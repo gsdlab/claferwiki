@@ -10,6 +10,7 @@ Requirements
 * syntax coloring for Clafer models
 * navigation over Clafer code with navigable links (e.g. for references)
 * tag for clafers in the text
+* translating constraints to CNL and showing as pop-up?
 
 How it works
 ------------
