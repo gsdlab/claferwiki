@@ -1,1 +1,0 @@
-gitit -f gitit.cnf
