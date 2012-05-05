@@ -70,6 +70,7 @@ aC : C
 
 will be rendered as
 
+```html
 <div id="c1_A">
 <b>abstract</b> A<br>
 <span style="padding-left:20px">b <b>?</b></span><br>
@@ -95,7 +96,7 @@ anA <b>:</b> <a href="#c1_A">A</a><br>
 aC <b>:</b> <a href="#c6_C">C</a><br>
 <span style="padding-left:20px"><b>[</b> <b>no</b> d <b>]</b></span>
 </div>
-
+```
 
 
 
