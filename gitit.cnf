@@ -125,7 +125,7 @@ plugins:
 # starts with Gitit.Plugin., gitit will assume that the plugin is
 # an installed module and will not try to find a source file.
 # Examples:
-plugins: plugins/Dot.hs
+plugins: plugins/Dot.hs, plugins/Clafer.hs
 # plugins: plugins/DotPlugin
 # plugins: Gitit.Plugin.InterwikiLinks
 
