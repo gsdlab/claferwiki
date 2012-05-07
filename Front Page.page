@@ -1,6 +1,6 @@
 Model example
 
-```clafer
+```
 abstract A
     b ?
     c -> C
@@ -45,3 +45,5 @@ anA <b>:</b> <a href="#c1_A">A</a><br>
 aC <b>:</b> <a href="#c6_C">C</a><br>
 <span style="padding-left:20px"><b>[</b> <b>no</b> d <b>]</b></span>
 </div>
+
+Clafer [plugin]() example
