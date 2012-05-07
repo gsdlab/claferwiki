@@ -1,0 +1,9 @@
+To use the Clafer plugin, you create a code block, like so:
+
+````
+~~~{.clafer .v .mxml}
+model
+~~~
+````
+
+Note that the .clafer **must** come first; the other tags are the same as in Clafer -?, except with the symbolic characters removed. This is because only alphanumeric characters function properly in the code block headers.
