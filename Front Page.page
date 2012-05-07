@@ -1,6 +1,6 @@
 Model example
 
-```Not clafer
+```Notclafer
 abstract A
     b ?
     c -> C
