@@ -2,7 +2,7 @@ Clafer Plugin Test
 
 Clafer [plugin]() example
 
-~~~{.clafer .mclafer}
+~~~clafer
 abstract Person
     age : integer
 
