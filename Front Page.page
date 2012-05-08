@@ -1,6 +1,8 @@
 Clafer Plugin Test
 
-~~~{.clafer -mclafer}
+Clafer [plugin]() example
+
+~~~{.clafer .mclafer}
 abstract Person
     age : integer
 
@@ -66,4 +68,3 @@ aC <b>:</b> <a href="#c6_C">C</a><br>
 
 
 
-Clafer [plugin]() example
