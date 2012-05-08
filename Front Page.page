@@ -7,7 +7,7 @@ abstract Person
     age : integer
 
     adult ?
-    [ adult <=> age >= 18 ]
+        [ age >= 18 ]
 
     xor maritalStatus
         neverMarried
