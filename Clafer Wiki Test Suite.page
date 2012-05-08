@@ -45,5 +45,5 @@ a1 : A
 Incorrect model - should see error below:
 
 ```clafer
-[ A ]
+// [ A ]
 ```
