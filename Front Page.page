@@ -9,7 +9,7 @@ abstract Person
     xor maritalStatus
         neverMarried
         married
-            [ age >= 18 ]
+//            [ age >= 18 ]
         divorced
 
 Alice : Person 
