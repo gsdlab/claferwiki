@@ -28,4 +28,8 @@ Test Error:
 ~~~{.clafer .v .k}
 abstract a
   this is an error
+  abstract abstract
+there is no way this
+      is-valid#clafer!
+error
 ~~~
