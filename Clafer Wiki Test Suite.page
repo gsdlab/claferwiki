@@ -47,3 +47,20 @@ Incorrect model - should see error below:
 ```clafer
 // [ A ]
 ```
+
+# `Person` example
+
+~~~{.clafer .mclafer}
+abstract Person
+    age : integer
+
+    xor maritalStatus
+        neverMarried
+        married
+        divorced
+
+Alice : Person 
+
+Bob : Person
+    [ married ]
+~~~
