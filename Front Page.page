@@ -14,6 +14,12 @@ abstract Person
         married
             [ adult ]
         divorced
+
+Alice : Person 
+    [ adult ]
+
+Bob : Person
+    [ married ]
 ~~~
 
 
