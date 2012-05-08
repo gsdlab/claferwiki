@@ -24,7 +24,7 @@ claferCompile (CodeBlock (id, classes, namevals) contents) | first classes == "c
     (ec, out, err) <- readProcessWithExitCode "clafer" ("-o":"-s":(flagTrans (tail classes) filepath)) []
     if ec == ExitSuccess
        then return $ CodeBlock (id, classes, namevals) out
-       else error $ "clafer returned an error status: " ++ err-- ++ "\nParameters: " ++ (foldr (\(x) -> ((x ++ ",") ++)) [] (flagTrans (tail classes) filepath))
+       else return $ CodeBlock (id, classes, namevals) ("clafer returned an error status: " ++ err)
 claferCompile x = return x
 
 --this is added so that it won't break if the wiki contains code blocks with no headers
