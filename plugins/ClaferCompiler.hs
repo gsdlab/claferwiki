@@ -21,7 +21,7 @@ callClafer x = liftIO $ do
 
 compile file = do
   content <- readFile file
-  writeFile "static/clafer/output.txt" ((unlines (addNumbers (lines content) 1)) ++ "\nEnd of file")
+  writeFile "static/clafer/output.txt" ((unlines $ addNumbers (lines content) 1) ++ "\nEnd of file")
   removeFile file
 
 addNumbers :: [String] -> Int -> [String]

@@ -1,7 +1,6 @@
 module ClaferReader (plugin) where
 
 import Network.Gitit.Interface
-import System.FilePath ((</>))
 import Control.Monad.Trans (liftIO)
 
 plugin :: Plugin
