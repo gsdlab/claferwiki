@@ -11,7 +11,7 @@ import Data.Digest.Pure.SHA (sha1, showDigest)
 import System.Directory (doesFileExist, removeFile)
 import Control.Monad.Trans (liftIO)
 import Control.Monad (when)
-import Language.Clafer (generateM, compileM, addModuleFragment, defaultClaferArgs)
+import Language.Clafer (generateM, compileM, addModuleFragment, defaultClaferArgs, CompilerResult(..))
 import Language.Clafer.ClaferArgs
 plugin :: Plugin
 plugin = mkPageTransformM callClafer
@@ -29,7 +29,9 @@ callClafer x = return x
 compile file arguments = do
   content <- readFile file
   let args = defaultClaferArgs {mode = Just Clafer};
-      (ext, output, stats, mapping) = generateM args (compileM args (addModuleFragment args content));
+      CompilerResult {extension = ext,
+                      outputCode = output,
+                      statistics = stats} = generateM args (compileM args (addModuleFragment args content));
   writeFile ("static/clafer/" ++ uniqueName content ++ "." ++ ext) (unlines [stats, output])
   writeFile "static/clafer/output.txt" (unlines $ addNumbers (lines content) 1)
   removeFile file
