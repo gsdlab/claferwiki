@@ -11,7 +11,7 @@ readBlock (CodeBlock (id, classes, namevals) contents)
   | first classes == "clafer" = do
   let filepath = "static/clafer/temp.txt"
   liftIO $ do
-    _ <- appendFile filepath (contents ++ "\n#break\n")
+    _ <- appendFile filepath (contents ++ "\n//# FRAGMENT\n")
     return $ CodeBlock (id, classes, namevals) contents
 readBlock x = return x
 
