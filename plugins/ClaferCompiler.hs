@@ -21,15 +21,14 @@ callClafer (CodeBlock (id, classes, namevals) contents)
   | first classes == "clafer" = liftIO $ do
   notCompiled <- doesFileExist "static/clafer/temp.txt"
   if notCompiled
-     then do compile "static/clafer/temp.txt" defaultClaferArgs --arguments
+     then do compile "static/clafer/temp.txt" defaultClaferArgs{mode=Just Html, keep_unused=Just True}
              return (CodeBlock (id, classes, namevals) contents)
      else return (CodeBlock (id, classes, namevals) contents)
 callClafer x = return x
 
-compile file arguments = do
+compile file args = do
   content <- readFile file
-  let args = defaultClaferArgs {mode = Just Clafer};
-      CompilerResult {extension = ext,
+  let CompilerResult {extension = ext,
                       outputCode = output,
                       statistics = stats} = generateM args (compileM args (addModuleFragment args content));
   writeFile ("static/clafer/" ++ uniqueName content ++ "." ++ ext) (unlines [stats, output])
