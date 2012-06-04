@@ -13,6 +13,7 @@ import Control.Monad.Trans (liftIO)
 import Control.Monad (when)
 import Language.Clafer (generateM, compileM, addModuleFragment, defaultClaferArgs, CompilerResult(..))
 import Language.Clafer.ClaferArgs
+import Data.List (intercalate)
 plugin :: Plugin
 plugin = mkPageTransformM callClafer
 
@@ -31,7 +32,8 @@ compile file args = do
   let CompilerResult {extension = ext,
                       outputCode = output,
                       statistics = stats} = generateM args (compileM args (addModuleFragment args content));
-  writeFile ("static/clafer/" ++ uniqueName content ++ "." ++ ext) (unlines [stats, output])
+  writeFile ("static/clafer/" ++ uniqueName content ++ "." ++ ext)
+            ("<pre>" ++ stats ++ "</pre><br>\n" ++ output)
   writeFile "static/clafer/output.txt" (unlines $ addNumbers (lines content) 1)
   removeFile file
 
