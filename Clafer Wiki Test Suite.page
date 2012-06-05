@@ -1,66 +1,72 @@
 This test suite demonstrates how an example model can be processed.
 
 # Example model
+Telematics Example (from [](http://gsd.uwaterloo.ca/node/291)):
 
-```
-abstract A
-   b ?
+Generic PLA
 
-a1 : A
-   [ b ]
-```
+``` {.clafer}
+abstract options
+    xor size
+        small
+        large
+    cache ?
+        size : integer
+            fixed ?
+    [small && cache => fixed]
 
-# Desugaring using `.mclafer`
+abstract comp
+    version : integer = 1 + 2
 
-```{.clafer .mclafer}
-abstract A
-   b ?
+abstract ECU : comp
 
-a1 : A
-   [ b ]
-```
-
-# Compile to Alloy (by default)
-
-```clafer
-abstract A
-   b ?
-
-a1 : A
-   [ b ]
+abstract display : comp
+    server -> ECU
+    `options
+    [this.version >= server.version]
 ```
 
-# Output Compiler IR XML using .mxml
+Specific PLA (template)
 
-```{.clafer .mxml}
-abstract A
-   b ?
+```{.clafer}
+abstract plaECU : ECU
+    `display 1..2
+        [server = parent
+         !options.cache]
 
-a1 : A
-   [ b ]
+ECU1 : plaECU
+
+ECU2 : plaECU ?
+    master -> ECU1
 ```
 
-# Handle incorrect model 
+Feature Model for the specific PL
 
-Incorrect model - should see error below:
+```{.clafer}
+telematicsSystem
+    xor channel
+        single
+        dual
 
-```clafer
-// [ A ]
+    extraDisplay ?
+
+    xor size
+        small
+        large
+
+    [dual <=> ECU2
+     extraDisplay <=> #ECU1.display = 2
+     extraDisplay <=> (ECU2 => #ECU2.display = 2)
+     large <=> !plaECU.display.options.size.small
+     small <=> !plaECU.display.options.size.large]
 ```
 
-# `Person` example
+Concrete Product
 
-~~~{.clafer .mclafer}
-abstract Person
-    age : integer
+```{.clafer}
+[dual
+ extraDisplay
+ telematicsSystem.size.large]
+```
 
-    xor maritalStatus
-        neverMarried
-        married
-        divorced
-
-Alice : Person 
-
-Bob : Person
-    [ married ]
-~~~
+This example's output in HTML can be found in claferwiki/static/clafer/
