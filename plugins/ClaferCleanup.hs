@@ -2,13 +2,14 @@ module ClaferCleanup (plugin) where
 
 import Network.Gitit.Interface
 import Control.Monad.Trans (liftIO)
-import System.Directory (doesFileExist, removeFile)
+import System.Directory (createDirectoryIfMissing, doesFileExist, removeFile)
 
 plugin :: Plugin
 plugin = mkPageTransformM cleanup
 
 cleanup :: Block -> PluginM Block
 cleanup x = liftIO $ do
+  createDirectoryIfMissing True "static/clafer/"
   tempExists <- doesFileExist "static/clafer/temp.txt"
   outputExists <- doesFileExist "static/clafer/output.txt"
   if tempExists
