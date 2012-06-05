@@ -1,19 +1,16 @@
 module ClaferCompiler (plugin) where
 
 import Network.Gitit.Interface
-import System.Process (readProcessWithExitCode)
-import System.Exit (ExitCode(ExitSuccess))
-import System.FilePath ((</>))
+import System.Directory (doesFileExist, removeFile)
+import Control.Monad.Trans (liftIO)
 -- from the utf8-string package on HackageDB:
 import Data.ByteString.Lazy.UTF8 (fromString)
 -- from the SHA package on HackageDB:
 import Data.Digest.Pure.SHA (sha1, showDigest)
-import System.Directory (doesFileExist, removeFile)
-import Control.Monad.Trans (liftIO)
-import Control.Monad (when)
 import Language.Clafer (generateM, compileM, addModuleFragment, defaultClaferArgs, CompilerResult(..))
 import Language.Clafer.ClaferArgs
 import Data.List (intercalate)
+
 plugin :: Plugin
 plugin = mkPageTransformM callClafer
 
@@ -37,7 +34,7 @@ compile file args = do
   writeFile "static/clafer/output.txt" (unlines $ addNumbers (lines content) 1)
   removeFile file
 
---this is added so that it won't break if the wiki contains code blocks with no headers
+-- this is added so that it won't break if the wiki contains code blocks with no headers
 first [] = []
 first (x:xs) = x
 
