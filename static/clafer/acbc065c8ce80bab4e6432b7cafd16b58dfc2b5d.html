@@ -1,0 +1,41 @@
+<pre>All clafers: 26 | Abstract: 5 | Concrete: 19 | References: 2
+Constraints: 8
+Goals: 0
+Global scope: 1..*
+All names unique: False
+</pre><br>
+<font size="4"><tt><span style="padding-left:0px"><b>abstract</b> 0..* <a name="c1_options">options</a>  : <a href="#clafer"></a> 0..* </span><br>
+  <span style="padding-left:20px"> 1..1 <a name="c2_size">size</a>  : <a href="#clafer"></a> 1..1 </span><br>
+    <span style="padding-left:40px"> 0..* <a name="c3_small">small</a>  : <a href="#clafer"></a> 0..1 </span><br>
+    <span style="padding-left:40px"> 0..* <a name="c4_large">large</a>  : <a href="#clafer"></a> 0..1 </span><br>
+  <span style="padding-left:20px"> 0..* <a name="c5_cache">cache</a>  : <a href="#clafer"></a> 0..1 </span><br>
+    <span style="padding-left:40px"> 0..* <a name="c6_size">size</a>  : <a href="#integer"></a> 1..1 </span><br>
+      <span style="padding-left:60px"> 0..* <a name="c7_fixed">fixed</a>  : <a href="#clafer"></a> 0..1 </span><br>
+  <span style="padding-left:20px">[ some <a href="#this"></a>.<a href="#c2_size">size</a>.<a href="#c3_small">small</a> && some <a href="#this"></a>.<a href="#c5_cache">cache</a> => some <a href="#this"></a>.<a href="#c5_cache">cache</a>.<a href="#c6_size">size</a>.<a href="#c7_fixed">fixed</a> ]</span><br>
+<span style="padding-left:0px"><b>abstract</b> 0..* <a name="c16_comp">comp</a>  : <a href="#clafer"></a> 0..* </span><br>
+  <span style="padding-left:20px"> 0..* <a name="c17_version">version</a>  : <a href="#integer"></a> 1..1 </span><br>
+    <span style="padding-left:40px">[ <a href="#this"></a> = "1" + "2" ]</span><br>
+<span style="padding-left:0px"><b>abstract</b> 0..* <a name="c23_ECU">ECU</a>  : <a href="#c16_comp">comp</a> 0..* </span><br>
+<span style="padding-left:0px"><b>abstract</b> 0..* <a name="c24_display">display</a>  : <a href="#c16_comp">comp</a> 0..* </span><br>
+  <span style="padding-left:20px"> 0..* <a name="c25_server">server</a>  ->> <a href="#c23_ECU">ECU</a> 1..1 </span><br>
+  <span style="padding-left:20px">[ all disj :<a href="#this"></a>.<a href="#c25_server">server</a> | <a href="#x"></a>.<a href="#ref"></a> != <a href="#y"></a>.<a href="#ref"></a> ]</span><br>
+  <span style="padding-left:20px"> 0..* <a name="c35_options">options</a>  : <a href="#c1_options">options</a> 1..1 </span><br>
+  <span style="padding-left:20px">[ <a href="#this"></a>.<a href="#c17_version">version</a> >= <a href="#this"></a>.<a href="#c25_server">server</a>.<a href="#ref"></a>.<a href="#c17_version">version</a> ]</span><br>
+<span style="padding-left:0px"><b>abstract</b> 0..* <a name="c43_plaECU">plaECU</a>  : <a href="#c23_ECU">ECU</a> 0..* </span><br>
+  <span style="padding-left:20px"> 0..* <a name="c44_display">display</a>  : <a href="#c24_display">display</a> 1..2 </span><br>
+    <span style="padding-left:40px">[ <a href="#this"></a>.<a href="#c25_server">server</a>.<a href="#ref"></a> = <a href="#this"></a>.<a href="#parent"></a> && no <a href="#this"></a>.<a href="#c35_options">options</a>.<a href="#c5_cache">cache</a> ]</span><br>
+<span style="padding-left:0px"> 0..* <a name="c53_ECU1">ECU1</a>  : <a href="#c43_plaECU">plaECU</a> 1..1 </span><br>
+<span style="padding-left:0px"> 0..* <a name="c54_ECU2">ECU2</a>  : <a href="#c43_plaECU">plaECU</a> 0..1 </span><br>
+  <span style="padding-left:20px"> 0..* <a name="c55_master">master</a>  ->> <a href="#c53_ECU1">ECU1</a> 1..1 </span><br>
+  <span style="padding-left:20px">[ all disj :<a href="#this"></a>.<a href="#c55_master">master</a> | <a href="#x"></a>.<a href="#ref"></a> != <a href="#y"></a>.<a href="#ref"></a> ]</span><br>
+<span style="padding-left:0px"> 0..* <a name="c65_telematicsSystem">telematicsSystem</a>  : <a href="#clafer"></a> 1..1 </span><br>
+  <span style="padding-left:20px"> 1..1 <a name="c66_channel">channel</a>  : <a href="#clafer"></a> 1..1 </span><br>
+    <span style="padding-left:40px"> 0..* <a name="c67_single">single</a>  : <a href="#clafer"></a> 0..1 </span><br>
+    <span style="padding-left:40px"> 0..* <a name="c68_dual">dual</a>  : <a href="#clafer"></a> 0..1 </span><br>
+  <span style="padding-left:20px"> 0..* <a name="c69_extraDisplay">extraDisplay</a>  : <a href="#clafer"></a> 0..1 </span><br>
+  <span style="padding-left:20px"> 1..1 <a name="c70_size">size</a>  : <a href="#clafer"></a> 1..1 </span><br>
+    <span style="padding-left:40px"> 0..* <a name="c71_small">small</a>  : <a href="#clafer"></a> 0..1 </span><br>
+    <span style="padding-left:40px"> 0..* <a name="c72_large">large</a>  : <a href="#clafer"></a> 0..1 </span><br>
+  <span style="padding-left:20px">[ some <a href="#this"></a>.<a href="#c66_channel">channel</a>.<a href="#c68_dual">dual</a> <=> some <a href="#c54_ECU2">ECU2</a> && some <a href="#this"></a>.<a href="#c69_extraDisplay">extraDisplay</a> <=> #<a href="#c53_ECU1">ECU1</a>.<a href="#c44_display">display</a> = "2" && some <a href="#this"></a>.<a href="#c69_extraDisplay">extraDisplay</a> <=> some <a href="#c54_ECU2">ECU2</a> => #<a href="#c54_ECU2">ECU2</a>.<a href="#c44_display">display</a> = "2" && some <a href="#this"></a>.<a href="#c70_size">size</a>.<a href="#c72_large">large</a> <=> no <a href="#c43_plaECU">plaECU</a>.<a href="#c44_display">display</a>.<a href="#c35_options">options</a>.<a href="#c2_size">size</a>.<a href="#c3_small">small</a> && some <a href="#this"></a>.<a href="#c70_size">size</a>.<a href="#c71_small">small</a> <=> no <a href="#c43_plaECU">plaECU</a>.<a href="#c44_display">display</a>.<a href="#c35_options">options</a>.<a href="#c2_size">size</a>.<a href="#c4_large">large</a> ]</span><br>
+<span style="padding-left:0px">[ some <a href="#c65_telematicsSystem">telematicsSystem</a>.<a href="#c66_channel">channel</a>.<a href="#c68_dual">dual</a> && some <a href="#c65_telematicsSystem">telematicsSystem</a>.<a href="#c69_extraDisplay">extraDisplay</a> && some <a href="#c65_telematicsSystem">telematicsSystem</a>.<a href="#c70_size">size</a>.<a href="#c72_large">large</a> ]</span><br>
+</tt></font>
