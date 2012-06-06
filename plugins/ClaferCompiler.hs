@@ -30,7 +30,8 @@ compile file args = do
                       outputCode = output,
                       statistics = stats} = generateM args (compileM args (addModuleFragment args content));
   writeFile ("static/clafer/" ++ uniqueName content ++ "." ++ ext)
-            ("<pre>" ++ stats ++ "</pre><br>\n" ++ output)
+            ("<head><link rel=\"stylesheet\" type=\"text/css\" href=\"../css/custom.css\" /></head><pre>" ++
+              stats ++ "</pre><br>\n" ++ output)
   writeFile "static/clafer/output.txt" (unlines $ addNumbers (lines content) 1)
   removeFile file
 
