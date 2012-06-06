@@ -12,13 +12,14 @@ Dependencies
 * [The Haskell Platform](http://hackage.haskell.org/platform)
 * [Git](http://git-scm.com)
 * [Gitit wiki](http://gitit.net)
-* [Clafer compiler](https://github.com/gsdlab/clafer)
+* [Clafer compiler (html branch)](https://github.com/gsdlab/clafer/tree/html)
   
 Installation
 ------------
 
 * install the dependencies
   * enable syntax highlighting [see note 2](http://gitit.net/Installing)
+  * ensure you switch to html branch before installing Clafer
 * in some `<target directory>` where you want to have the wiki,
   * execute `git clone git://github.com/gsdlab/claferwiki.git`
   * execute `make run` 
