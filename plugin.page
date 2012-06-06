@@ -1,35 +1,11 @@
 To use the Clafer plugin, you create a code block, like so:
 
 ````
-~~~{.clafer .v .mxml}
+~~~{.clafer}
 model
 ~~~
 ````
 
 Note that the .clafer **must** come first; the other tags are the same as in Clafer -?, except with the symbolic characters removed. This is because only alphanumeric characters function properly in the code block headers.
 
-Test Example:
-
-~~~{.clafer .v .k .malloy42}
-telematicsSystem
-    xor channel
-        single
-        dual
-
-    extraDisplay ?
-
-    xor size
-        small
-        large
-~~~
-
-Test Error:
-
-~~~{.clafer .v .k}
-abstract a
-  this is an error
-  abstract abstract
-there is no way this
-      is-valid#clafer!
-error
-~~~
+For an example, see [Clafer Wiki Test Suite]()

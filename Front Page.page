@@ -1,9 +1,27 @@
+Overview
+========
+
+[Clafer Wiki](https://github.com/gsdlab/claferwiki) is a wiki integrated with the Clafer compiler. 
+[Clafer](http://clafer.org) is a modeling language developed at [Generative Software Development Lab](http://gsd.uwaterloo.ca).
+The tight integration of the Clafer compiler allows modelers to freely mix natural language text with fragments of a model expressed in Clafer. 
+All model fragments on a single page are considered to be part of the same module and they can easily cross reference. 
+Model fragments are entered on a wiki page using *code blocks* (see using the [plugin]()) which are transformed into HTML during page rendering.
+When Clafer compiler produces the HTML output, it performs code highlighting and adds hyperlinks which allow for navigation from a clafer name 
+use to that clafer's definition.
+The compiler also embeds compile errors into the output. 
+The integration of the compiler turns the wiki into an integrated development environment (IDE) and naturally enables collaborative modeling.
+
+Examples
+========
+
 [Clafer Wiki Test Suite]()
 
-Clafer [plugin]() example
+The intended output
+===================
 
-How this should work?
-The following example model 
+Our goal is to achieve the following HTML rendering:
+
+- the following example model 
 
 ```
 abstract A
@@ -23,17 +41,17 @@ aC : C
     [ no d ]
 ```
 
-should be rendered as follows:
+- should be rendered as follows:
 
 <div id="c1_A">
 <b>abstract</b> A<br>
-<span style="padding-left:20px">b <b>?</b></span><br>
-<span style="padding-left:20px">c <b>-></b> <a href="#c6_C">C</a></span>
+<span id="c2_b" style="padding-left:20px">b <b>?</b></span><br>
+<span id="c3_c" style="padding-left:20px">c <b>-></b> <a href="#c6_C">C</a></span>
 </div>
 <br>
 <div id="c4_B">
 <b>abstract</b> B<br>
-<span style="padding-left:20px">d <b>?</b></span>
+<span id="c5_d" style="padding-left:20px">d <b>?</b></span>
 </div>
 <br>
 <div id="c6_C">
@@ -42,80 +60,11 @@ should be rendered as follows:
 <br>
 <div id="c7_anA">
 anA <b>:</b> <a href="#c1_A">A</a><br>
-<span style="padding-left:20px"><b>[</b> b <b>]</b></span><br>
-<span style="padding-left:20px"><b>[</b> c <b>=</b> <a href="#c8_aC">aC</a> <b>]</b></span>
+<span style="padding-left:20px"><b>[</b> <a href="#c2_b">b</a> <b>]</b></span><br>
+<span style="padding-left:20px"><b>[</b> <a href="#c3_c">c</a> <b>=</b> <a href="#c8_aC">aC</a> <b>]</b></span>
 </div>
 <br>
 <div id="c8_aC">
 aC <b>:</b> <a href="#c6_C">C</a><br>
-<span style="padding-left:20px"><b>[</b> <b>no</b> d <b>]</b></span>
-</div>
-=======
-[Clafer Wiki Test Suite]()
-
-Clafer [plugin]() example
-
-~~~{.clafer .mclafer}
-abstract Person
-    age : integer
-
-    xor maritalStatus
-        neverMarried
-        married
-        divorced
-
-Alice : Person 
-
-Bob : Person
-    [ married ]
-~~~
-
-
-
-Model example
-
-```
-abstract A
-    b ?
-    c -> C
-
-abstract B
-    d ?
-
-abstract C : B
-
-anA : A
-    [ b ]
-    [ c = aC ]
-
-aC : C
-    [ no d ]
-```
-
-should be rendered as follows:
-
-<div id="c1_A">
-<b>abstract</b> A<br>
-<span style="padding-left:20px">b <b>?</b></span><br>
-<span style="padding-left:20px">c <b>-></b> <a href="#c6_C">C</a></span>
-</div>
-<br>
-<div id="c4_B">
-<b>abstract</b> B<br>
-<span style="padding-left:20px">d <b>?</b></span>
-</div>
-<br>
-<div id="c6_C">
-<b>abstract</b> C <b>:</b> <a href="#c4_B">B</a>
-</div>
-<br>
-<div id="c7_anA">
-anA <b>:</b> <a href="#c1_A">A</a><br>
-<span style="padding-left:20px"><b>[</b> b <b>]</b></span><br>
-<span style="padding-left:20px"><b>[</b> c <b>=</b> <a href="#c8_aC">aC</a> <b>]</b></span>
-</div>
-<br>
-<div id="c8_aC">
-aC <b>:</b> <a href="#c6_C">C</a><br>
-<span style="padding-left:20px"><b>[</b> <b>no</b> d <b>]</b></span>
+<span style="padding-left:20px"><b>[</b> <b>no</b> <a href=#c5_d">d</a> <b>]</b></span>
 </div>
