@@ -8,7 +8,7 @@ plugin = mkPageTransformM readBlock
 
 readBlock :: Block -> PluginM Block
 readBlock (CodeBlock (id, classes, namevals) contents)
-  | first classes == "clafer" = liftIO $ do
+  | "clafer" `elem` classes && (not $ "summary" `elem` classes) = liftIO $ do
     contents <- getBlock
     return $ CodeBlock (id, classes, namevals) contents
 readBlock x = return x

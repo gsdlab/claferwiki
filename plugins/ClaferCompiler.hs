@@ -7,9 +7,10 @@ import Control.Monad.Trans (liftIO)
 import Data.ByteString.Lazy.UTF8 (fromString)
 -- from the SHA package on HackageDB:
 import Data.Digest.Pure.SHA (sha1, showDigest)
-import Language.Clafer (generateM, compileM, addModuleFragment, defaultClaferArgs, CompilerResult(..))
+import Language.Clafer (generateM, compileM, addModuleFragment, defaultClaferArgs,
+                        CompilerResult(..))
 import Language.Clafer.ClaferArgs
-import Data.List (intercalate)
+-- import Data.List (intercalate)
 
 plugin :: Plugin
 plugin = mkPageTransformM callClafer
@@ -30,8 +31,7 @@ compile file args = do
                       outputCode = output,
                       statistics = stats} = generateM args (compileM args (addModuleFragment args content));
   writeFile ("static/clafer/" ++ uniqueName content ++ "." ++ ext)
-            ("<head><link rel=\"stylesheet\" type=\"text/css\" href=\"../css/custom.css\" /></head><pre>" ++
-              stats ++ "</pre><br>\n" ++ output)
+            ("<head><link rel=\"stylesheet\" type=\"text/css\" href=\"../css/custom.css\" /></head>" ++ output)
   writeFile "static/clafer/output.txt" (unlines $ addNumbers (lines content) 1)
   removeFile file
 

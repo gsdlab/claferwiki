@@ -8,7 +8,7 @@ plugin = mkPageTransformM readBlock
 
 readBlock :: Block -> PluginM Block
 readBlock (CodeBlock (id, classes, namevals) contents)
-  | first classes == "clafer" = do
+  | "clafer" `elem` classes && (not $ "summary" `elem` classes) = do
   let filepath = "static/clafer/temp.txt"
   liftIO $ do
     _ <- appendFile filepath (contents ++ "\n//# FRAGMENT\n")
