@@ -1,3 +1,5 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
 <meta http-equiv="X-UA-Compatible" content="IE=9">
 <head>
   <link rel="stylesheet" type="text/css" href="../static/css/custom.css" />
@@ -82,13 +84,23 @@
 </g>
 </g>
 </svg>
-<br>
+<h2>Module Statistics</h2>
 All clafers: 8 | Abstract: 3 | Concrete: 4 | References: 1<br>
 Constraints: 4<br>
 Goals: 0<br>
 Global scope: 1..*<br>
 All names unique: False<br>
-<div id="c1_A">
+
+<h2>Module Contents</h2>
+<p>
+In our domain, we have a few concepts: A, B, and C.
+</p>
+<p>
+The clafer A<br>
+A has an optional property b <br>
+and links to the clafer C via the reference c.
+</p>
+<div class="code" id="c1_A">
 <span class="keyword">abstract</span> A<br>
 <span id="c2_b" class="l1">b <span class="keyword">?</span></span><br>
 <span id="c3_c" class="l1">c 
@@ -97,12 +109,22 @@ All names unique: False<br>
 </span>
 </div>
 <br>
-<div id="c4_B">
+<p>
+The clafer B has an optional property d. <br>
+We say <br>
+"B with d" or <br>
+"B without d" to indicate the variant we mean.
+</p>
+<div class="code" id="c4_B">
 <span class="keyword">abstract</span> B<br>
 <span id="c5_d" class="l1">d <span class="keyword">?</span></span>
 </div>
 <br>
-<div id="c6_C">
+<p>The clafer C inherits all its properties from the clafer B. <br>
+That means we can also say <br>
+"C with d" or <br>
+"C without d" to characterize an instance of C.</p>
+<div class="code" id="c6_C">
   <span class="keyword">abstract</span> C 
   <span class="keyword">:</span> 
    <a href="#c4_B">
@@ -110,7 +132,12 @@ All names unique: False<br>
    </a>
 </div>
 <br>
-<div id="c7_anA">
+<p>Here we have an example instance of the clafer A: anA.<br>
+The concrete clafer anA has <br>
+a property b <br>
+and links to another concrete clafer aC via the reference c.
+</p>
+<div class="code" id="c7_anA">
 anA <span class="keyword">:</span> <a href="#c1_A"><span class="identifier">A</span></a><br>
   <span class="l1">
     <span class="keyword">[</span> <a href="#c2_b"><span class="reference">b</span></a> <span class="keyword">]</span>
@@ -123,7 +150,11 @@ anA <span class="keyword">:</span> <a href="#c1_A"><span class="identifier">A</s
   <span class="keyword">]</span></span>
 </div>
 <br>
-<div id="c8_aC">
+<p>
+The concrete clafer aC can be characterized as <br>
+"C without d".
+</p>
+<div class="code" id="c8_aC">
 aC <span class="keyword">:</span> <a href="#c6_C">C</a><br>
 <span class="l1">
   <span class="keyword">[</span> 
@@ -132,4 +163,10 @@ aC <span class="keyword">:</span> <a href="#c6_C">C</a><br>
   <span class="keyword">]</span>
 </span>
 </div>
+<br>
+<p>
+So in this model you can see some basic constructs of Clafer.<br>
+For more information visit <a href="http://clafer.org">Clafer Home Page</a>.<br>
+</p>
 </body>
+</html>
