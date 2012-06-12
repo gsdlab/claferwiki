@@ -1,9 +1,3 @@
-# Discoveries
-- The greater-than sign, >, will not display in svg tooltips on the wiki
-- For some reason, the source code for the .svg file is correct in the editor, but will not display on the wiki. All that appears is a black box. The elements inside appear to be correctly placed, and the links work. However, nothing is visible.
-- If you save the .svg file (using IE), the source code shows it is horribly mangled. Attempting to fix it only makes it weirder.
-- The wiki automatically converts &#num; to the corresponding character.
-
 # Module Summary
 
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
