@@ -1,6 +1,3 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
-<html>
-<meta http-equiv="X-UA-Compatible" content="IE=9">
 <head><link rel="stylesheet" type="text/css" href="../static/css/custom.css" /></head>
 
 Module Summary
@@ -185,7 +182,7 @@ Telematics Model
 <span class="keyword">abstract</span> display <span class="keyword">:</span> <a href="#c16_comp"><span class="reference">comp</span></a><br>
   <span id="c25_server" class="l1">server <span class="keyword">-></span> <a href="#c23_ECU"><span class="reference">ECU</span></a></span><br>
 <span class="l1">`<a href="#c1_options"><span class="reference">options</span></a><br>
-  <span class="l1"><span class="keyword">[</span> <a href="#this"><span class="reference">this</span></a> .<a href="#c17_version"><span class="reference">version</span></a> >= <a href="#c25_server"><span class="reference">server</span></a>.<a href="#c17_version"><span class="reference">version</span></a> <span class="keyword">]</span></span><br>
+  <span class="l1"><span class="keyword">[</span> <a href="#this"><span class="reference">this</span></a>.<a href="#c17_version"><span class="reference">version</span></a> >= <a href="#c25_server"><span class="reference">server</span></a>.<a href="#c17_version"><span class="reference">version</span></a> <span class="keyword">]</span></span><br>
 </div>
 <br>
 <div id="c43_plaECU">
@@ -215,9 +212,7 @@ telematicsSystem<br>
     <span id="c72_large" class="l2">large</span><br>
   <span class="l1"><span class="keyword">[</span> <a href="#c68_dual"><span class="reference">dual</span></a> <=> <a href="#c54_ECU2"><span class="reference">ECU2</span></a> <span class="keyword">]</span></span><br>
   <span class="l1"><span class="keyword">[</span> <a href="#c69_extraDisplay"><span class="reference">extraDisplay</span></a> <=> #<a href="#c53_ECU1"><span class="reference">ECU1</span></a>.<a href="#c44_display"><span class="reference">display</span></a> = 2 <span class="keyword">]</span></span><br>
-  <span class="l1"><span class="keyword">[</span> <a href="#c69_extraDisplay"><span class="reference">extraDisplay</span></a> <=> <a href="#c54_ECU2"><span class="reference">ECU2</span></a> => #<a href="#c54_ECU2"><span class="reference">ECU2</span></a> .<a href="#c44_display"><span class="reference">display</span></a> = 2 <span class="keyword">]</span></span><br>
+  <span class="l1"><span class="keyword">[</span> <a href="#c69_extraDisplay"><span class="reference">extraDisplay</span></a> <=> <a href="#c54_ECU2"><span class="reference">ECU2</span></a> => #<a href="#c54_ECU2"><span class="reference">ECU2</span></a>.<a href="#c44_display"><span class="reference">display</span></a> = 2 <span class="keyword">]</span></span><br>
   <span class="l1"><span class="keyword">[</span> <a href="#c72_large"><span class="reference">large</span></a> <=> <span class="keyword">!</span><a href="#c43_plaECU"><span class="reference">plaECU</span></a>.<a href="#c44_display"><span class="reference">display</span></a>.<a href="#c35_options"><span class="reference">options</span></a>.<a href="#c2_size"><span class="reference">size</span></a>.<a href="#c3_small"><span class="reference">small</span></a> <span class="keyword">]</span></span><br>
   <span class="l1"><span class="keyword">[</span> <a href="#c71_small"><span class="reference">small</span></a> <=> <span class="keyword">!</span><a href="#c43_plaECU"><span class="reference">plaECU</span></a>.<a href="#c44_display"><span class="reference">display</span></a>.<a href="#c35_options"><span class="reference">options</span></a>.<a href="#c2_size"><span class="reference">size</span></a>.<a href="#c4_large"><span class="reference">large</span></a> <span class="keyword">]</span></span><br>
 </div>
-<br>
-</html>
