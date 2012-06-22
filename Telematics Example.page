@@ -20,8 +20,7 @@ Module Summary
     large
   cache ?
     size : integer
-      fixed ?
-  [small && cache => fixed]">
+      fixed ?">
 <polygon fill="none" stroke="black" points="259.25,-108 152.75,-108 152.75,-72 259.25,-72 259.25,-108"/>
 <text text-anchor="middle" x="206" y="-86.3" font-family="Times New Roman,serif" font-size="14.00">abstract options</text>
 </a>
@@ -49,9 +48,9 @@ Module Summary
 <!-- c24_display -->
 <g id="node5" class="node"><title>c24_display</title>
 <a xlink:href="#c24_display" xlink:title="abstract display : comp
-  server -> ECU
-  \`options
-  [this.version >= server.version]">
+  server -gt; ECU
+  `options
+  [this.version gt;= server.version]">
 <polygon fill="none" stroke="black" points="269.25,-180 122.75,-180 122.75,-144 269.25,-144 269.25,-180"/>
 <text text-anchor="middle" x="196" y="-158.3" font-family="Times New Roman,serif" font-size="14.00">abstract display : comp</text>
 </a>
@@ -106,7 +105,7 @@ Module Summary
 <!-- c54_ECU2 -->
 <g id="node14" class="node"><title>c54_ECU2</title>
 <a xlink:href="#c7_ECU2" xlink:title="ECU2 : plaECU ?
-  master -> ECU1">
+  master -gt; ECU1">
 <polygon fill="none" stroke="black" points="185,-396 69,-396 69,-360 185,-360 185,-396"/>
 <text text-anchor="middle" x="127" y="-374.3" font-family="Times New Roman,serif" font-size="14.00">ECU2 : plaECU ?</text>
 </a>
@@ -123,19 +122,7 @@ Module Summary
 </g>
 <!-- c65_telematicsSystem -->
 <g id="node17" class="node"><title>c65_telematicsSystem</title>
-<a xlink:href="#c65_telematicsSystem" xlink:title="telematicsSystem
-  xor channel
-    single
-    dual
-  extraDisplay ?
-  xor size
-    small
-    large
-  [dual <=> ECU2
-   extraDisplay <=> #ECU1.display = 2
-   extraDisplay <=> (ECU2 => #ECU2.display = 2)
-   large <=> !plaECU.display.options.size.small
-   small <=> !plaECU.display.options.size.large]">
+<a xlink:href="#c65_telematicsSystem" xlink:title="telematicsSystem">
 <polygon fill="none" stroke="black" points="316.25,-396 203.75,-396 203.75,-360 316.25,-360 316.25,-396"/>
 <text text-anchor="middle" x="260" y="-374.3" font-family="Times New Roman,serif" font-size="14.00">telematicsSystem</text>
 </a>
