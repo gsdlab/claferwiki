@@ -1,0 +1,22 @@
+digraph telematics_simplified
+{
+  node [shape = box];
+  c1_options [label="abstract options" URL="#c1_options"];
+  c2_comp [label="abstract comp" URL="#c2_comp"];
+  c3_ECU [label="abstract ECU : comp" URL="#c3_ECU"];
+  c3_ECU -> c2_comp [arrowhead=onormal];
+  c4_display [label="abstract display : comp" URL="#c4_display"];
+  c4_display -> c2_comp [arrowhead=onormal];
+  c4_display -> c1_options [style=dashed arrowhead=onormal];
+  c4_display -> c3_ECU [arrowhead=vee];
+  c5_plaECU [label="abstract plaECU : ECU" URL="#c5_plaECU"];
+  c5_plaECU -> c3_ECU [arrowhead=onormal];
+  c5_plaECU -> c4_display [style=dashed arrowhead=onormal];
+  c6_ECU1 [label="ECU1 : plaECU" URL="#c6_ECU1"];
+  c6_ECU1 -> c5_plaECU [arrowhead=onormal];
+  c7_ECU2 [label="ECU2 : plaECU ?" URL="#c7_ECU2"];
+  c7_ECU2 -> c5_plaECU [arrowhead=onormal];
+  c7_ECU2 -> c6_ECU1 [arrowhead=vee];
+  c8_telematicsSystem [label="telematicsSystem" URL="#c8_telematicsSystem"];
+}
+//graph is made by the following command: dot -Tsvg -o "Telematics Example.svg" "Telematics Example.txt"
