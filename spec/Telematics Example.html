@@ -1,0 +1,56 @@
+<head><link rel="stylesheet" type="text/css" href="../static/css/custom.css" /></head>
+<div id="c1_options">
+<span class="keyword">abstract</span> options<br>
+  <span id="c2_size" class="l1">size</span><br>
+    <span id="c3_small" class="l2">small</span><br>
+    <span id="c4_large" class="l2">large</span><br>   
+  <span id="c5_cache" class="l1">cache</span><br>
+    <span id="c6_size" class="l2">size</span><br>
+      <span id="c7_fixed" class="l3">fixed</span><br>
+  <span class="l1"><span class="keyword">[</span> <a href="#c3_small"><span class="reference">small</span></a> && <a href="#c5_cache"><span class="reference">cache</span></a> => <a href="#c7_fixed"><span class="reference">fixed</span></a> <span class="keyword">]</span></span><br>
+</div>
+<br>
+<div id="c16_comp">
+<span class="keyword">abstract</span> comp<br>
+  <span id="c17_version" class="l1">version <span class="keyword">:</span> integer = 1 + 2</span><br>
+</div>
+<br>
+<div id="c23_ECU">
+<span class="keyword">abstract</span> ECU <span class="keyword">:</span> <a href="#c16_comp"><span class="reference">comp</span></a><br>
+</div>
+<br>
+<div id="c24_display">
+<span class="keyword">abstract</span> display <span class="keyword">:</span> <a href="#c16_comp"><span class="reference">comp</span></a><br>
+  <span id="c25_server" class="l1">server <span class="keyword">-></span> <a href="#c23_ECU"><span class="reference">ECU</span></a></span><br>
+<span class="l1">`<a href="#c1_options"><span class="reference">options</span></a><br>
+  <span class="l1"><span class="keyword">[</span> <a href="#this"><span class="reference">this</span></a> .<a href="#c17_version"><span class="reference">version</span></a> >= <a href="#c25_server"><span class="reference">server</span></a>.<a href="#c17_version"><span class="reference">version</span></a> <span class="keyword">]</span></span><br>
+</div>
+<br>
+<div id="c43_plaECU">
+<span class="keyword">abstract</span> plaECU <span class="keyword">:</span> <a href="#c23_ECU"><span class="reference">ECU</span></a><br>
+  <span id="c44_display" class="l1">`<a href="#c24_display"><span class="reference">display</span></a> 1..2</span><br>
+    <span class="l2"><span class="keyword">[</span> <a href="#this"><span class="reference">this</span></a> .<a href="#c25_server"><span class="reference">server</span></a> .<a href="#ref"><span class="reference">ref</span></a> = <a href="#this"><span class="reference">this</span></a> .<a href="#parent"><span class="reference">parent</span></a> && <span class="keyword">no</span> <a href="#this"><span class="reference">this</span></a> .<a href="#c35_options"><span class="reference">options</span></a> .<a href="#c5_cache"><span class="reference">cache</span></a> <span class="keyword">]</span></span><br>
+</div>
+<br>
+<div id="c53_ECU1">
+ECU1 <span class="keyword">:</span> <a href="#c43_plaECU"><span class="reference">plaECU</span></a> 1..1<br>
+</div>
+<br>
+<div id="c54_ECU2">
+ECU2 <span class="keyword">:</span> <a href="#c43_plaECU"><span class="reference">plaECU</span></a> 0..1<br>
+  <span id="c55_master" class="l1">0..*c55_master <span class="keyword">->></span> <a href="#c53_ECU1"><span class="reference">ECU1</span></a> 1..1</span><br>
+  <span class="l1"><span class="keyword">[</span> all disj <span class="keyword">:</span><a href="#this"><span class="reference">this</span></a> .<a href="#c55_master"><span class="reference">master</span></a> | <a href="#x"><span class="reference">x</span></a> .<a href="#ref"><span class="reference">ref</span></a> != <a href="#y"><span class="reference">y</span></a> .<a href="#ref"><span class="reference">ref</span></a> <span class="keyword">]</span></span><br>
+</div>
+<br>
+<div id="c65_telematicsSystem">
+telematicsSystem <span class="keyword">:</span> <a href="#clafer"><span class="reference">clafer</span></a> 1..1<br>
+  <span id="c66_channel" class="l1">1..1c66_channel <span class="keyword">:</span> <a href="#clafer"><span class="reference">clafer</span></a> 1..1</span><br>
+    <span id="c67_single" class="l2">0..*c67_single <span class="keyword">:</span> <a href="#clafer"><span class="reference">clafer</span></a> 0..1</span><br>
+    <span id="c68_dual" class="l2">0..*c68_dual <span class="keyword">:</span> <a href="#clafer"><span class="reference">clafer</span></a> 0..1</span><br>
+  <span id="c69_extraDisplay" class="l1">0..*c69_extraDisplay <span class="keyword">:</span> <a href="#clafer"><span class="reference">clafer</span></a> 0..1</span><br>
+  <span id="c70_size" class="l1">1..1c70_size <span class="keyword">:</span> <a href="#clafer"><span class="reference">clafer</span></a> 1..1</span><br>
+    <span id="c71_small" class="l2">0..*c71_small <span class="keyword">:</span> <a href="#clafer"><span class="reference">clafer</span></a> 0..1</span><br>
+    <span id="c72_large" class="l2">0..*c72_large <span class="keyword">:</span> <a href="#clafer"><span class="reference">clafer</span></a> 0..1</span><br>
+  <span class="l1"><span class="keyword">[</span> <a href="#c68_dual"><span class="reference">dual</span></a> <=> <a href="#c54_ECU2"><span class="reference">ECU2</span></a> <a href="#c69_extraDisplay"><span class="reference">extraDisplay</span></a> <=> #<a href="#c53_ECU1"><span class="reference">ECU1</span></a>.<a href="#c44_display"><span class="reference">display</span></a> = 2 <a href="#c69_extraDisplay"><span class="reference">extraDisplay</span></a> <=> <a href="#c54_ECU2"><span class="reference">ECU2</span></a> => #<a href="#c54_ECU2"><span class="reference">ECU2</span></a> .<a href="#c44_display"><span class="reference">display</span></a> = 2&& <span class="keyword">some</span> <a href="#this"><span class="reference">this</span></a> .<a href="#c70_size"><span class="reference">size</span></a> .<a href="#c72_large"><span class="reference">large</span></a> <=> <span class="keyword">no</span> <a href="#c43_plaECU"><span class="reference">plaECU</span></a> .<a href="#c44_display"><span class="reference">display</span></a> .<a href="#c35_options"><span class="reference">options</span></a> .<a href="#c2_size"><span class="reference">size</span></a> .<a href="#c3_small"><span class="reference">small</span></a> && <span class="keyword">some</span> <a href="#this"><span class="reference">this</span></a> .<a href="#c70_size"><span class="reference">size</span></a> .<a href="#c71_small"><span class="reference">small</span></a> <=> <span class="keyword">no</span> <a href="#c43_plaECU"><span class="reference">plaECU</span></a> .<a href="#c44_display"><span class="reference">display</span></a> .<a href="#c35_options"><span class="reference">options</span></a> .<a href="#c2_size"><span class="reference">size</span></a> .<a href="#c4_large"><span class="reference">large</span></a> <span class="keyword">]</span></span><br>
+</div>
+<br>
