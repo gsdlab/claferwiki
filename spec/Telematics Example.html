@@ -2,8 +2,10 @@
 <html>
 <meta http-equiv="X-UA-Compatible" content="IE=9">
 <head><link rel="stylesheet" type="text/css" href="../static/css/custom.css" /></head>
+<body>
 <h2>Module Summary</h2>
 
+<figure>
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
  "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
@@ -120,22 +122,51 @@
 </g>
 </g>
 </svg>
-
+<figcaption>Fig. 1: An overview of the module in the simplified notation</figcaption>
+</figure>
 
 
 
 <h2>Telematics Model</h2>
-<img src="telematics-elements.jpg">
-<div class="code" id="c1_options">
-<span class="keyword">abstract</span> options<br>
-  <span id="c2_size" class="l1"><span class="keyword">xor</span> size</span><br>
-    <span id="c3_small" class="l2">small</span><br>
-    <span id="c4_large" class="l2">large</span><br>   
-  <span id="c5_cache" class="l1">cache <span class="keyword">?</span></span><br>
-    <span id="c6_size" class="l2">size <span class="keyword">:</span> integer</span><br>
-      <span id="c7_fixed" class="l3">fixed <span class="keyword">?</span></span><br>
-  <span class="l1"><span class="keyword">[</span> <a href="#c3_small"><span class="reference">small</span></a> && <a href="#c5_cache"><span class="reference">cache</span></a> => <a href="#c7_fixed"><span class="reference">fixed</span></a> <span class="keyword">]</span></span><br>
+<p>
+Vehicle telematics systems integrate multiple telecommunication and information processing functions in an automobile, 
+such as navigation, driving assistance, emergency and warning systems, hands-free phone, and entertainment functions,
+and present them to the driver and passengers via multimedia displays. 
+</p>
+<p>
+A concrete telematics system can support either
+a single or two channels; two channels afford independent programming for the
+driver and the passengers. The choice is represented as the xor-group
+channel. By default, each channel has one associated
+display; however, we can add one extra display per channel, as indicated by
+the optional feature <a href="#c69_extraDisplay">extraDisplay</a>. 
+Finally, we can choose <a href="#c71_large">large</a> or <a href="#c71_small">small</a> displays (displaySize).
+</p>
+<br>
+<div class="code" id="c65_telematicsSystem">
+telematicsSystem<br>
+  <span id="c66_channel" class="l1"><span class="keyword">xor</span> channel</span><br>
+    <span id="c67_single" class="l2">single</span><br>
+    <span id="c68_dual" class="l2">dual</span><br>
+  <span id="c69_extraDisplay" class="l1">extraDisplay <span class="keyword">?</span></span><br>
+  <span id="c70_size" class="l1"><span class="keyword">xor</span> size</span></a></span><br>
+    <span id="c71_small" class="l2">small</span><br>
+    <span id="c72_large" class="l2">large</span><br>
 </div>
+<p>
+There are two types of components: <a href="#c23_ECU">ECU</a>s (electronic control units) and <a href="#c24_display">display</a>s.
+Each display has exactly one <a href="#c23_ECU">ECU</a> as its server. All components have a version.
+Components themselves may have <a href="#c1_options">options</a>, like the display size or <a href="#c5_cache">cache</a>. 
+We can also specify the cache size and decide whether it is <a href="#c7_fixed">fixed</a> or
+can be updated dynamically. Thus, the solution space model consists of a class
+model of component types and a feature model of component options.
+</p>
+<br>
+<figure>
+  <img src="telematics-elements.jpg" width="600px">
+  <figcaption>Fig. 2: Components of a telematics system</figcaption>
+</figure>
+
 <br>
 <div class="code" id="c16_comp">
 <span class="keyword">abstract</span> comp<br>
@@ -153,6 +184,37 @@
   <span class="l1"><span class="keyword">[</span> <a href="#this"><span class="reference">this</span></a> .<a href="#c17_version"><span class="reference">version</span></a> >= <a href="#c25_server"><span class="reference">server</span></a>.<a href="#c17_version"><span class="reference">version</span></a> <span class="keyword">]</span></span><br>
 </div>
 <br>
+<div class="code" id="c1_options">
+<span class="keyword">abstract</span> options<br>
+  <span id="c2_size" class="l1"><span class="keyword">xor</span> size</span><br>
+    <span id="c3_small" class="l2">small</span><br>
+    <span id="c4_large" class="l2">large</span><br>   
+  <span id="c5_cache" class="l1">cache <span class="keyword">?</span></span><br>
+    <span id="c6_size" class="l2">size <span class="keyword">:</span> integer</span><br>
+      <span id="c7_fixed" class="l3">fixed <span class="keyword">?</span></span><br>
+  <span class="l1"><span class="keyword">[</span> <a href="#c3_small"><span class="reference">small</span></a> && <a href="#c5_cache"><span class="reference">cache</span></a> => <a href="#c7_fixed"><span class="reference">fixed</span></a> <span class="keyword">]</span></span><br>
+</div>
+<br>
+<p>
+The architectural meta-model is very generic: the meta-model describes infinitely
+many different products, each corresponding to its particular instance. We would
+like to specialize and extend the meta-model to create a particular template.
+A template makes most of the architectural structure fixed, but leaves some
+points of variability. 
+</p>
+<p>
+a concrete product must have at least one ECU and thus we create
+ECU1 to represent the mandatory instance. 
+Then, optional instances are represented using classes with cardinality
+0..1. Our product line can optionally have another ECU, represented by
+ECU2.
+Similarly, each ECU has either one display or two displays, but none of the
+displays has cache. Besides, we need to constrain the server reference in each
+display in plaECU, so that it points to its associated ECU - this constraint is nested under
+display. The reference parent points to the current instance of
+plaECU, which is either ECU1 or ECU2.Also, ECU2 extends the base
+type with master,pointing to ECU1 as the main control unit.
+</p>
 <div class="code" id="c43_plaECU">
 <span class="keyword">abstract</span> plaECU <span class="keyword">:</span> <a href="#c23_ECU"><span class="reference">ECU</span></a><br>
   <span id="c44_display" class="l1">`<a href="#c24_display"><span class="reference">display</span></a> 1..2</span><br>
@@ -169,15 +231,27 @@ ECU2 <span class="keyword">:</span> <a href="#c43_plaECU"><span class="reference
   <span id="c55_master" class="l1">master <span class="keyword">-></span> <a href="#c53_ECU1"><span class="reference">ECU1</span></a></span><br>
 </div>
 <br>
-<div class="code" id="c65_telematicsSystem">
-telematicsSystem<br>
-  <span id="c66_channel" class="l1"><span class="keyword">xor</span> channel</span><br>
-    <span id="c67_single" class="l2">single</span><br>
-    <span id="c68_dual" class="l2">dual</span><br>
-  <span id="c69_extraDisplay" class="l1">extraDisplay <span class="keyword">?</span></span><br>
-  <span id="c70_size" class="l1"><span class="keyword">xor</span> size</span></a></span><br>
-    <span id="c71_small" class="l2">small</span><br>
-    <span id="c72_large" class="l2">large</span><br>
+<figure>
+  <img src="Telematics Architecture.jpg" >
+  <figcaption>Fig. 3: A possible domain-specific rendering of the product-line architecture</figcaption>
+</figure>
+<p>
+Having defined the architectural template, we are ready to expose the remaining
+variability points as a product-line feature model. 
+A set of constraints coupling its features to the variability
+points of the template. Note that the template allowed the number of displays
+(ECU1.display and ECU2.display) and the size of every display to vary independently;
+however, we further restrict the variability in the feature model, requiring
+either all present ECUs to have two displays or all to have no extra display and
+either all present displays to be small or all to be large. Also note that we opted
+to explain the meaning of each feature in terms of the model elements to be
+selected rather than defining the presence condition of each element in terms of
+the features. Both approaches are available in Clafer, however.
+Constraints allow us restricting a model to a single instance. The following code block shows
+a top-level constraint specifying a single product, with two ECUs, two large
+displays per ECU, and all components in version 1. 
+</p>
+<div class="code">
   <span class="l1"><span class="keyword">[</span> <a href="#c68_dual"><span class="reference">dual</span></a> <=> <a href="#c54_ECU2"><span class="reference">ECU2</span></a> <span class="keyword">]</span></span><br>
   <span class="l1"><span class="keyword">[</span> <a href="#c69_extraDisplay"><span class="reference">extraDisplay</span></a> <=> #<a href="#c53_ECU1"><span class="reference">ECU1</span></a>.<a href="#c44_display"><span class="reference">display</span></a> = 2 <span class="keyword">]</span></span><br>
   <span class="l1"><span class="keyword">[</span> <a href="#c69_extraDisplay"><span class="reference">extraDisplay</span></a> <=> <a href="#c54_ECU2"><span class="reference">ECU2</span></a> => #<a href="#c54_ECU2"><span class="reference">ECU2</span></a> .<a href="#c44_display"><span class="reference">display</span></a> = 2 <span class="keyword">]</span></span><br>
@@ -185,4 +259,5 @@ telematicsSystem<br>
   <span class="l1"><span class="keyword">[</span> <a href="#c71_small"><span class="reference">small</span></a> <=> <span class="keyword">!</span><a href="#c43_plaECU"><span class="reference">plaECU</span></a>.<a href="#c44_display"><span class="reference">display</span></a>.<a href="#c35_options"><span class="reference">options</span></a>.<a href="#c2_size"><span class="reference">size</span></a>.<a href="#c4_large"><span class="reference">large</span></a> <span class="keyword">]</span></span><br>
 </div>
 <br>
+</body>
 </html>

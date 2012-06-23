@@ -3,6 +3,7 @@
 
 /* Put your custom style modifications here: */
 
+body { font-size: 18px }
 .identifier{}
 .keyword{font-weight:bold}
 .reference{}
