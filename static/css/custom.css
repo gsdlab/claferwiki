@@ -6,7 +6,7 @@
 .identifier{}
 .keyword{font-weight:bold}
 .reference{}
-.code { background-color: lightgray}
+.code { background-color: lightgray; font-size: 18px }
 
 .l0{}
 .l1{padding-left:20px}

@@ -1,5 +1,6 @@
-digraph telematics_simplified
+digraph telematics_simplified 
 {
+  rankdir="BT"
   node [shape = box];
   c1_options [label="abstract options" URL="#c1_options" tooltip="abstract options&#10;  xor size&#10;    small&#10;    large&#10;  cache ?&#10;    size : integer&#10;      fixed ?&#10;  [small && cache => fixed]"];
   c16_comp [label="abstract comp" URL="#c16_comp" tooltip="abstract comp&#10;  version : integer = 1 + 2"];
@@ -7,16 +8,16 @@ digraph telematics_simplified
   c23_ECU -> c16_comp [arrowhead=onormal];
   c24_display [label="abstract display : comp" URL="#c24_display" tooltip="abstract display : comp&#10;  server -> ECU&#10;  `options&#10;  [this.version >= server.version]"];
   c24_display -> c16_comp [arrowhead=onormal];
-  c24_display -> c1_options [style=dashed arrowhead=onormal];
-  c24_display -> c23_ECU [arrowhead=vee];
+  c24_display -> c1_options [style=dashed arrowhead=onormal constraint=false];
+  c24_display -> c23_ECU [arrowhead=vee constraint=false label="server"];
   c43_plaECU [label="abstract plaECU : ECU" URL="#c43_plaECU" tooltip="abstract plaECU : ECU&#10;  `display 1..2&#10;    [server = parent&#10;     !options.cache]"];
   c43_plaECU -> c23_ECU [arrowhead=onormal];
-  c43_plaECU -> c24_display [style=dashed arrowhead=onormal];
+  c43_plaECU -> c24_display [style=dashed arrowhead=onormal constraint=false];
   c53_ECU1 [label="ECU1 : plaECU" URL="#c53_ECU1" tooltip="ECU1 : plaECU"];
   c53_ECU1 -> c43_plaECU [arrowhead=onormal];
   c54_ECU2 [label="ECU2 : plaECU ?" URL="#c7_ECU2" tooltip="ECU2 : plaECU ?&#10;  master -> ECU1"];
   c54_ECU2 -> c43_plaECU [arrowhead=onormal];
-  c54_ECU2 -> c53_ECU1 [arrowhead=vee];
+  c54_ECU2 -> c53_ECU1 [arrowhead=vee constraint=false label="master"];
   c65_telematicsSystem [label="telematicsSystem" URL="#c65_telematicsSystem" tooltip="telematicsSystem&#10;  xor channel&#10;    single&#10;    dual&#10;  extraDisplay ?&#10;  xor size&#10;    small&#10;    large&#10;  [dual <=> ECU2&#10;   extraDisplay <=> #ECU1.display = 2&#10;   extraDisplay <=> (ECU2 => #ECU2.display = 2)&#10;   large <=> !plaECU.display.options.size.small&#10;   small <=> !plaECU.display.options.size.large]"];
 }
 //graph is made by the following command: dot -Tsvg -o "Telematics Example.svg" "Telematics Example.dot"
