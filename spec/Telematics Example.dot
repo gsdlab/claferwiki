@@ -15,7 +15,7 @@ digraph telematics_simplified
   c43_plaECU -> c24_display [style=dashed arrowhead=onormal constraint=false];
   c53_ECU1 [label="ECU1 : plaECU" URL="#c53_ECU1" tooltip="ECU1 : plaECU"];
   c53_ECU1 -> c43_plaECU [arrowhead=onormal];
-  c54_ECU2 [label="ECU2 : plaECU ?" URL="#c7_ECU2" tooltip="ECU2 : plaECU ?&#10;  master -> ECU1"];
+  c54_ECU2 [label="ECU2 : plaECU ?" URL="#c54_ECU2" tooltip="ECU2 : plaECU ?&#10;  master -> ECU1"];
   c54_ECU2 -> c43_plaECU [arrowhead=onormal];
   c54_ECU2 -> c53_ECU1 [arrowhead=vee constraint=false label="master"];
   c65_telematicsSystem [label="telematicsSystem" URL="#c65_telematicsSystem" tooltip="telematicsSystem&#10;  xor channel&#10;    single&#10;    dual&#10;  extraDisplay ?&#10;  xor size&#10;    small&#10;    large&#10;  [dual <=> ECU2&#10;   extraDisplay <=> #ECU1.display = 2&#10;   extraDisplay <=> (ECU2 => #ECU2.display = 2)&#10;   large <=> !plaECU.display.options.size.small&#10;   small <=> !plaECU.display.options.size.large]"];
