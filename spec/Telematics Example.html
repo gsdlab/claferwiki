@@ -3,7 +3,15 @@
 <meta http-equiv="X-UA-Compatible" content="IE=9">
 <head><link rel="stylesheet" type="text/css" href="../static/css/custom.css" /></head>
 <body>
-<h2>Module Summary</h2>
+
+<h2>Telematics Product Line</h2>
+<p>
+Vehicle telematics systems integrate multiple telecommunication and information processing functions in an automobile, 
+such as navigation, driving assistance, emergency and warning systems, hands-free phone, and entertainment functions,
+and present them to the driver and passengers via multimedia displays. 
+</p>
+
+<h3>Summary of concepts</h3>
 
 <figure>
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
@@ -125,14 +133,7 @@
 <figcaption>Fig. 1: An overview of the module in the simplified notation</figcaption>
 </figure>
 
-
-
-<h2>Telematics Model</h2>
-<p>
-Vehicle telematics systems integrate multiple telecommunication and information processing functions in an automobile, 
-such as navigation, driving assistance, emergency and warning systems, hands-free phone, and entertainment functions,
-and present them to the driver and passengers via multimedia displays. 
-</p>
+<h3>Detailed model</h3>
 <p>
 A concrete telematics system can support either
 a single or two channels; two channels afford independent programming for the
@@ -140,7 +141,7 @@ driver and the passengers. The choice is represented as the xor-group
 channel. By default, each channel has one associated
 display; however, we can add one extra display per channel, as indicated by
 the optional feature <a href="#c69_extraDisplay">extraDisplay</a>. 
-Finally, we can choose <a href="#c71_large">large</a> or <a href="#c71_small">small</a> displays (displaySize).
+Finally, we can choose <a href="#c72_large">large</a> or <a href="#c71_small">small</a> displays (displaySize).
 </p>
 <br>
 <div class="code" id="c65_telematicsSystem">
@@ -252,12 +253,15 @@ a top-level constraint specifying a single product, with two ECUs, two large
 displays per ECU, and all components in version 1. 
 </p>
 <div class="code">
-  <span class="l1"><span class="keyword">[</span> <a href="#c68_dual"><span class="reference">dual</span></a> <=> <a href="#c54_ECU2"><span class="reference">ECU2</span></a> <span class="keyword">]</span></span><br>
-  <span class="l1"><span class="keyword">[</span> <a href="#c69_extraDisplay"><span class="reference">extraDisplay</span></a> <=> #<a href="#c53_ECU1"><span class="reference">ECU1</span></a>.<a href="#c44_display"><span class="reference">display</span></a> = 2 <span class="keyword">]</span></span><br>
-  <span class="l1"><span class="keyword">[</span> <a href="#c69_extraDisplay"><span class="reference">extraDisplay</span></a> <=> <a href="#c54_ECU2"><span class="reference">ECU2</span></a> => #<a href="#c54_ECU2"><span class="reference">ECU2</span></a> .<a href="#c44_display"><span class="reference">display</span></a> = 2 <span class="keyword">]</span></span><br>
-  <span class="l1"><span class="keyword">[</span> <a href="#c72_large"><span class="reference">large</span></a> <=> <span class="keyword">!</span><a href="#c43_plaECU"><span class="reference">plaECU</span></a>.<a href="#c44_display"><span class="reference">display</span></a>.<a href="#c35_options"><span class="reference">options</span></a>.<a href="#c2_size"><span class="reference">size</span></a>.<a href="#c3_small"><span class="reference">small</span></a> <span class="keyword">]</span></span><br>
-  <span class="l1"><span class="keyword">[</span> <a href="#c71_small"><span class="reference">small</span></a> <=> <span class="keyword">!</span><a href="#c43_plaECU"><span class="reference">plaECU</span></a>.<a href="#c44_display"><span class="reference">display</span></a>.<a href="#c35_options"><span class="reference">options</span></a>.<a href="#c2_size"><span class="reference">size</span></a>.<a href="#c4_large"><span class="reference">large</span></a> <span class="keyword">]</span></span><br>
+<span class="keyword">[</span> <a href="#c68_dual"><span class="reference">dual</span></a> <=> <a href="#c54_ECU2"><span class="reference">ECU2</span></a> <span class="keyword">]</span><br>
+<span class="keyword">[</span> <a href="#c69_extraDisplay"><span class="reference">extraDisplay</span></a> <=> #<a href="#c53_ECU1"><span class="reference">ECU1</span></a>.<a href="#c44_display"><span class="reference">display</span></a> = 2 <span class="keyword">]</span><br>
+<span class="keyword">[</span> <a href="#c69_extraDisplay"><span class="reference">extraDisplay</span></a> <=> <a href="#c54_ECU2"><span class="reference">ECU2</span></a> => #<a href="#c54_ECU2"><span class="reference">ECU2</span></a> .<a href="#c44_display"><span class="reference">display</span></a> = 2 <span class="keyword">]</span><br>
+<span class="keyword">[</span> <a href="#c72_large"><span class="reference">large</span></a> <=> <span class="keyword">!</span><a href="#c43_plaECU"><span class="reference">plaECU</span></a>.<a href="#c44_display"><span class="reference">display</span></a>.<a href="#c35_options"><span class="reference">options</span></a>.<a href="#c2_size"><span class="reference">size</span></a>.<a href="#c3_small"><span class="reference">small</span></a> <span class="keyword">]</span><br>
+<span class="keyword">[</span> <a href="#c71_small"><span class="reference">small</span></a> <=> <span class="keyword">!</span><a href="#c43_plaECU"><span class="reference">plaECU</span></a>.<a href="#c44_display"><span class="reference">display</span></a>.<a href="#c35_options"><span class="reference">options</span></a>.<a href="#c2_size"><span class="reference">size</span></a>.<a href="#c4_large"><span class="reference">large</span></a> <span class="keyword">]</span><br>
 </div>
-<br>
+<figure>
+  <img src="telematics-mapping.jpg" >
+  <figcaption>Fig. 4: A possible rendering of the mapping constraints</figcaption>
+</figure>
 </body>
 </html>
