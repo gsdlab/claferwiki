@@ -30,3 +30,6 @@ body { font-size: 18px }
 .l18{padding-left:360px}
 .l19{padding-left:380px}
 .l20{padding-left:400px}
+
+a[href$='Lookup failed'] {color: red}
+a[href$='Uid not found'] {color: red}
