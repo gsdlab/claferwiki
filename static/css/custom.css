@@ -33,3 +33,4 @@ body { font-size: 18px }
 
 a[href$='Lookup failed'] {color: red}
 a[href$='Uid not found'] {color: red}
+a[href$='Ambiguous name'] {color: yellow}
