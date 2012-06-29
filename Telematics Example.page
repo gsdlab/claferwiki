@@ -167,7 +167,7 @@ can be updated dynamically. Thus, the solution space model consists of a class
 model of component types and a feature model of component options.
 
 <figure>
-  <img src="telematics-elements.jpg" width="600px">
+  <img src="./telematics-elements.jpg" width="600px">
   <figcaption>Fig. 2: Components of a telematics system</figcaption>
 </figure>
 
@@ -261,6 +261,6 @@ displays per ECU, and all components in version 1.
 <span class="keyword">[</span> <a href="#c71_small"><span class="reference">small</span></a> <=> <span class="keyword">!</span><a href="#c43_plaECU"><span class="reference">plaECU</span></a>.<a href="#c44_display"><span class="reference">display</span></a>.<a href="#c35_options"><span class="reference">options</span></a>.<a href="#c2_size"><span class="reference">size</span></a>.<a href="#c4_large"><span class="reference">large</span></a> <span class="keyword">]</span><br>
 </div>
 <figure>
-  <img src="telematics-mapping.jpg" >
+  <img src="/telematics-mapping.jpg" >
   <figcaption>Fig. 4: A possible rendering of the mapping constraints</figcaption>
 </figure>
