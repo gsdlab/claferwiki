@@ -1,7 +1,14 @@
 This test suite demonstrates how an example model can be processed.
 
 # Example model
-Telematics Example (from [](http://gsd.uwaterloo.ca/node/291)):
+[Telematics Example](http://gsd.uwaterloo.ca/node/291):
+
+## Model Summary
+
+~~~{.clafer .cummary} 
+~~~
+
+## Details
 
 Generic PLA
 
