@@ -12,11 +12,16 @@ cleanup x = liftIO $ do
   createDirectoryIfMissing True "static/clafer/"
   tempExists <- doesFileExist "static/clafer/temp.txt"
   outputExists <- doesFileExist "static/clafer/output.txt"
+  nameExists <- doesFileExist "static/clafer/name.txt"
   if tempExists
      then do removeFile "static/clafer/temp.txt"
              return x
      else return x
   if outputExists
      then do removeFile "static/clafer/output.txt"
+             return x
+     else return x
+  if nameExists
+     then do removeFile "static/clafer/name.txt"
              return x
      else return x

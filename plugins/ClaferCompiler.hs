@@ -30,9 +30,12 @@ compile file args = do
   let CompilerResult {extension = ext,
                       outputCode = output,
                       statistics = stats} = generateHtml args (addModuleFragment args content);
-  writeFile ("static/clafer/" ++ uniqueName content ++ "." ++ ext)
+      name = uniqueName content
+  writeFile ("static/clafer/" ++ name ++ "." ++ ext)
             ("<head><link rel=\"stylesheet\" type=\"text/css\" href=\"../css/custom.css\" /></head>\n" ++ output)
-  writeFile "static/clafer/output.txt" (unlines $ addNumbers (lines content) 1)
+  writeFile "static/clafer/output.txt" content
+  writeFile "static/clafer/name.txt" name
+  writeFile ("static/clafer/" ++ name ++ ".cfr") content
   removeFile file
 
 -- this is added so that it won't break if the wiki contains code blocks with no headers
@@ -43,8 +46,4 @@ first (x:xs) = x
 uniqueName :: String -> String
 uniqueName = showDigest . sha1 . fromString
 
-addNumbers :: [String] -> Int -> [String]
-addNumbers [] _ = []
-addNumbers (x:xs) index
-  | x == "//# FRAGMENT" = ("End of fragment " ++ (show index)) : "//# FRAGMENT" : addNumbers xs (index + 1)
-  | otherwise = x : addNumbers xs index
+

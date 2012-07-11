@@ -2,6 +2,12 @@ module ClaferWriter (plugin) where
 
 import Network.Gitit.Interface
 import Control.Monad.Trans (liftIO)
+import System.Process (readProcessWithExitCode)
+import System.Exit (ExitCode(ExitSuccess))
+import System.FilePath ((</>))
+import Language.Clafer (generateGraph, compileM, addModuleFragment, defaultClaferArgs,
+                        CompilerResult(..))
+import Language.Clafer.ClaferArgs
 
 plugin :: Plugin
 plugin = mkPageTransformM readBlock
@@ -11,6 +17,19 @@ readBlock (CodeBlock (id, classes, namevals) contents)
   | "clafer" `elem` classes && (not $ "summary" `elem` classes) = liftIO $ do
     contents <- getBlock
     return $ CodeBlock (id, classes, namevals) contents
+  | "clafer" `elem` classes && "summary" `elem` classes = do
+      let args = defaultClaferArgs{mode=Just Html, keep_unused=Just True}
+      cfg <- askConfig
+      liftIO $ do
+      fileName <- readFile "static/clafer/name.txt"
+      content <- readFile $ "static/clafer/" ++ fileName ++ ".cfr"
+      let CompilerResult {extension = ext,
+                          outputCode = output,
+                          statistics = stats} = generateGraph args (addModuleFragment args content) "Summary";
+      _ <- readProcessWithExitCode "dot" ["-Tsvg", "-o", "static/clafer/summary.svg"] output
+      out <- readFile "static/clafer/summary.svg"
+      return $ RawBlock "html" (out ++ "<br>\nModule Statistics<br>\n<span class=\"summary\">" ++ stats ++
+                                 "</class><br>\n<a href=clafer/" ++ fileName ++ ".cfr>Click here</a> to download the .cfr file")
 readBlock x = return x
 
 --this is added so that it won't break if the wiki contains code blocks with no headers
