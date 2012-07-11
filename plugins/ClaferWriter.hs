@@ -28,8 +28,8 @@ readBlock (CodeBlock (id, classes, namevals) contents)
                           statistics = stats} = generateGraph args (addModuleFragment args content) "Summary";
       _ <- readProcessWithExitCode "dot" ["-Tsvg", "-o", "static/clafer/summary.svg"] output
       out <- readFile "static/clafer/summary.svg"
-      return $ RawBlock "html" (out ++ "<br>\nModule Statistics<br>\n<span class=\"summary\">" ++ stats ++
-                                 "</class><br>\n<a href=clafer/" ++ fileName ++ ".cfr>Click here</a> to download the .cfr file")
+      return $ RawBlock "html" (out ++ "<br>\nModule Statistics:<br>\n<span class=\"summary\">" ++ stats ++
+                                 "</class><br>\nModule Downloads: <a href=clafer/" ++ fileName ++ ".cfr>[.cfr]</a> <a href=clafer/" ++ fileName ++ ".html>[.html]</a>")
 readBlock x = return x
 
 --this is added so that it won't break if the wiki contains code blocks with no headers
