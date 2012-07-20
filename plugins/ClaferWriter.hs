@@ -16,7 +16,7 @@ readBlock :: Block -> PluginM Block
 readBlock (CodeBlock (id, classes, namevals) contents)
   | "clafer" `elem` classes && (not $ "summary" `elem` classes) = liftIO $ do
     contents <- getBlock
-    return $ RawBlock "html" contents
+    return $ RawBlock "html" ("<div class=\"code\">" ++ contents ++ "</div>")
   {-| "clafer" `elem` classes && "summary" `elem` classes = do
       let args = defaultClaferArgs{mode=Just Html, keep_unused=Just True}
       cfg <- askConfig
