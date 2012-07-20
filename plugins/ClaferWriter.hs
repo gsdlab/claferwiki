@@ -35,7 +35,7 @@ readBlock (CodeBlock (id, classes, namevals) contents)
               return CompilerResult { extension = ext, outputCode = output, statistics = stats, mappingToAlloy = Nothing }
       _ <- readProcessWithExitCode "dot" ["-Tsvg", "-o", "static/clafer/summary.svg"] output
       out <- readFile "static/clafer/summary.svg"
-      return $ RawBlock "html" (out ++ "<br>\nModule Statistics:<br>\n<span class=\"summary\">" ++ stats ++
+      return $ RawBlock "html" (out ++ "<br>\nModule Statistics:<br>\n<span class=\"summary\">" ++ unlines (map (++"<br>") (lines stats)) ++
                                  "</class><br>\nModule Downloads: <a href=clafer/" ++ fileName ++ ".cfr>[.cfr]</a> <a href=clafer/" ++ fileName ++ ".html>[.html]</a>")
 readBlock x = return x
 
