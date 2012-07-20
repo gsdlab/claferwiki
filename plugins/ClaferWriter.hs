@@ -5,8 +5,7 @@ import Control.Monad.Trans (liftIO)
 import System.Process (readProcessWithExitCode)
 import System.Exit (ExitCode(ExitSuccess))
 import System.FilePath ((</>))
-import Language.Clafer (addModuleFragment, defaultClaferArgs,
-                        CompilerResult(..))
+import Language.Clafer
 import Language.Clafer.ClaferArgs
 
 plugin :: Plugin
@@ -17,19 +16,27 @@ readBlock (CodeBlock (id, classes, namevals) contents)
   | "clafer" `elem` classes && (not $ "summary" `elem` classes) = liftIO $ do
     contents <- getBlock
     return $ RawBlock "html" ("<div class=\"code\">" ++ contents ++ "</div>")
-  {-| "clafer" `elem` classes && "summary" `elem` classes = do
-      let args = defaultClaferArgs{mode=Just Html, keep_unused=Just True}
+  | "clafer" `elem` classes && "summary" `elem` classes = do
+      let args = defaultClaferArgs{mode=Just Graph, keep_unused=Just True}
       cfg <- askConfig
       liftIO $ do
       fileName <- readFile "static/clafer/name.txt"
       content <- readFile $ "static/clafer/" ++ fileName ++ ".cfr"
-      let CompilerResult {extension = ext,
-                          outputCode = output,
-                          statistics = stats} = generateGraph args (addModuleFragment args content) "Summary";
+      Right CompilerResult { extension = ext,
+                             outputCode = output,
+                             statistics = stats,
+                             mappingToAlloy = Nothing } <- runClaferT args $ do
+              addModuleFragment content
+              parse
+              compile
+              CompilerResult {extension = ext,
+                              outputCode = output,
+                              statistics = stats} <- generate
+              return CompilerResult { extension = ext, outputCode = output, statistics = stats, mappingToAlloy = Nothing }
       _ <- readProcessWithExitCode "dot" ["-Tsvg", "-o", "static/clafer/summary.svg"] output
       out <- readFile "static/clafer/summary.svg"
       return $ RawBlock "html" (out ++ "<br>\nModule Statistics:<br>\n<span class=\"summary\">" ++ stats ++
-                                 "</class><br>\nModule Downloads: <a href=clafer/" ++ fileName ++ ".cfr>[.cfr]</a> <a href=clafer/" ++ fileName ++ ".html>[.html]</a>")-}
+                                 "</class><br>\nModule Downloads: <a href=clafer/" ++ fileName ++ ".cfr>[.cfr]</a> <a href=clafer/" ++ fileName ++ ".html>[.html]</a>")
 readBlock x = return x
 
 --this is added so that it won't break if the wiki contains code blocks with no headers

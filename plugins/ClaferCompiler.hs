@@ -54,19 +54,6 @@ compileFragments args model =
         fragments' []                  = []
         fragments' ("//# FRAGMENT":xs) = fragments' xs
         fragments' model               = takeWhile (/= "//# FRAGMENT") model : fragments' (dropWhile (/= "//# FRAGMENT") model)
-        
-{-compile file args = do
-  content <- readFile file
-  let CompilerResult {extension = ext,
-                      outputCode = result,
-                      statistics = stats} = generateHtml args (addModuleFragment args content);
-      name = uniqueName content
-  writeFile ("static/clafer/" ++ name ++ "." ++ ext)
-            ("<head><link rel=\"stylesheet\" type=\"text/css\" href=\"../css/custom.css\" /></head>\n" ++ output)
-  writeFile "static/clafer/output.txt" content
-  writeFile "static/clafer/name.txt" name
-  writeFile ("static/clafer/" ++ name ++ ".cfr") content
-  removeFile file-}
 
 -- this is added so that it won't break if the wiki contains code blocks with no headers
 first [] = []
@@ -75,5 +62,3 @@ first (x:xs) = x
 -- | Generate a unique filename given the file's contents.
 uniqueName :: String -> String
 uniqueName = showDigest . sha1 . fromString
-
-
