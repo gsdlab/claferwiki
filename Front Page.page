@@ -1,10 +1,3 @@
-[Clafer Wiki Test Suite]()
-
-[Mockup]() sample
-
-[Mockup of Telematics Example](Telematics Example)
-
-
 Overview
 ========
 
@@ -23,55 +16,11 @@ Examples
 
 [Clafer Wiki Test Suite]()
 
-The intended output
-===================
+[Merchandise Financial Planning]()
 
-Our goal is to achieve the following HTML rendering:
+Mockups
+=======
 
-- the following example model 
+[Mockup]() Example from [Issue 43](http://gsd.uwaterloo.ca:8888/question/205/generate-clafer-models-in-html)
 
-```
-abstract A
-    b ?
-    c -> C
-
-abstract B
-    d ?
-
-abstract C : B
-
-anA : A
-    [ b ]
-    [ c = aC ]
-
-aC : C
-    [ no d ]
-```
-
-- should be rendered as follows:
-
-<div id="c1_A">
-<b>abstract</b> A<br>
-<span id="c2_b" style="padding-left:20px">b <b>?</b></span><br>
-<span id="c3_c" style="padding-left:20px">c <b>-></b> <a href="#c6_C">C</a></span>
-</div>
-<br>
-<div id="c4_B">
-<b>abstract</b> B<br>
-<span id="c5_d" style="padding-left:20px">d <b>?</b></span>
-</div>
-<br>
-<div id="c6_C">
-<b>abstract</b> C <b>:</b> <a href="#c4_B">B</a>
-</div>
-<br>
-<div id="c7_anA">
-anA <b>:</b> <a href="#c1_A">A</a><br>
-<span style="padding-left:20px"><b>[</b> <a href="#c2_b">b</a> <b>]</b></span><br>
-<span style="padding-left:20px"><b>[</b> <a href="#c3_c">c</a> <b>=</b> <a href="#c8_aC">aC</a> <b>]</b></span>
-</div>
-<br>
-<div id="c8_aC">
-aC <b>:</b> <a href="#c6_C">C</a><br>
-<span style="padding-left:20px"><b>[</b> <b>no</b> <a href="#c5_d">d</a> <b>]</b></span>
-</div>
+[Mockup of Telematics Example](Telematics Example)

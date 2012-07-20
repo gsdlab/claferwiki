@@ -5,8 +5,8 @@ This test suite demonstrates how an example model can be processed.
 
 ## Model Summary
 
-~~~{.clafer .summary} 
-~~~
+```{.clafer .summary} 
+```
 
 ## Details
 
@@ -21,12 +21,24 @@ abstract options
         size : integer
             fixed ?
     [small && cache => fixed]
+```
 
+some wiki text inbetween fragments
+
+``` {.clafer}
 abstract comp
     version : integer = 1 + 2
+```
 
+some wiki text inbetween fragments
+
+``` {.clafer}
 abstract ECU : comp
+```
 
+some wiki text inbetween fragments
+
+``` {.clafer}
 abstract display : comp
     server -> ECU
     `options
