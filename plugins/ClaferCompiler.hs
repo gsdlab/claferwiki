@@ -42,7 +42,7 @@ compileFragments args model =
                         statistics = stats} <- generateHtml
         liftIO $ do
           writeFile ("static/clafer/" ++ name ++ "." ++ ext)
-                    ("<head><link rel=\"stylesheet\" type=\"text/css\" href=\"../css/custom.css\" /></head>\n" ++ output)
+                    (header ++ css ++ "</head>\n<body>\n" ++ output ++ "</body>\n</html>")
           writeFile "static/clafer/output.html" $ output ++ "\n<!-- # FRAGMENT -->"
           writeFile "static/clafer/name.txt" name
           writeFile ("static/clafer/" ++ name ++ ".cfr") model
