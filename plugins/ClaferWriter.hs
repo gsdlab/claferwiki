@@ -3,6 +3,7 @@ module ClaferWriter (plugin) where
 import Network.Gitit.Interface
 import Control.Monad.Trans (liftIO)
 import System.Process (readProcessWithExitCode)
+import System.Directory (doesFileExist)
 import System.Exit (ExitCode(ExitSuccess))
 import System.FilePath ((</>))
 import Language.Clafer
@@ -21,33 +22,38 @@ readBlock (CodeBlock (id, classes, namevals) contents)
       cfg <- askConfig
       liftIO $ do
       fileName <- readFile "static/clafer/name.txt"
-      content <- readFile $ "static/clafer/" ++ fileName ++ ".cfr"
-      Right CompilerResult { extension = ext,
-                             outputCode = output,
-                             statistics = stats,
-                             mappingToAlloy = Nothing } <- runClaferT args $ do
-              addModuleFragment content
-              parse
-              compile
-              CompilerResult {extension = ext,
-                              outputCode = output,
-                              statistics = stats} <- generate
-              return CompilerResult { extension = ext, outputCode = output, statistics = stats, mappingToAlloy = Nothing }
-      _ <- readProcessWithExitCode "dot" ["-Tsvg", "-o", "static/clafer/summary.svg"] output
-      out <- readFile "static/clafer/summary.svg"
-      return $ RawBlock "html" (out ++ "<br>\nModule Statistics:<br>\n<span class=\"summary\">" ++ unlines (map (++"<br>") (lines stats)) ++
-                                 "</class><br>\nModule Downloads: <a href=clafer/" ++ fileName ++ ".cfr>[.cfr]</a> <a href=clafer/" ++ fileName ++ ".html>[.html]</a>")
+      fileExists <- doesFileExist $ "static/clafer/" ++ fileName ++ ".cfr"
+      if fileExists--file may not exist if compilation failed
+      then do content <- readFile $ "static/clafer/" ++ fileName ++ ".cfr"
+              Right CompilerResult { extension = ext,
+                                     outputCode = output,
+                                     statistics = stats,
+                                     mappingToAlloy = Nothing } <- runClaferT args $ do
+                                                                    addModuleFragment content
+                                                                    parse
+                                                                    compile
+                                                                    CompilerResult {extension = ext,
+                                                                                    outputCode = output,
+                                                                                    statistics = stats} <- generate
+                                                                    return CompilerResult { extension = ext, outputCode = output, statistics = stats, mappingToAlloy = Nothing }
+              _ <- readProcessWithExitCode "dot" ["-Tsvg", "-o", "static/clafer/summary.svg"] output
+              out <- readFile "static/clafer/summary.svg"
+              return $ RawBlock "html" (out ++ "<br>\nModule Statistics:<br>\n<span class=\"summary\">" ++ unlines (map (++"<br>") (lines stats)) ++
+                                              "</class><br>\nModule Downloads: <a href=clafer/" ++ fileName ++ ".cfr>[.cfr]</a> <a href=clafer/" ++ fileName ++ ".html>[.html]</a>")
+      else return $ RawBlock "html" "<!-- # SUMMARY /-->"
 readBlock x = return x
 
 --this is added so that it won't break if the wiki contains code blocks with no headers
 first [] = []
 first (x:xs) = x
+rest [] = []
+rest (x:xs) = xs
 
 getBlock = do
   contents <- readFile "static/clafer/output.html"
   let fileLines = lines contents;
-      block = unlines $ takeWhile (\ x -> x /= "<!-- # FRAGMENT -->") fileLines
-  length contents `seq` (writeFile "static/clafer/output.html" (unlines $ tail $ dropWhile (\ x -> x /= "<!-- # FRAGMENT -->") fileLines))
+      block = unlines $ takeWhile (\ x -> x /= "<!-- # FRAGMENT /-->") fileLines
+  length contents `seq` (writeFile "static/clafer/output.html" (unlines $ rest $ dropWhile (\ x -> x /= "<!-- # FRAGMENT /-->") fileLines))
 -- the preceding line was taken from StackOverflow:
 -- http://stackoverflow.com/questions/2527271/in-haskell-i-want-to-read-a-file-and-then-write-to-it-do-i-need-strictness-ann
   return block
