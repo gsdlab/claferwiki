@@ -1,0 +1,19 @@
+The following models contain parse errors.
+
+```
+Company
+   employs => Person
+```
+
+```
+abstract - Person
+   age : integer
+```
+
+```
+Adults -> Person in Company
+```
+
+```
+1 + 2 = 5
+```
