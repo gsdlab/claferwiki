@@ -1,5 +1,14 @@
 The following model fragments from [Issue 132](http://gsd.uwaterloo.ca:8888/question/623/display-compiler-errors-in-html-rendering) contain parse errors.
 
+Module Summary
+==============
+
+```{.clafer .summary}
+```
+
+Module Details
+==============
+
 ```{.clafer}
 Company
    employs => Person
