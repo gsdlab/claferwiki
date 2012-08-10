@@ -1,9 +1,11 @@
 The following models contain parse errors.
 
-```
+```{.clafer}
 Company
    employs => Person
 ```
+
+Error: incorrect symbol for reference `=>` instead of `->`
 
 ```
 abstract - Person
