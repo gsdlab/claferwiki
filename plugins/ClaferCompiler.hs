@@ -55,7 +55,7 @@ callClafer (CodeBlock (id, classes, namevals) contents)
     highlightErrors' model ((ParseErr ErrPos{modelPos = Pos l c, fragId = n} msg):es) = do
       let (ls, lss) = genericSplitAt (l + toInteger n) model
       let newLine = fst (genericSplitAt (c - 1) $ last ls) ++ "<span class=\"error\" title=\"Parse failed at line " ++ show l ++ " column " ++ show c ++
-                                                                "...\n" ++ msg ++ "\">" ++ snd (genericSplitAt (c - 1) $ last ls) ++ "</span>"
+                       "...\n" ++ msg ++ "\">" ++ (if snd (genericSplitAt (c - 1) $ last ls) == "" then "&nbsp;" else snd (genericSplitAt (c - 1) $ last ls)) ++ "</span>"
       highlightErrors' (init ls ++ [newLine] ++ lss) es
     replace x y []     = []
     replace x y (z:zs) = (if x == z then y else z):replace x y zs
