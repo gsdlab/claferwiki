@@ -7,6 +7,7 @@ import System.Directory (doesFileExist)
 import System.Exit (ExitCode(ExitSuccess))
 import System.FilePath ((</>))
 import Language.Clafer
+import Language.ClaferT
 import Language.Clafer.ClaferArgs
 
 plugin :: Plugin
@@ -25,21 +26,26 @@ readBlock (CodeBlock (id, classes, namevals) contents)
       fileExists <- doesFileExist $ "static/clafer/" ++ fileName ++ ".cfr"
       if fileExists--file may not exist if compilation failed
       then do content <- readFile $ "static/clafer/" ++ fileName ++ ".cfr"
-              Right CompilerResult { extension = ext,
-                                     outputCode = output,
-                                     statistics = stats,
-                                     mappingToAlloy = Nothing } <- runClaferT args $ do
-                                                                    addModuleFragment content
-                                                                    parse
-                                                                    compile
-                                                                    CompilerResult {extension = ext,
-                                                                                    outputCode = output,
-                                                                                    statistics = stats} <- generate
-                                                                    return CompilerResult { extension = ext, outputCode = output, statistics = stats, mappingToAlloy = Nothing }
-              _ <- readProcessWithExitCode "dot" ["-Tsvg", "-o", "static/clafer/summary.svg"] output
-              out <- readFile "static/clafer/summary.svg"
-              return $ RawBlock "html" (out ++ "<br>\nModule Statistics:<br>\n<span class=\"summary\">" ++ unlines (map (++"<br>") (lines stats)) ++
-                                              "</class><br>\nModule Downloads: <a href=clafer/" ++ fileName ++ ".cfr>[.cfr]</a> <a href=clafer/" ++ fileName ++ ".html>[.html]</a>")
+              graph <- runClaferT args $ do
+                  addModuleFragment content
+                  parse
+                  compile
+                  CompilerResult {extension = ext,
+                                  outputCode = output,
+                                  statistics = stats} <- generate
+                  return CompilerResult { extension = ext, outputCode = output, statistics = stats, mappingToAlloy = Nothing }
+              case graph of
+                Right CompilerResult { extension = ext,
+                                       outputCode = output,
+                                       statistics = stats,
+                                       mappingToAlloy = Nothing } -> do
+                    _ <- readProcessWithExitCode "dot" ["-Tsvg", "-o", "static/clafer/summary.svg"] output
+                    out <- readFile "static/clafer/summary.svg"
+                    return $ RawBlock "html" (out ++ "<br>\nModule Statistics:<br>\n<span class=\"summary\">" ++ unlines (map (++"<br>") (lines stats)) ++
+                                                    "</class><br>\nModule Downloads: <a href=clafer/" ++ fileName ++ ".cfr>[.cfr]</a> <a href=clafer/" ++ fileName ++ ".html>[.html]</a>")
+                Left err -> return $ RawBlock "html" ("<pre>\n" ++ concatMap handleErr err ++ "\n</pre>")
+                  where handleErr (ClaferErr msg) = "Clafer encountered an error: " ++ msg
+                        handleErr (ParseErr ErrPos{modelPos = Pos l c} msg) = "Clafer encountered a parse error at line " ++ show l ++ ", column " ++ show c ++  msg
       else return $ RawBlock "html" "<!-- # SUMMARY /-->"
 readBlock x = return x
 
