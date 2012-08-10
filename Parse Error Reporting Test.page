@@ -5,17 +5,23 @@ Company
    employs => Person
 ```
 
-Error: incorrect symbol for reference `=>` instead of `->`
+Error: incorrect symbol for reference `=>` instead of `->`.
 
-```
+```{.clafer}
 abstract - Person
    age : integer
 ```
 
-```
+Error: the symbol `-` used instead of `:` or `->`.
+
+```{.clafer}
 Adults -> Person in Company
 ```
 
-```
+Error: the operator `in` can only be used within a constraint.
+
+```{.clafer}
 1 + 2 = 5
 ```
+
+Error: incorrect clafer name - names cannot begin with a number. 
