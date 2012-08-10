@@ -1,4 +1,4 @@
-The following models contain parse errors.
+The following model fragments from [Issue 132](http://gsd.uwaterloo.ca:8888/question/623/display-compiler-errors-in-html-rendering) contain parse errors.
 
 ```{.clafer}
 Company
