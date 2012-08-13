@@ -45,7 +45,7 @@ readBlock (CodeBlock (id, classes, namevals) contents)
                                                     "</class><br>\nModule Downloads: <a href=clafer/" ++ fileName ++ ".cfr>[.cfr]</a> <a href=clafer/" ++ fileName ++ ".html>[.html]</a>")
                 Left err -> return $ RawBlock "html" ("<pre>\n" ++ concatMap handleErr err ++ "\n</pre>")
                   where handleErr (ClaferErr msg) = "Clafer encountered an error: " ++ msg
-                        handleErr (ParseErr ErrPos{modelPos = Pos l c} msg) = "Clafer encountered a parse error at line " ++ show l ++ ", column " ++ show c ++  msg
+                        handleErr (ParseErr ErrPos{modelPos = Pos l c} msg) = "Clafer encountered a parse error at line " ++ show l ++ ", column " ++ show c ++ " " ++ msg
       else return $ RawBlock "html" "<!-- # SUMMARY /-->"
 readBlock x = return x
 
