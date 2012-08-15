@@ -18,7 +18,7 @@ readBlock block@(CodeBlock (id, classes, namevals) contents)
   | "clafer" `elem` classes && "summary" `elem` classes = summary True True True
   | "clafer" `elem` classes && "graph" `elem` classes || "stats" `elem` classes || "links" `elem` classes
     = summary ("graph" `elem` classes)  ("stats" `elem` classes) ("links" `elem` classes)
-  | "clafer" `elem` classes = liftIO $ do
+  | ["clafer"] == classes = liftIO $ do
     contents <- getBlock
     return $ RawBlock "html" ("<div class=\"code\">" ++ contents ++ "</div>")
 readBlock x = return x
