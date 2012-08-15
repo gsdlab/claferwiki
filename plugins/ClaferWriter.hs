@@ -46,7 +46,7 @@ summary withGraph withStats withLinks = do
                     _ <- readProcessWithExitCode "dot" ["-Tsvg", "-o", "static/clafer/summary.svg"] output
                     out <- readFile "static/clafer/summary.svg"
                     return $ RawBlock "html" ((if withGraph then out else "") ++ (if withGraph && withStats then "<br>\n" else "") ++ 
-                                                (if withStats then "Module Statistics:<br>\n" ++ unlines (map (++"<br>") (lines stats)) else "") ++ (if withLinks && (withStats || withGraph) then "<br>\n" else "")
+                                                (if withStats then "Module Statistics:<br>\n" ++ unlines (map (++"<br>") (lines stats)) else "") ++ (if withLinks && (withStats || withGraph) then "<br>\n" else "") ++
                                                 if withLinks then "Module Downloads: <a href=clafer/" ++ fileName ++ ".cfr>[.cfr]</a> <a href=clafer/" ++ fileName ++ ".html>[.html]</a>" else "")
                 Left err -> return $ RawBlock "html" ("<pre>\n" ++ concatMap handleErr err ++ "\n</pre>")
                   where handleErr (ClaferErr msg) = "Clafer encountered an error: " ++ msg
