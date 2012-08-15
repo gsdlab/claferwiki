@@ -10,6 +10,17 @@ Module Details
 ==============
 
 ```{.clafer}
+Car
+   xor body
+      hatchback
+      sedan
+      SUV
+      minivan
+```
+
+First, we have a correct model.
+
+```{.clafer}
 Company
    employs => Person
 ```
