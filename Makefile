@@ -8,9 +8,10 @@ install:
 	cp -f --preserve=all README.md $(to)
 	mkdir -p $(to)/static/img
 	cp -f --preserve=all static/img/logo.png $(to)/static/img
+	mkdir -p $(to)/static/css
+	cp -f --preserve=all static/css/clafer.css $(to)/static/css/clafer.css
 	mkdir -p $(to)/plugins
 	cp -f --preserve=all plugins/ClaferCleanup.hs $(to)/plugins
 	cp -f --preserve=all plugins/ClaferReader.hs $(to)/plugins
 	cp -f --preserve=all plugins/ClaferCompiler.hs $(to)/plugins
 	cp -f --preserve=all plugins/ClaferWriter.hs $(to)/plugins
-
