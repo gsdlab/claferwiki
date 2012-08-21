@@ -11,6 +11,7 @@ plugin = mkPageTransformM cleanup
 cleanup :: Block -> PluginM Block
 cleanup x = liftIO $ do
   createDirectoryIfMissing True "static/clafer/"
+  createDirectoryIfMissing True "static/css/"
   tempExists <- doesFileExist "static/clafer/temp.txt"
   outputExists <- doesFileExist "static/clafer/output.html"
   nameExists <- doesFileExist "static/clafer/name.txt"

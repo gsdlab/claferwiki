@@ -26,10 +26,10 @@ readBlock x = return x
 summary withGraph withStats withLinks = do
       let args = defaultClaferArgs{mode=Just Graph, keep_unused=Just True}
       liftIO $ do
-      fileName <- readFile "static/clafer/name.txt"
-      fileExists <- doesFileExist $ "static/clafer/" ++ fileName ++ ".cfr"
+      fileExists <- doesFileExist "static/clafer/name.txt"
       if fileExists--file may not exist if an error occurred
-      then do content <- readFile $ "static/clafer/" ++ fileName ++ ".cfr"
+      then do fileName <- readFile "static/clafer/name.txt"
+              content <- readFile $ "static/clafer/" ++ fileName ++ ".cfr"
               graph <- runClaferT args $ do
                   addModuleFragment content
                   parse
@@ -51,7 +51,7 @@ summary withGraph withStats withLinks = do
                 Left err -> return $ RawBlock "html" ("<pre>\n" ++ concatMap handleErr err ++ "\n</pre>")
                   where handleErr (ClaferErr msg) = "Clafer encountered an error: " ++ msg
                         handleErr (ParseErr ErrPos{modelPos = Pos l c} msg) = "Clafer encountered a parse error at line " ++ show l ++ ", column " ++ show c ++ " " ++ msg
-      else return $ RawBlock "html" "<!-- # SUMMARY /-->"
+      else return $ RawBlock "html" "Clafer error: <span class=\"error\">No clafer model found</span>"
 
 --this is added so that it won't break if the wiki contains code blocks with no headers
 first [] = []

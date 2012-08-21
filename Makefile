@@ -6,6 +6,7 @@ install:
 	cp -f --preserve=all gitit.cnf $(to)
 	cp -f --preserve=all claferwiki.sh $(to)
 	cp -f --preserve=all README.md $(to)
+	cp -f --preserve=all -r .git $(to)
 	mkdir -p $(to)/static/img
 	cp -f --preserve=all static/img/logo.png $(to)/static/img
 	mkdir -p $(to)/static/css
