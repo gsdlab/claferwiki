@@ -62,3 +62,8 @@ Error: the operator `in` can only be used within a constraint.
 ```
 
 Error: incorrect clafer name - names cannot begin with a number. 
+
+```clafer
+```
+
+And here's an empty code block - it should not cause any trouble anymore as reported in [issue 137](http://gsd.uwaterloo.ca:8888/question/635/layoutresolver-error-on-empty-fragment).
