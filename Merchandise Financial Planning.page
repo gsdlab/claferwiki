@@ -74,8 +74,8 @@ Month: HierarchyLevel
 			  aggregatesToHigherLevel = Season]
 MensCasualWear: HierarchyLevel
 			[ levelBelongsToThis = Menswear 
-	  		no spreadsToLowerLevel
-	  		no aggregatesToHigherLevel ]
+			no spreadsToLowerLevel
+			no aggregatesToHigherLevel ]
 ```
 
 ## 2.4. Plan
@@ -90,8 +90,8 @@ Plan (Tgt), Waiting for Approval Plan (Wa)
 Each plan is created by one or more planning role(s), and belongs to a specific retail channel such as store or a catalog.
 
 ```clafer
-VersionAbbreviation = Op | Cp | Wp | Ly | Wa | Tgt
-abstract plan	
+enum VersionAbbreviation = Op | Cp | Wp | Ly | Wa | Tgt
+abstract plan
 	PlanCreatedBy -> planningRole +
 	versionAbbreviation -> VersionAbbreviation
 	planSeenInTheFollowingViews -> view +
@@ -110,10 +110,10 @@ abstract plan
 ```clafer
 abstract WorkingPlan: plan
 	[ versionAbbreviation = Wp ]
-	seeded?				
-		seedingSource -> LastYear							
-		lastSeedingDate: string			
-		seededWithThoseInstances -> HierarchyLevelInstance * 
+	seeded?
+		seedingSource -> LastYear
+		lastSeedingDate: string
+		seededWithThoseInstances -> HierarchyLevelInstance *
 ```
 
 ## 2.6. Original Plan
@@ -148,7 +148,7 @@ This plan version is composed of the company’s targets set by the TopDown and/
 
 ```clafer
 abstract TargetPlan: plan
-	[ versionAbbreviation = Tgt ]		
+	[ versionAbbreviation = Tgt ]
 	composedOf -> Target+
 ```
 
@@ -160,20 +160,20 @@ abstract WaitingForApproval: plan
 	[ versionAbbreviation = Wa ] 
 
 //***************** Concrete Clafers ******************
-WorkingPlan2012: WorkingPlan	
-			[ PlanCreatedBy = ExecutiveManager, PlanningDirector, MerchandisePlanner	 
-	   		planSeenInTheFollowingViews = 2012PlanningView
-	 		Seeded	     
-	   		retailChannels.internet ]
-TargetPlan2012: TargetPlan	
-			[  PlanCreatedBy = ExecutiveManager, PlanningDirector, MerchandisePlanner	   
-	   		composedOf = TopDownSalesTargets2012, MiddleOutMarkdownTargets2012
-		   	planSeenInTheFollowingViews =  Targets2012PlanningView	     
-	   		retailChannels.internet ]
+WorkingPlan2012: WorkingPlan
+			[ PlanCreatedBy = ExecutiveManager, PlanningDirector, MerchandisePlanner
+			planSeenInTheFollowingViews = 2012PlanningView
+			Seeded
+			retailChannels.internet ]
+TargetPlan2012: TargetPlan
+			[  PlanCreatedBy = ExecutiveManager, PlanningDirector, MerchandisePlanner
+			composedOf = TopDownSalesTargets2012, MiddleOutMarkdownTargets2012
+			planSeenInTheFollowingViews =  Targets2012PlanningView
+			retailChannels.internet ]
 OriginalPlan2012: OriginalPlan
-			[  PlanCreatedBy = MerchandisePlanner	   
-	   		planSeenInTheFollowingViews = Targets2012ReviewView
-	   		retailChannels.store ]
+			[  PlanCreatedBy = MerchandisePlanner
+			planSeenInTheFollowingViews = Targets2012ReviewView
+			retailChannels.store ]
 ```
 
 ## 2.11. Metric
@@ -186,8 +186,8 @@ Requirement #32: Markdowns are classified into regular, promotional and permanen
 abstract metric
 		xor metricName
 			xor sales
-				regularSales	
-				promotionalSales	
+				regularSales
+				promotionalSales
 				clearanceSales
 			xor markdown
 				regularMarkdown
@@ -217,14 +217,14 @@ Requirement #7: Bottom-up roles are typically merchandise planners. They create 
 Requirement #8: The targets are published by superior levels to the subsequent level: top down passes to middle out, and middle out passes to bottom up. The bottom up then submits the Op, Cp, or both to the middle out role for approval.  
 
 ```clafer
-PlanningRoleLevel = TopDown | MiddleOut | BottomUp
+enum PlanningRoleLevel = TopDown | MiddleOut | BottomUp
 abstract planningRole
 	roleLevel -> PlanningRoleLevel
-	roleCreatedTheFollowingPlans -> plan +    
+	roleCreatedTheFollowingPlans -> plan +
 	roleCreatedTheFollowingTargets -> Target *
-	[ roleLevel=BottomUp => no roleCreatedTheFollowingTargets ] 
+	[ roleLevel=BottomUp => no roleCreatedTheFollowingTargets ]
 	roleReceivesTheFollowingTargets -> Target *
-	[ roleLevel=TopDown => no roleReceivesTheFollowingTargets]	
+	[ roleLevel=TopDown => no roleReceivesTheFollowingTargets]
 	RoleSeesTheFollowingViews -> view +
 	roleEditsTheFollowingMeasures -> Measure *
 
@@ -261,7 +261,7 @@ abstract Target
 	publishedTo -> planningRole
 // The constraints below are used to ensure that targets are published to direct lower levels.
 	[ createdBy.roleLevel=TopDown => publishedTo.roleLevel = MiddleOut ]
-	[ createdBy.roleLevel=MiddleOut => publishedTo.roleLevel = BottomUp ]          
+	[ createdBy.roleLevel=MiddleOut => publishedTo.roleLevel = BottomUp ]
 
 //**************** Concrete Clafers *******************
 TopDownSalesTargets2012: Target
@@ -293,18 +293,18 @@ abstract workflow
 		preSeasonPlanning
 		inSeasonPlanning
 	proceededBy -> workflow ?
-	[proceededBy != workflow] //if I want to say can’t be proceeded by the same workflow.
+	[proceededBy != workflow] //if I want to say can't be proceeded by the same workflow.
 	followedBy -> workflow ?
-	[followedBy != workflow] //if I want to say can’t be followed by the same workflow instance.
+	[followedBy != workflow] //if I want to say can't be followed by the same workflow instance.
 	
 // The following two constraints ensure that pre-season isn't proceeded by anything and is followed by in-season.
-		[all v: workflow | v.workflowPlanningSeason.preSeasonPlanning => no proceededBy]
-[all v: workflow | v.workflowPlanningSeason.preSeasonPlanning => v.followedBy.workflowPlanningSeason.inSeasonPlanning]
+	[all v: workflow | v.workflowPlanningSeason.preSeasonPlanning => no proceededBy]
+	[all v: workflow | v.workflowPlanningSeason.preSeasonPlanning => v.followedBy.workflowPlanningSeason.inSeasonPlanning]
 
 // The following two constraints ensure that in-season is proceeded by pre-season and isn't followed by anything.
-[all v: workflow | v.workflowPlanningSeason.inSeasonPlanning => no followedBy]
-[all v: workflow | v.workflowPlanningSeason.inSeasonPlanning=> v.proceededBy.workflowPlanningSeason.preSeasonPlanning]
-		views -> view +
+	[all v: workflow | v.workflowPlanningSeason.inSeasonPlanning => no followedBy]
+	[all v: workflow | v.workflowPlanningSeason.inSeasonPlanning => v.proceededBy.workflowPlanningSeason.preSeasonPlanning]
+	views -> view +
 
 
 //***************** Concrete Clafers ******************
@@ -313,7 +313,7 @@ PreSeasonTargetSettingWorkflow: workflow
 	   workflowPlanningSeason.preSeasonPlanning
 	   no proceededBy
 	   followedBy = InSeasonTargetSettingWorkflow
-	   		views = Targets2012PlanningView, Targets2012ApprovalView]
+	   views = Targets2012PlanningView, Targets2012ApprovalView]
 
 InSeasonTargetSettingWorkflow: workflow
 	[  belongsToThisSystem = Oracle
@@ -337,7 +337,7 @@ Requirement #33: In the view, you choose to seed, approve, create, or review a p
 ```clafer
 abstract view 
 	viewBelongsTo -> workflow
-	xor visibility	
+	xor visibility
 		specificRole -> planningRole
 		[viewBelongsTo.workflowPlanningSeason.inSeasonPlanning => ! specificRole.roleLevel = TopDown ]
 	allRoles
@@ -350,11 +350,11 @@ abstract view
 		Approval
 			[ specificRole.roleLevel = MiddleOut ]	// Role has to be MiddleOut
 			[ planversion = WaitingForApproval ]	// Plan Version has to be Wa
-			[ viewBelongsTo.workflowPlanningSeason.preSeasonPlanning]	
+			[ viewBelongsTo.workflowPlanningSeason.preSeasonPlanning]
 		Seeding
-			[ viewBelongsTo.workflowPlanningSeason.preSeasonPlanning]	
+			[ viewBelongsTo.workflowPlanningSeason.preSeasonPlanning]
 			[ specificRole.roleLevel =TopDown || specificRole.roleLevel = MiddleOut]
-			[ planversion = WorkingPlan ] 	//Seeding has to occur in the working plan
+			[ planversion = WorkingPlan ]	//Seeding has to occur in the working plan
 		Review
 		Planning
 
@@ -417,17 +417,17 @@ abstract Measure
 //***************** Concrete Clafers ******************
 TgtSales: Measure
 			[belongsTo = Targets2012PlanningView, Targets2012ReviewView
-   			measureMetric = sales2011
-   			amount
-   			measureBelongsToThisPlan = TargetPlan2012
-   			nonReferenceMeasure ]
+			 measureMetric = sales2011
+			amount
+			 measureBelongsToThisPlan = TargetPlan2012
+			 nonReferenceMeasure ]
 
 LyMarkdown: Measure
 			[belongsTo = Targets2012PlanningView, Targets2012ApprovalView
-   			measureMetric = markdown2011
-   			percentage
-   			measureBelongsToThisPlan = TargetPlan2012
-   			referenceMeasure ]
+			measureMetric = markdown2011
+			percentage
+			measureBelongsToThisPlan = TargetPlan2012
+			referenceMeasure ]
 ```
 
 ## 2.17. Rule
