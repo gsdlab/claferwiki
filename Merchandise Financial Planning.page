@@ -1,8 +1,3 @@
-# 1. Overview
-
-~~~{.clafer .summary}
-~~~
-
 # 2. Clafer Model
 
 ## 2.1. Merchandise Financial System
@@ -174,19 +169,19 @@ abstract WaitingForApproval: plan
 
 //***************** Concrete Clafers ******************
 WorkingPlan2012: WorkingPlan
-			[ PlanCreatedBy = ExecutiveManager, PlanningDirector, MerchandisePlanner
-//			planSeenInTheFollowingViews = 2012PlanningView
-			seeded
-			retailChannels.internet ]
+		[ PlanCreatedBy = ExecutiveManager, PlanningDirector, MerchandisePlanner
+//		  planSeenInTheFollowingViews = 2012PlanningView
+		  seeded
+		  retailChannels.internet ]
 TargetPlan2012: TargetPlan
-			[  PlanCreatedBy = ExecutiveManager, PlanningDirector, MerchandisePlanner
-			composedOf = TopDownSalesTargets2012, MiddleOutMarkdownTargets2012
-//			planSeenInTheFollowingViews =  Targets2012PlanningView
-			retailChannels.internet ]
+		[  PlanCreatedBy = ExecutiveManager, PlanningDirector, MerchandisePlanner
+		   composedOf = TopDownSalesTargets2012, MiddleOutMarkdownTargets2012
+//		   planSeenInTheFollowingViews =  Targets2012PlanningView
+		   retailChannels.internet ]
 OriginalPlan2012: OriginalPlan
-			[  PlanCreatedBy = MerchandisePlanner
-//			planSeenInTheFollowingViews = Targets2012ReviewView
-			retailChannels.store ]
+		[  PlanCreatedBy = MerchandisePlanner
+//		   planSeenInTheFollowingViews = Targets2012ReviewView
+		   retailChannels.store ]
 ```
 
 ## 2.11. Metric
