@@ -10,6 +10,7 @@ install:
 	mkdir -p $(to)/static/img
 	cp -f --preserve=all static/img/logo.png $(to)/static/img
 	mkdir -p $(to)/static/css
+	cp -f --preserve=all static/css/custom.css $(to)/static/css/custom.css
 	cp -f --preserve=all static/css/clafer.css $(to)/static/css/clafer.css
 	mkdir -p $(to)/plugins
 	cp -f --preserve=all plugins/ClaferCleanup.hs $(to)/plugins
