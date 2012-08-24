@@ -1,3 +1,8 @@
+# 1. Overview
+
+~~~{.clafer .summary}
+~~~
+
 # 2. Clafer Model
 
 ## 2.1. Merchandise Financial System
@@ -57,25 +62,33 @@ abstract HierarchyLevelInstance
 
 //***************** Concrete Clafers ******************
 Cal2012: CalendarHierarchy
-			[ levels = Year, Season, Month, Week ]
+	[ levels = Year, Season, Month, Week ]
 Menswear: ProductHierarchy
-			[ levels = MensCasualWear, MensSportsWear ]
+	[ levels = MensCasualWear, MensSportsWear ]
 Year: HierarchyLevel
-			[ levelBelongsToThis = Cal2012
-			  spreadsToLowerLevel = Season  
-	  		no aggregatesToHigherLevel ]
+	[ levelBelongsToThis = Cal2012
+	  spreadsToLowerLevel = Season  
+	  no aggregatesToHigherLevel ]
 Season: HierarchyLevel
-			[ levelBelongsToThis = Cal2012
-			  spreadsToLowerLevel = Month
-			  aggregatesToHigherLevel = Year]
+	[ levelBelongsToThis = Cal2012
+	  spreadsToLowerLevel = Month
+	  aggregatesToHigherLevel = Year ]
 Month: HierarchyLevel
-			[ levelBelongsToThis = Cal2012
-			  spreadsToLowerLevel = Week
-			  aggregatesToHigherLevel = Season]
+	[ levelBelongsToThis = Cal2012
+	  spreadsToLowerLevel = Week
+	  aggregatesToHigherLevel = Season ]
+Week: HierarchyLevel
+	[ levelBelongsToThis = Cal2012
+	  no spreadsToLowerLevel
+	  aggregatesToHigherLevel = Month ]
 MensCasualWear: HierarchyLevel
-			[ levelBelongsToThis = Menswear 
-			no spreadsToLowerLevel
-			no aggregatesToHigherLevel ]
+	[ levelBelongsToThis = Menswear 
+	  no spreadsToLowerLevel
+	  no aggregatesToHigherLevel ]
+MensSportsWear: HierarchyLevel
+	[ levelBelongsToThis = Menswear 
+	  no spreadsToLowerLevel
+	  no aggregatesToHigherLevel ]
 ```
 
 ## 2.4. Plan
@@ -94,7 +107,7 @@ enum VersionAbbreviation = Op | Cp | Wp | Ly | Wa | Tgt
 abstract plan
 	PlanCreatedBy -> planningRole +
 	versionAbbreviation -> VersionAbbreviation
-	planSeenInTheFollowingViews -> view +
+//	planSeenInTheFollowingViews -> view +
 	xor retailChannels
 		store
 		internet
@@ -162,17 +175,17 @@ abstract WaitingForApproval: plan
 //***************** Concrete Clafers ******************
 WorkingPlan2012: WorkingPlan
 			[ PlanCreatedBy = ExecutiveManager, PlanningDirector, MerchandisePlanner
-			planSeenInTheFollowingViews = 2012PlanningView
-			Seeded
+//			planSeenInTheFollowingViews = 2012PlanningView
+			seeded
 			retailChannels.internet ]
 TargetPlan2012: TargetPlan
 			[  PlanCreatedBy = ExecutiveManager, PlanningDirector, MerchandisePlanner
 			composedOf = TopDownSalesTargets2012, MiddleOutMarkdownTargets2012
-			planSeenInTheFollowingViews =  Targets2012PlanningView
+//			planSeenInTheFollowingViews =  Targets2012PlanningView
 			retailChannels.internet ]
 OriginalPlan2012: OriginalPlan
 			[  PlanCreatedBy = MerchandisePlanner
-			planSeenInTheFollowingViews = Targets2012ReviewView
+//			planSeenInTheFollowingViews = Targets2012ReviewView
 			retailChannels.store ]
 ```
 
@@ -255,7 +268,7 @@ These are the lower level components from which the target plan is composed. As 
 
 ```clafer
 abstract Target
-	belongsTo -> Targetplan	
+	belongsTo -> TargetPlan	
 	createdBy -> planningRole
 		[! createdBy.roleLevel = BottomUp] // BottomUp roles can't create Targets
 	publishedTo -> planningRole
