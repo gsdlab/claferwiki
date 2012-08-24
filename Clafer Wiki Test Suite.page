@@ -78,11 +78,7 @@ telematicsSystem
      extraDisplay <=> (ECU2 => #ECU2.display = 2)
      large <=> !plaECU.display.options.size.small
      small <=> !plaECU.display.options.size.large]
-```
 
-Concrete Product
-
-```{.clafer}
 [dual
  extraDisplay
  telematicsSystem.size.large]
