@@ -54,7 +54,12 @@ callClafer (CodeBlock (id, classes, namevals) contents)
     highlightErrors' model ((ClaferErr msg):es) = highlightErrors' model es
     highlightErrors' model ((ParseErr ErrPos{modelPos = Pos l c, fragId = n} msg):es) = do
       let (ls, lss) = genericSplitAt (l + toInteger n) model
-      let newLine = fst (genericSplitAt (c - 1) $ last ls) ++ "<span class=\"error\" title=\"Parse failed at line " ++ show l ++ " column " ++ show c ++
+      let newLine = fst (genericSplitAt (c - 1) $ last ls) ++ "<span class=\"error\" title=\"Parsing failed at line " ++ show l ++ " column " ++ show c ++
+                       "...\n" ++ msg ++ "\">" ++ (if snd (genericSplitAt (c - 1) $ last ls) == "" then "&nbsp;" else snd (genericSplitAt (c - 1) $ last ls)) ++ "</span>"
+      highlightErrors' (init ls ++ [newLine] ++ lss) es
+    highlightErrors' model ((SemanticErr ErrPos{modelPos = Pos l c, fragId = n} msg):es) = do
+      let (ls, lss) = genericSplitAt (l + toInteger n) model
+      let newLine = fst (genericSplitAt (c - 1) $ last ls) ++ "<span class=\"error\" title=\"Compiling failed at line " ++ show l ++ " column " ++ show c ++
                        "...\n" ++ msg ++ "\">" ++ (if snd (genericSplitAt (c - 1) $ last ls) == "" then "&nbsp;" else snd (genericSplitAt (c - 1) $ last ls)) ++ "</span>"
       highlightErrors' (init ls ++ [newLine] ++ lss) es
     replace x y []     = []
