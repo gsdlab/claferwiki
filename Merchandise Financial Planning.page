@@ -34,13 +34,13 @@ Users may edit data at different levels of each hierarchy (product, location, an
 abstract Hierarchy
 abstract CalendarHierarchy: Hierarchy
 	levels -> HierarchyLevel +
-	[ all l:levels | l.levelBelongsToThis = this ] 
+	[ all l : levels | l.levelBelongsToThis = this ] 
 abstract ProductHierarchy: Hierarchy
 	levels -> HierarchyLevel +
-	[ all l:levels | l.levelBelongsToThis = this ]
+	[ all l : levels | l.levelBelongsToThis = this ]
 abstract LocationHierarchy: Hierarchy
 	levels -> HierarchyLevel +
-	[ all l:levels | l.levelBelongsToThis = this ]
+	[ all l : levels | l.levelBelongsToThis = this ]
 abstract HierarchyLevel
 	levelBelongsToThis -> Hierarchy
 	spreadsToLowerLevel -> HierarchyLevel ?
