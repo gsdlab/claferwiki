@@ -1,5 +1,8 @@
 # 2. Clafer Model
 
+```{.clafer .stats}
+```
+
 ## 2.1. Merchandise Financial System
 A Merchandise Financial Planning (MFP) system deals with three main types of hierarchies; Calendar, Product, and Location.
 
@@ -12,8 +15,8 @@ MFP systems have the concept of workflows or workbooks which they use to manage 
 ```clafer
 abstract MFPsystem
 	2..3 hierarchies
-		calendar -> CalendarHierarchy[1]
-		product -> ProductHierarchy [1]
+		calendar -> CalendarHierarchy
+		product -> ProductHierarchy
 		location -> LocationHierarchy
 	hasTheFollowingWorkflows -> workflow+
 //***************** Concrete Clafers *****************
