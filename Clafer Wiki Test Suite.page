@@ -47,7 +47,7 @@ abstract display : comp
 
 Specific PLA (template)
 
-```{.clafer}
+```clafer
 abstract plaECU : ECU
     `display 1..2
         [server = parent
@@ -61,7 +61,7 @@ ECU2 : plaECU ?
 
 Feature Model for the specific PL
 
-```{.clafer}
+```clafer
 telematicsSystem
     xor channel
         single
@@ -78,7 +78,11 @@ telematicsSystem
      extraDisplay <=> (ECU2 => #ECU2.display = 2)
      large <=> !plaECU.display.options.size.small
      small <=> !plaECU.display.options.size.large]
+```
 
+Now can have global constraints in a separate code block:
+
+```clafer
 [dual
  extraDisplay
  telematicsSystem.size.large]
