@@ -15,16 +15,22 @@ plugin = mkPageTransformM readBlock
 
 readBlock :: Block -> PluginM Block
 readBlock block@(CodeBlock (id, classes, namevals) contents)
-  | "clafer" `elem` classes && "summary" `elem` classes = summary True True True
-  | "clafer" `elem` classes && "graph" `elem` classes || "stats" `elem` classes || "links" `elem` classes
-    = summary ("graph" `elem` classes)  ("stats" `elem` classes) ("links" `elem` classes)
-  | ["clafer"] == classes = liftIO $ do
+  | "clafer" `elem` classes && "summary" `elem` classes 
+    = summary (Just Graph) True True
+  | "clafer" `elem` classes && "graph" `elem` classes
+    = summary (Just Graph)  ("stats" `elem` classes) ("links" `elem` classes) 
+  | "clafer" `elem` classes && "cvlGraph" `elem` classes
+    = summary (Just CVLGraph) ("stats" `elem` classes) ("links" `elem` classes) 
+  | "clafer" `elem` classes && not ("graph" `elem` classes) && not ("cvlGraph" `elem` classes) && (("stats" `elem` classes) || ("links" `elem` classes) )
+    = summary Nothing ("stats" `elem` classes) ("links" `elem` classes) 
+  | "clafer"  `elem` classes && not ("graph" `elem` classes) && not ("cvlGraph" `elem` classes) && not ("stats" `elem` classes) && not ("links" `elem` classes)
+    = liftIO $ do
     contents <- getBlock
     return $ RawBlock "html" ("<div class=\"code\">" ++ contents ++ "</div>")
 readBlock x = return x
 
-summary withGraph withStats withLinks = do
-      let args = defaultClaferArgs{mode=Just Graph, keep_unused=Just True}
+summary graphMode withStats withLinks = do
+      let args = defaultClaferArgs{mode=graphMode, keep_unused=Just True}
       liftIO $ do
       fileExists <- doesFileExist "static/clafer/name.txt"
       if fileExists--file may not exist if an error occurred
@@ -34,23 +40,22 @@ summary withGraph withStats withLinks = do
                   addModuleFragment content
                   parse
                   compile
-                  CompilerResult {extension = ext,
-                                  outputCode = output,
-                                  statistics = stats} <- generate
-                  return CompilerResult { extension = ext, outputCode = output, statistics = stats, mappingToAlloy = Nothing }
+                  generate
               case graph of
                 Right CompilerResult { extension = ext,
                                        outputCode = output,
-                                       statistics = stats,
-                                       mappingToAlloy = Nothing } -> do
+                                       statistics = stats } -> do
                     _ <- readProcessWithExitCode "dot" ["-Tsvg", "-o", "static/clafer/summary.svg"] output
                     out <- readFile "static/clafer/summary.svg"
-                    return $ RawBlock "html" ((if withGraph then out else "") ++ (if withGraph && withStats then "<br>\n" else "") ++ 
-                                                (if withStats then "Module Statistics:<br>\n" ++ unlines (map (++"<br>") (lines stats)) else "") ++ (if withLinks && (withStats || withGraph) then "<br>\n" else "") ++
+                    return $ RawBlock "html" ((if (withGraph graphMode) then out else "") ++ (if (withGraph graphMode) && withStats then "<br>\n" else "") ++ 
+                                                (if withStats then "Module Statistics:<br>\n" ++ unlines (map (++"<br>") (lines stats)) else "") ++ (if withLinks && (withStats || (withGraph graphMode)) then "<br>\n" else "") ++
                                                 if withLinks then "Module Downloads: <a href=clafer/" ++ fileName ++ ".cfr>[.cfr]</a> <a href=clafer/" ++ fileName ++ ".html>[.html]</a>" else "")
-                Left err -> return $ RawBlock "html" ("<pre>\n" ++ concatMap handleErr err ++ "\n</pre>")
+                        where withGraph Nothing = False
+                              withGraph _       = True
+                Left err -> return $ RawBlock "html" ("<pre>\n" ++ (concatMap handleErr err) ++ "\n</pre>")
                   where handleErr (ClaferErr msg) = "Clafer encountered an error: " ++ msg
                         handleErr (ParseErr ErrPos{modelPos = Pos l c} msg) = "Clafer encountered a parse error at line " ++ show l ++ ", column " ++ show c ++ " " ++ msg
+                        handleErr (SemanticErr ErrPos{modelPos = Pos l c} msg) = "Clafer encountered a compilation error at line " ++ show l ++ ", column " ++ show c ++ " " ++ msg						
       else return $ RawBlock "html" "Clafer error: <span class=\"error\">No clafer model found</span>"
 
 --this is added so that it won't break if the wiki contains code blocks with no headers
