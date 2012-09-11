@@ -7,7 +7,10 @@ Sandbox page for exploratory testing
 
 ```clafer
 A ?
-
+  b
+  c ?
+  d +
+  
 [ A ] 
 ```
 
