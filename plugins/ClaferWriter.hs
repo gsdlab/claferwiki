@@ -29,8 +29,11 @@ readBlock block@(CodeBlock (id, classes, namevals) contents)
     return $ RawBlock "html" ("<div class=\"code\">" ++ contents ++ "</div>")
 readBlock x = return x
 
+withGraph Nothing = False
+withGraph _       = True
+						
 summary graphMode withStats withLinks = do
-      let args = defaultClaferArgs{mode=graphMode, keep_unused=Just True}
+      let args = defaultClaferArgs{mode=(if withGraph graphMode then graphMode else Just Graph), keep_unused=Just True}
       liftIO $ do
       fileExists <- doesFileExist "static/clafer/name.txt"
       if fileExists--file may not exist if an error occurred
@@ -50,8 +53,7 @@ summary graphMode withStats withLinks = do
                     return $ RawBlock "html" ((if (withGraph graphMode) then out else "") ++ (if (withGraph graphMode) && withStats then "<br>\n" else "") ++ 
                                                 (if withStats then "Module Statistics:<br>\n" ++ unlines (map (++"<br>") (lines stats)) else "") ++ (if withLinks && (withStats || (withGraph graphMode)) then "<br>\n" else "") ++
                                                 if withLinks then "Module Downloads: <a href=clafer/" ++ fileName ++ ".cfr>[.cfr]</a> <a href=clafer/" ++ fileName ++ ".html>[.html]</a>" else "")
-                        where withGraph Nothing = False
-                              withGraph _       = True
+                        
                 Left err -> return $ RawBlock "html" ("<pre>\n" ++ (concatMap handleErr err) ++ "\n</pre>")
                   where handleErr (ClaferErr msg) = "Clafer encountered an error: " ++ msg
                         handleErr (ParseErr ErrPos{modelPos = Pos l c} msg) = "Clafer encountered a parse error at line " ++ show l ++ ", column " ++ show c ++ " " ++ msg
