@@ -64,9 +64,9 @@ Cal2012: CalendarHierarchy
 Menswear: ProductHierarchy
 	[ levels = MensCasualWear, MensSportsWear ]
 Year: HierarchyLevel
-	[ levelBelongsToThis = Cal2012
-	  spreadsToLowerLevel = Season  
-	  no aggregatesToHigherLevel ]
+	[ levelBelongsToThis = Cal2012 ]
+	[ spreadsToLowerLevel = Season ] 
+	[ no aggregatesToHigherLevel ]
 Season: HierarchyLevel
 	[ levelBelongsToThis = Cal2012
 	  spreadsToLowerLevel = Month
