@@ -21,10 +21,10 @@ abstract MFPsystem
 	hasTheFollowingWorkflows -> workflow+
 //***************** Concrete Clafers *****************
 Oracle: MFPsystem
-	[ calendar = Cal2012
-	  product = Menswear
-	  hasTheFollowingWorkflows = PreSeasonTargetSettingWorkflow
-	  PreSeasonTargetSettingWorkflow, InSeasonTargetSettingWorkflow]
+	[ calendar = Cal2012 ]
+	[ product = Menswear]
+	[ hasTheFollowingWorkflows = PreSeasonTargetSettingWorkflow ]
+	[ PreSeasonTargetSettingWorkflow, InSeasonTargetSettingWorkflow]
 ```
 
 ## 2.2. Hierarchy, Hierarchy Levels Hierarchy Level Instance
@@ -68,17 +68,17 @@ Year: HierarchyLevel
 	[ spreadsToLowerLevel = Season ] 
 	[ no aggregatesToHigherLevel ]
 Season: HierarchyLevel
-	[ levelBelongsToThis = Cal2012
-	  spreadsToLowerLevel = Month
-	  aggregatesToHigherLevel = Year ]
+	[ levelBelongsToThis = Cal2012 ]
+	[ spreadsToLowerLevel = Month ]
+	[ aggregatesToHigherLevel = Year ]
 Month: HierarchyLevel
-	[ levelBelongsToThis = Cal2012
-	  spreadsToLowerLevel = Week
-	  aggregatesToHigherLevel = Season ]
+	[ levelBelongsToThis = Cal2012]
+	[ spreadsToLowerLevel = Week ]
+	[ aggregatesToHigherLevel = Season ]
 Week: HierarchyLevel
-	[ levelBelongsToThis = Cal2012
-	  no spreadsToLowerLevel
-	  aggregatesToHigherLevel = Month ]
+	[ levelBelongsToThis = Cal2012 ]
+	[ no spreadsToLowerLevel]
+	[  aggregatesToHigherLevel = Month ]
 MensCasualWear: HierarchyLevel
 	[ levelBelongsToThis = Menswear 
 	  no spreadsToLowerLevel
@@ -241,11 +241,11 @@ abstract planningRole
 
 //***************** Concrete Clafers ******************
 PlanningDirector: planningRole
-	[  roleLevel = MiddleOut
-	   roleCreatedTheFollowingPlans = WorkingPlan2012, TargetPlan2012  
-	   roleCreatedTheFollowingTargets = MiddleOutMarkdownTargets2012
-	   roleReceivesTheFollowingTargets = TopDownSalesTargets2012
-	   RoleSeesTheFollowingViews = Targets2012ApprovalView, Targets2012ReviewView ]
+	[  roleLevel = MiddleOut ]
+	[  roleCreatedTheFollowingPlans = WorkingPlan2012, TargetPlan2012 ]
+	[  roleCreatedTheFollowingTargets = MiddleOutMarkdownTargets2012 ]
+	[  roleReceivesTheFollowingTargets = TopDownSalesTargets2012 ]
+	[  RoleSeesTheFollowingViews = Targets2012ApprovalView, Targets2012ReviewView ]
 ExecutiveManager: planningRole
 	[  roleLevel = TopDown
 	   roleCreatedTheFollowingPlans = WorkingPlan2012, TargetPlan2012
