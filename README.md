@@ -30,6 +30,15 @@ Installation
   * execute `make dependencies` to install `pandoc` with code highlighting support and `gitit` wiki 
   * execute `make install to=<target directory>` 
 
+### Important: Branches must correspond
+
+Clafer, ClaferIG, and ClaferWiki are following the *simultaneous release model*. 
+The branch `master` contains releases, whereas the branch `develop` contains code under development. 
+When building the tools, the branches should match:
+Releases `clafer/master` and `claferwiki/master` are guaranteed to work well together.
+Development versions `clafer/develop` and `claferwiki/develop` should work well together but this might not always be the case.
+
+
 Running
 -------
 
@@ -64,20 +73,20 @@ For general usage information for the GitIt wiki see the [README](http://gitit.n
 
 You can insert code blocks with clafer code anywhere in the page as follows:
 
-`````
+~~~
 ```.clafer
 <here goes your model fragment>
 ```
-`````
+~~~
 
 
 The model overview, including the graph, stats, and download links, can be added as follows:
 
-`````
+~~~
 ```{.clafer .summary}
 <the contents in this block are ignored>
 ```
-`````
+~~~
 
 To have the code blocks correctly processed, make sure to add an empty line before and after the code block, even if the code block is the last element on the page.
 
