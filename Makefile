@@ -7,6 +7,7 @@ install:
 	mkdir -p $(to)
 	cp -f --preserve=all gitit.cnf $(to)
 	cp -f --preserve=all claferwiki.sh $(to)
+	chmod +x $(to)/claferwiki.sh
 	cp -f --preserve=all README.md $(to)
 	cp -f --preserve=all -r .git $(to)
 	mkdir -p $(to)/static/img
