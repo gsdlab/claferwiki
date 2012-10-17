@@ -1,11 +1,41 @@
-To use the Clafer plugin, you create a code block, like so:
+To use the clafer plugin, write your clafer model inside clafer code blocks. A clafer code block looks like this
 
 ````
-~~~{.clafer}
-model
-~~~
+```clafer
+(Your clafer mdoel goes here)
+```
 ````
 
-Note that the .clafer **must** come first; the other tags are the same as in Clafer -?, except with the symbolic characters removed. This is because only alphanumeric characters function properly in the code block headers.
+or this
+
+````
+```{.clafer}
+(Your clafer model goes here)
+```
+````
+
+You can also use ~ instead of ` to create a code block. Ensure that each code block is separated by any outside text by at least one blank line. You can add graphs, statistics and links to the source file in your wiki page. To do this, add .graph, .stats or .links to the code block, in addition to the .clafer, like so:
+
+````
+```{.clafer .graph .stats}
+```
+````
+
+You can combine as many as you like in one code block. Additionally, .summary is a shorthand for .graph .stats .links.
+
+````
+```{.clafer .summary}
+```
+````
+
+is equivalent to
+
+````
+```{.clafer .graph .stats .links}
+```
+````
+
+Each code block is treated as a separate fragment of one model. All code blocks on one page are collected together and compiled as one model. Therefore, each code block starts with a top-level definition, and each top-level definition must be contained in only one code block.
+
 
 For an example, see [Clafer Wiki Test Suite]()

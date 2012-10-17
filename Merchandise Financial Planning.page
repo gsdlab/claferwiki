@@ -1,0 +1,452 @@
+# 2. Clafer Model
+
+```{.clafer .stats}
+```
+
+## 2.1. Merchandise Financial System
+A Merchandise Financial Planning (MFP) system deals with three main types of hierarchies; Calendar, Product, and Location.
+
+- **Calendar Hierarchy**-- represents the time units that the system deals with, such as Season, Month, and Week for the Spring 2004 season.  
+- **Product Hierarchy**-- represents the several product categories that the system deals with, such as department, class, and sub-class for Men’s Casual Wear, or Men’s Formal Wear in Fashion store.  
+- **Location Hierarchy**-- reflects multiple channels within the organization at their aggregate level, such as total Brick and Mortar Divisions, catalog and/or e-commerce.
+
+MFP systems have the concept of workflows or workbooks which they use to manage and complete their entire plan.
+
+```clafer
+abstract MFPsystem
+	2..3 hierarchies
+		calendar -> CalendarHierarchy
+		product -> ProductHierarchy
+		location -> LocationHierarchy
+	hasTheFollowingWorkflows -> workflow+
+//***************** Concrete Clafers *****************
+Oracle: MFPsystem
+	[ calendar = Cal2012 ]
+	[ product = Menswear]
+	[ hasTheFollowingWorkflows = PreSeasonTargetSettingWorkflow ]
+	[ PreSeasonTargetSettingWorkflow, InSeasonTargetSettingWorkflow]
+```
+
+## 2.2. Hierarchy, Hierarchy Levels Hierarchy Level Instance
+Users may edit data at different levels of each hierarchy (product, location, and calendar). A hierarchy level can spread to one or more lower related levels within the same hierarchy, or aggregates to one or more higher levels within the same hierarchy.
+
+```clafer
+abstract Hierarchy
+abstract CalendarHierarchy: Hierarchy
+	levels -> HierarchyLevel +
+	[ all l : levels | l.levelBelongsToThis = this ] 
+abstract ProductHierarchy: Hierarchy
+	levels -> HierarchyLevel +
+	[ all l : levels | l.levelBelongsToThis = this ]
+abstract LocationHierarchy: Hierarchy
+	levels -> HierarchyLevel +
+	[ all l : levels | l.levelBelongsToThis = this ]
+abstract HierarchyLevel
+	levelBelongsToThis -> Hierarchy
+	spreadsToLowerLevel -> HierarchyLevel ?
+	aggregatesToHigherLevel -> HierarchyLevel ?
+	[ all disj d1; d2 : HierarchyLevel | (d2 = d1.aggregatesToHigherLevel <=> d1 = d2.spreadsToLowerLevel) ]
+```
+
+## 2.3. Hierarchy Level Instance
+In order to ensure that related level belongs to the same hierarchy type, we introduce the concept of Hierarchy Level Instance. For instance, a “Year” level in the “Calendar” Hierarchy spreads to “Month”, “Week”, and “Days” levels. However, it can’t spread to the  “department” level for the “Product” hierarchy. 
+
+```clafer
+abstract HierarchyLevelInstance
+			instanceBelongsTo -> HierarchyLevel
+			instanceAggregatesTo -> HierarchyLevelInstance ?
+			instanceSpreadsTo -> HierarchyLevelInstance ?
+[ all disj d1; d2 : HierarchyLevelInstance | (d2 = d1.instanceAggregatesTo <=> d1 = d2.instanceSpreadsTo) ]
+
+//***************** Concrete Clafers ******************
+Cal2012: CalendarHierarchy
+	[ levels = Year, Season, Month, Week ]
+Menswear: ProductHierarchy
+	[ levels = MensCasualWear, MensSportsWear ]
+Year: HierarchyLevel
+	[ levelBelongsToThis = Cal2012 ]
+	[ spreadsToLowerLevel = Season ] 
+	[ no aggregatesToHigherLevel ]
+Season: HierarchyLevel
+	[ levelBelongsToThis = Cal2012 ]
+	[ spreadsToLowerLevel = Month ]
+	[ aggregatesToHigherLevel = Year ]
+Month: HierarchyLevel
+	[ levelBelongsToThis = Cal2012]
+	[ spreadsToLowerLevel = Week ]
+	[ aggregatesToHigherLevel = Season ]
+Week: HierarchyLevel
+	[ levelBelongsToThis = Cal2012 ]
+	[ no spreadsToLowerLevel]
+	[  aggregatesToHigherLevel = Month ]
+MensCasualWear: HierarchyLevel
+	[ levelBelongsToThis = Menswear 
+	  no spreadsToLowerLevel
+	  no aggregatesToHigherLevel ]
+MensSportsWear: HierarchyLevel
+	[ levelBelongsToThis = Menswear 
+	  no spreadsToLowerLevel
+	  no aggregatesToHigherLevel ]
+```
+
+## 2.4. Plan
+The strategic and financial planning processes are supported by different plan versions to designate different plan types.  These version names and their abbreviations are used frequently; for example, in views to distinguish measures. 
+
+
+The different plan versions, and their corresponding abbreviations include:
+
+- Working Plan (Wp), Original Plan (Op), Current Plan (Cp), Last Year Plan (Ly), Target 
+
+Plan (Tgt), Waiting for Approval Plan (Wa)
+Each plan is created by one or more planning role(s), and belongs to a specific retail channel such as store or a catalog.
+
+```clafer
+enum VersionAbbreviation = Op | Cp | Wp | Ly | Wa | Tgt
+abstract plan
+	PlanCreatedBy -> planningRole +
+	versionAbbreviation -> VersionAbbreviation
+//	planSeenInTheFollowingViews -> view +
+	xor retailChannels
+		store
+		internet
+		catalog
+```
+
+## 2.5. Working Plan
+
+- The working plan is the editable plan version. 
+- It used to develop and revise data.  
+- Requirement #29: When seeding a plan, you choose which information to seed. You can seed a certain level of each hierarchy (product, calendar, location) or all levels.
+
+```clafer
+abstract WorkingPlan: plan
+	[ versionAbbreviation = Wp ]
+	seeded?
+		seedingSource -> LastYear
+		lastSeedingDate: string
+		seededWithThoseInstances -> HierarchyLevelInstance *
+```
+
+## 2.6. Original Plan
+The original plan is a plan version which acts as the baseline against which the current plan is evaluated. It is pre-Season plan that has been approved and promoted from (Wa) to (Op). All roles can view the Op version measures.
+
+```clafer
+abstract OriginalPlan: plan
+	[ versionAbbreviation = Op ] 
+```
+
+## 2.7. Current Plan
+
+- An in-season plan that has been approved and promoted from Waiting for Approval (Wa) to Current Plan (Cp) version. 
+- The plan is updated based on current status. 
+- All roles have visibility to current plan measures.
+
+```clafer
+abstract CurrentPlan: plan
+	[ versionAbbreviation = Cp ]
+```
+
+## 2.8. Last Year Plan
+A plan version that provides reference to last year’s actual historical data. This plan version is not editable by any role.
+
+```clafer
+abstract LastYear: plan
+	[ versionAbbreviation = Ly ]
+```
+
+## 2.9. Target Plan
+This plan version is composed of the company’s targets set by the TopDown and/or MiddleOut planning role(s).
+
+```clafer
+abstract TargetPlan: plan
+	[ versionAbbreviation = Tgt ]
+	composedOf -> Target+
+```
+
+## 2.10. Waiting For Approval Plan
+A plan awaiting approval by the Middle-out role. The bottom up role submits the plan for approval. 
+
+```clafer
+abstract WaitingForApproval: plan
+	[ versionAbbreviation = Wa ] 
+
+//***************** Concrete Clafers ******************
+WorkingPlan2012: WorkingPlan
+		[ PlanCreatedBy = ExecutiveManager, PlanningDirector, MerchandisePlanner
+//		  planSeenInTheFollowingViews = 2012PlanningView
+		  seeded
+		  retailChannels.internet ]
+TargetPlan2012: TargetPlan
+		[  PlanCreatedBy = ExecutiveManager, PlanningDirector, MerchandisePlanner
+		   composedOf = TopDownSalesTargets2012, MiddleOutMarkdownTargets2012
+//		   planSeenInTheFollowingViews =  Targets2012PlanningView
+		   retailChannels.internet ]
+OriginalPlan2012: OriginalPlan
+		[  PlanCreatedBy = MerchandisePlanner
+//		   planSeenInTheFollowingViews = Targets2012ReviewView
+		   retailChannels.store ]
+```
+
+## 2.11. Metric
+Requirement #3: The planning processes are supported by key financial indicators (metrics) that include sales, markdown, turn, receipts, inventory, gross margin, and open-to-buy.  
+Requirement #31: MFP users can plan sales based on three classifications; regular, promotional and clearance sale.  
+  
+Requirement #32: Markdowns are classified into regular, promotional and permanent markdowns.  
+
+```clafer
+abstract metric
+		xor metricName
+			xor sales
+				regularSales
+				promotionalSales
+				clearanceSales
+			xor markdown
+				regularMarkdown
+				promotionalMarkdown
+				permenantMarkdown
+			turn
+			receipts
+			inventory
+			grossMargin
+			openToBuy
+
+//***************** Concrete Clafers ******************
+sales2011: metric
+			[ regularSales ]
+markdown2011: metric
+			[ promotionalMarkdown ]
+```
+
+## 2.12. Planning Role
+Requirement #4: There are three types of planning roles in MFPs; Top-down, Middle-out, and Bottom-up.  
+
+Requirement #5: Top-down roles are typically planning directors. They create the overall targets for the company and set top-down group level targets for the middle out role.  
+Requirement #6: Middle-out roles are typically planning managers. They create middle-out targets.  
+
+Requirement #7: Bottom-up roles are typically merchandise planners. They create Op (Original Plan) and Cp (Current Plan)  plans for approval by the middle out role.  
+  
+Requirement #8: The targets are published by superior levels to the subsequent level: top down passes to middle out, and middle out passes to bottom up. The bottom up then submits the Op, Cp, or both to the middle out role for approval.  
+
+```clafer
+enum PlanningRoleLevel = TopDown | MiddleOut | BottomUp
+abstract planningRole
+	roleLevel -> PlanningRoleLevel
+	roleCreatedTheFollowingPlans -> plan +
+	roleCreatedTheFollowingTargets -> Target *
+	[ roleLevel=BottomUp => no roleCreatedTheFollowingTargets ]
+	roleReceivesTheFollowingTargets -> Target *
+	[ roleLevel=TopDown => no roleReceivesTheFollowingTargets]
+	RoleSeesTheFollowingViews -> view +
+	roleEditsTheFollowingMeasures -> Measure *
+
+//***************** Concrete Clafers ******************
+PlanningDirector: planningRole
+	[  roleLevel = MiddleOut ]
+	[  roleCreatedTheFollowingPlans = WorkingPlan2012, TargetPlan2012 ]
+	[  roleCreatedTheFollowingTargets = MiddleOutMarkdownTargets2012 ]
+	[  roleReceivesTheFollowingTargets = TopDownSalesTargets2012 ]
+	[  RoleSeesTheFollowingViews = Targets2012ApprovalView, Targets2012ReviewView ]
+ExecutiveManager: planningRole
+	[  roleLevel = TopDown
+	   roleCreatedTheFollowingPlans = WorkingPlan2012, TargetPlan2012
+	   roleCreatedTheFollowingTargets = TopDownSalesTargets2012
+	   no roleReceivesTheFollowingTargets
+	   RoleSeesTheFollowingViews = Targets2012PlanningView, Targets2012ReviewView ]
+
+MerchandisePlanner: planningRole
+	[  roleLevel = BottomUp
+	   roleCreatedTheFollowingPlans = WorkingPlan2012, OriginalPlan2012   
+	   no roleCreatedTheFollowingTargets
+	   roleReceivesTheFollowingTargets = MiddleOutMarkdownTargets2012 
+	   RoleSeesTheFollowingViews = Targets2012ReviewView]
+```
+
+## 2.13. Target
+These are the lower level components from which the target plan is composed. As previously mentioned, the targets are either created by TopDown or MiddleOut roles, and published to lower levels. 
+
+```clafer
+abstract Target
+	belongsTo -> TargetPlan	
+	createdBy -> planningRole
+		[! createdBy.roleLevel = BottomUp] // BottomUp roles can't create Targets
+	publishedTo -> planningRole
+// The constraints below are used to ensure that targets are published to direct lower levels.
+	[ createdBy.roleLevel=TopDown => publishedTo.roleLevel = MiddleOut ]
+	[ createdBy.roleLevel=MiddleOut => publishedTo.roleLevel = BottomUp ]
+
+//**************** Concrete Clafers *******************
+TopDownSalesTargets2012: Target
+	[  belongsTo = TargetPlan2012   
+	   createdBy = ExecutiveManager   
+	   publishedTo = PlanningDirector ]
+
+MiddleOutMarkdownTargets2012: Target
+	[  belongsTo = TargetPlan2012   
+	   createdBy = PlanningDirector
+	   publishedTo = MerchandisePlanner ]
+```
+
+## 2.14. Workflow
+Requirement #12: MFPs follow workflows for creating/managing plans, and each workflow has one or more views.  
+
+Requirement #1: The planning processes is divided into two-sub processes; Creating the merchandise financial plan which occurs during pre-season planning. Managing and updating the merchandise financial plan occurs during in-season planning.  
+
+Requirement #2: Pre-season planning focuses on creating the original plan against which to benchmark the in-season progress after being approved.  
+
+Requirement #23: If you are doing pre-season planning, then it can’t be proceeded by in-season planning.  
+
+Requirement #24: Once you are in-season planning, you can’t return to the pre-season planning stage.  
+
+```clafer
+abstract workflow
+	belongsToThisSystem -> MFPsystem
+	xor workflowPlanningSeason
+		preSeasonPlanning
+		inSeasonPlanning
+	proceededBy -> workflow ?
+	[proceededBy != workflow] //if I want to say can't be proceeded by the same workflow.
+	followedBy -> workflow ?
+	[followedBy != workflow] //if I want to say can't be followed by the same workflow instance.
+	
+// The following two constraints ensure that pre-season isn't proceeded by anything and is followed by in-season.
+	[all v: workflow | v.workflowPlanningSeason.preSeasonPlanning => no proceededBy]
+	[all v: workflow | v.workflowPlanningSeason.preSeasonPlanning => v.followedBy.workflowPlanningSeason.inSeasonPlanning]
+
+// The following two constraints ensure that in-season is proceeded by pre-season and isn't followed by anything.
+	[all v: workflow | v.workflowPlanningSeason.inSeasonPlanning => no followedBy]
+	[all v: workflow | v.workflowPlanningSeason.inSeasonPlanning => v.proceededBy.workflowPlanningSeason.preSeasonPlanning]
+	views -> view +
+
+
+//***************** Concrete Clafers ******************
+PreSeasonTargetSettingWorkflow: workflow
+	[  belongsToThisSystem = Oracle
+	   workflowPlanningSeason.preSeasonPlanning
+	   no proceededBy
+	   followedBy = InSeasonTargetSettingWorkflow
+	   views = Targets2012PlanningView, Targets2012ApprovalView]
+
+InSeasonTargetSettingWorkflow: workflow
+	[  belongsToThisSystem = Oracle
+	   workflowPlanningSeason.inSeasonPlanning
+	   proceededBy = PreSeasonTargetSettingWorkflow
+	   no followedBy
+	   views = Targets2012ReviewView]
+```
+
+## 2.15. View
+Requirement #13: There are views who are meant to be seen by a single specific role, and others that could be seen by all roles.  
+
+Requirement #14: Each view has one or more measures.  
+
+Requirement #15: The strategic and financial planning processes supported by MFP use plan versions to designate different plan types that are used throughout the planning horizon. These version names and their abbreviations are used frequently in planning views (for example, to distinguish measures).  
+
+Requirement #30: Top-Down roles are not involved in in-season planning, only Middle-out and Bottom-up roles.  
+
+Requirement #33: In the view, you choose to seed, approve, create, or review a plan.  
+
+```clafer
+abstract view 
+	viewBelongsTo -> workflow
+	xor visibility
+		specificRole -> planningRole
+		[viewBelongsTo.workflowPlanningSeason.inSeasonPlanning => ! specificRole.roleLevel = TopDown ]
+	allRoles
+		roles -> planningRole * = planningRole
+	measures -> Measure +
+	planversion -> plan	
+	[viewBelongsTo.workflowPlanningSeason.inSeasonPlanning =>
+	 ! (planversion=WaitingForApproval || planversion = LastYear)]
+	xor viewType	
+		Approval
+			[ specificRole.roleLevel = MiddleOut ]	// Role has to be MiddleOut
+			[ planversion = WaitingForApproval ]	// Plan Version has to be Wa
+			[ viewBelongsTo.workflowPlanningSeason.preSeasonPlanning]
+		Seeding
+			[ viewBelongsTo.workflowPlanningSeason.preSeasonPlanning]
+			[ specificRole.roleLevel =TopDown || specificRole.roleLevel = MiddleOut]
+			[ planversion = WorkingPlan ]	//Seeding has to occur in the working plan
+		Review
+		Planning
+
+//***************** Concrete Clafers ******************
+Targets2012PlanningView: view	
+			[  viewBelongsTo = PreSeasonTargetSettingWorkflow
+			   specificRole = ExecutiveManager
+			   measures =  LyMarkdown, TgtSales
+			   planversion = TargetPlan2012
+			   viewType.Planning ]
+Targets2012ApprovalView: view
+			[  viewBelongsTo = PreSeasonTargetSettingWorkflow
+			   specificRole = PlanningDirector
+			   measures = LyMarkdown
+			   planversion = TargetPlan2012
+			   viewType.Approval ]
+Targets2012ReviewView: view
+			[  viewBelongsTo = InSeasonTargetSettingWorkflow
+			   allRoles
+			   measures = TgtSales
+			   planversion = OriginalPlan2012
+			   viewType.Review ]
+```
+
+2.16. Measure
+Requirement #17: Each measure could be expressed either in $ amount or as a percentage called unit of measure (UOM).  
+
+Requirement #18: A measure is defined for a specific metric, UOM, and a plan version it belongs to.  
+
+Requirement #19: Measures are classified into reference and non-reference measures (historical ones).  
+
+Requirement #20: All measures are visible by all roles.  
+
+Requirement #21: A non-reference measure is meant to be edited by a specific role.  
+
+Requirement #22: Reference measures can’t be edited by any role.   
+
+Requirement #25: Measures could be derived by other measures, be used to derive other measures, could have both previous properties, or a regular measure (i.e. isn’t any of the mentioned)  
+
+```clafer
+abstract Measure
+		// A measure belongs to one or more views.
+		belongsTo -> view+
+		measureMetric -> metric
+		or unitOfMeasure
+			amount
+			percentage
+		measureBelongsToThisPlan -> plan
+		xor measureType
+			referenceMeasure
+			nonReferenceMeasure
+				editedBy -> planningRole ?
+		derivedByAnotherMeasures?
+			derivedByTheseMeasures -> Measure +
+			derivedByThisRule -> Rule
+		derivesOtherMeasures?
+			derivesTheseMeasures ->  Measure +
+			derivesUsingThisRule -> Rule
+
+//***************** Concrete Clafers ******************
+TgtSales: Measure
+			[belongsTo = Targets2012PlanningView, Targets2012ReviewView
+			 measureMetric = sales2011
+			amount
+			 measureBelongsToThisPlan = TargetPlan2012
+			 nonReferenceMeasure ]
+
+LyMarkdown: Measure
+			[belongsTo = Targets2012PlanningView, Targets2012ApprovalView
+			measureMetric = markdown2011
+			percentage
+			measureBelongsToThisPlan = TargetPlan2012
+			referenceMeasure ]
+```
+
+## 2.17. Rule
+The rule is dealt with here in a superficial manner. It had to be present since a “Measure” derives or is derived by another measure through some rule. The details of those rules are outside the scope of the model. 
+
+```clafer
+abstract Rule
+	RelatedMeasure -> Measure*
+		[ this.derivedByAnotherMeasures.derivedByThisRule = Rule ||
+		  this.derivesOtherMeasures.derivesUsingThisRule = Rule ]
+```

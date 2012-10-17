@@ -1,0 +1,69 @@
+The following model fragments from [Issue 132](http://gsd.uwaterloo.ca:8888/question/623/display-compiler-errors-in-html-rendering) contain parse errors.
+
+Module Summary
+==============
+
+Overall summary:
+
+```{.clafer .summary}
+```
+
+Links to source code and html download.
+
+```{.clafer .links}
+```
+
+Rendering in simplified notation.
+
+```{.clafer .graph}
+```
+
+Module statistics.
+
+```{.clafer .stats}
+```
+
+Module Details
+==============
+
+```{.clafer}
+Car
+   xor body
+      hatchback
+      sedan
+      SUV
+      minivan
+```
+
+First, we have a correct model. Since there are parse errors in other code blocks on the page, this correct code block is not getting rendered in HTML since compilation is not executed due to parse errors. 
+
+```{.clafer}
+Company
+   employs => Person
+```
+
+Error: incorrect symbol for reference `=>` instead of `->`.
+
+```{.clafer}
+abstract - Person
+   age : integer
+```
+
+Error: the symbol `-` used instead of `:` or `->`.
+
+```{.clafer}
+Adults -> Person in Company
+```
+
+Error: the operator `in` can only be used within a constraint.
+
+```{.clafer}
+1 + 2 = 5
+```
+
+Error: incorrect clafer name - names cannot begin with a number. 
+
+```clafer
+```
+
+And here's an empty code block - it should not cause any trouble anymore as reported in [issue 137](http://gsd.uwaterloo.ca:8888/question/635/layoutresolver-error-on-empty-fragment).
