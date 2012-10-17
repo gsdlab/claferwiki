@@ -73,20 +73,20 @@ For general usage information for the GitIt wiki see the [README](http://gitit.n
 
 You can insert code blocks with clafer code anywhere in the page as follows:
 
-~~~
+~~~~
 ```.clafer
 <here goes your model fragment>
 ```
-~~~
+~~~~
 
 
 The model overview, including the graph, stats, and download links, can be added as follows:
 
-~~~
+~~~~
 ```{.clafer .summary}
 <the contents in this block are ignored>
 ```
-~~~
+~~~~
 
 To have the code blocks correctly processed, make sure to add an empty line before and after the code block, even if the code block is the last element on the page.
 
