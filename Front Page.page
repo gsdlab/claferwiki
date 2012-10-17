@@ -16,20 +16,11 @@ Examples
 
 [Telematics Example]()
 
+[Merchandise Financial Planning]()
+
+Tests
+=====
+
 [Parse Error Reporting Test]()
 
 [Compile Error Reporting Test]()
-
-[Merchandise Financial Planning]()
-
-Sandbox
-=======
-
-[Sandbox page for exploratory testing]()
-
-Mockups
-=======
-
-[Mockup]() Example from [Issue 43](http://gsd.uwaterloo.ca:8888/question/205/generate-clafer-models-in-html)
-
-[Mockup of Telematics Example](Telematics Example)
