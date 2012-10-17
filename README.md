@@ -47,8 +47,8 @@ Update
 Features
 --------
 
-![Telematics Example, model overview graph](spec/telematics-screenshot-1-medium.png)
-![Telematics Example, model details](spec/telematics-screenshot-2-medium.png)
+![Telematics Example, model overview graph](https://raw.github.com/gsdlab/claferwiki/master/spec/telematics-screenshot-1-medium.png)
+![Telematics Example, model details](https://raw.github.com/gsdlab/claferwiki/master/spec/telematics-screenshot-1-medium.png)
 
 * syntax coloring for Clafer models
 * linking from clafer name references within model fragments to clafer definitions
