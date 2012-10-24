@@ -1,0 +1,14 @@
+```{.clafer .summary}
+```
+
+```clafer
+abstract A
+   bs -> B *
+   
+abstract B
+   
+AB1 : A
+   [ bs = B1 ]
+
+B1 : B
+```
