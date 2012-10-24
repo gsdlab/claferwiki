@@ -3,10 +3,18 @@ Clafer Wiki
 
 Version v0.3.1.17-10-2012
 
-**Clafer-based wiki** is a wiki system integrated with Clafer: it allows for embedding Clafer model fragments in wiki pages and provides model authoring support. The project is based on the [Gitit wiki](http://gitit.net/). Goals of the project:
+**ClaferWiki** is a wiki system integrated with [Clafer compiler](https://github.com/gsdlab/clafer). [Clafer](http://clafer.org) is a lightweight yet powerful structural modeling language. ClaferWiki allows for embedding Clafer model fragments in wiki pages and provides model authoring support including code highlighting, parse and semantic error reporting, hyperlinking from identifier use to its definition, and graphical view rendering. 
 
-* provide infrastructure for informal-to-formal modeling with Clafer,
-* provide web interface for collaborative modeling with [Clafer compiler](https://github.com/gsdlab/clafer).
+ClaferWiki supports informal-to-formal modeling, that is, gradually refining parts of specification in natural language into a Clafer model fragments. Both the rich text and the model fragments can be freely mixed. Informal-to-formal modeling is important during domain modeling. 
+
+Also, ClaferWiki acts as a collaborative, lightweight, web-based integrated development environment (IDE) for Clafer. In addition to code highlighting, error reporting, hyperlinking, and graphical view rendering, it also provides model versioning and distributed online/offline editing capabilities as it is based on the Git distributed version control system and the [Gitit wiki](http://gitit.net/).
+
+Contributors
+------------
+
+* Chris Walker, co-op student May-Aug, 2012. Developer of Clafer Wiki, HTML and GraphViz generators.
+* [Michał‚ Antkiewicz](http://gsd.uwaterloo.ca/mantkiew), Research Engineer. Requirements, development, architecture, testing, technology transfer.
+* [Jimmy Liang](http://gsd.uwaterloo.ca/jliang), MSc. Candidate. Clafer compiler support, including multi-fragment compilation, source/AST/IR traceability, parsing and compilation error reporting.
 
 Dependencies
 ------------
