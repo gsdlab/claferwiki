@@ -11,6 +11,9 @@ use to that clafer's definition.
 The compiler also embeds compile errors into the output. 
 The integration of the compiler turns the wiki into an integrated development environment (IDE) and naturally enables collaborative modeling.
 
+
+[sandbox]()
+
 Examples
 ========
 
