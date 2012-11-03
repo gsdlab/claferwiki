@@ -2,13 +2,15 @@
 ```
 
 ```clafer
+/* standalone comment */
 abstract A
-   bs -> B *
+   bs -> B *   // bs is ...
    
 abstract B
-   
-AB1 : A
-   [ bs = B1 ]
+   // comment nested under B
+
+AB1 : A    
+   [ bs = B1 ]   // this constraint ensures...
 
 B1 : B
 ```
