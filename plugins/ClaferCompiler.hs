@@ -9,7 +9,7 @@ import System.Exit (ExitCode(ExitSuccess))
 import Data.ByteString.Lazy.UTF8 (fromString)
 -- from the SHA package on HackageDB:
 import Data.Digest.Pure.SHA (sha1, showDigest)
-import System.FilePath.Posix
+import System.FilePath
 import Data.Maybe (fromJust)
 import Language.Clafer
 import Language.ClaferT
