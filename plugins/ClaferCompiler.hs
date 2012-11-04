@@ -15,7 +15,7 @@ import Language.Clafer
 import Language.ClaferT
 import Language.Clafer.ClaferArgs
 import Language.Clafer.Css
-import Data.List (genericSplitAt)
+import Language.Clafer.Generator.Html (highlightErrors)
 
 plugin :: Plugin
 plugin = mkPageTransformM callClafer
@@ -26,7 +26,7 @@ callClafer (CodeBlock (id, classes, namevals) contents)
   notCompiled <- doesFileExist "static/clafer/temp.txt"
   if notCompiled
      then do model <- readFile "static/clafer/temp.txt"
-             catch (compileFragments defaultClaferArgs{mode=Just Html, keep_unused=Just True} model)  model
+             catch (compileFragments defaultClaferArgs{mode=Just Html, keep_unused=Just True, add_comments=Just True} model)  model
              return (CodeBlock (id, classes, namevals) contents)
      else return (CodeBlock (id, classes, namevals) contents)
   where
@@ -46,24 +46,7 @@ callClafer (CodeBlock (id, classes, namevals) contents)
           writeFile "static/clafer/name.txt" name
           writeFile ("static/clafer/" ++ name ++ ".cfr") model
           removeFile "static/clafer/temp.txt"
-    highlightErrors :: String -> [ClaferErr] -> String
-    highlightErrors model errors = "<pre>\n" ++ unlines (replace "<!-- # FRAGMENT /-->" "</pre>\n<!-- # FRAGMENT /-->\n<pre>" --assumes the fragments have been concatenated
-                                                          (highlightErrors' (replace "//# FRAGMENT" "<!-- # FRAGMENT /-->" (lines model)) errors)) ++ "</pre>"
-    highlightErrors' :: [String] -> [ClaferErr] -> [String]
-    highlightErrors' model [] = model
-    highlightErrors' model ((ClaferErr msg):es) = highlightErrors' model es
-    highlightErrors' model ((ParseErr ErrPos{modelPos = Pos l c, fragId = n} msg):es) = do
-      let (ls, lss) = genericSplitAt (l + toInteger n) model
-      let newLine = fst (genericSplitAt (c - 1) $ last ls) ++ "<span class=\"error\" title=\"Parsing failed at line " ++ show l ++ " column " ++ show c ++
-                       "...\n" ++ msg ++ "\">" ++ (if snd (genericSplitAt (c - 1) $ last ls) == "" then "&nbsp;" else snd (genericSplitAt (c - 1) $ last ls)) ++ "</span>"
-      highlightErrors' (init ls ++ [newLine] ++ lss) es
-    highlightErrors' model ((SemanticErr ErrPos{modelPos = Pos l c, fragId = n} msg):es) = do
-      let (ls, lss) = genericSplitAt (l + toInteger n) model
-      let newLine = fst (genericSplitAt (c - 1) $ last ls) ++ "<span class=\"error\" title=\"Compiling failed at line " ++ show l ++ " column " ++ show c ++
-                       "...\n" ++ msg ++ "\">" ++ (if snd (genericSplitAt (c - 1) $ last ls) == "" then "&nbsp;" else snd (genericSplitAt (c - 1) $ last ls)) ++ "</span>"
-      highlightErrors' (init ls ++ [newLine] ++ lss) es
-    replace x y []     = []
-    replace x y (z:zs) = (if x == z then y else z):replace x y zs
+
 callClafer x = return x
 
 compileFragments :: ClaferArgs -> InputModel -> Either [ClaferErr] CompilerResult
