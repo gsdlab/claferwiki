@@ -57,10 +57,10 @@ summary graphMode withStats withLinks = do
                                                statistics = stats } -> do
                                 case graphWithRefs of
                                         Right CompilerResult { outputCode = dotWithRefs } -> do
-                                                (_, unflattenedDotWithoutRefs, _) <- readProcessWithExitCode "unflatten" [ "-l 1000" ] dotWithoutRefs
-                                                (_, unflattenedDotWithRefs, _) <- readProcessWithExitCode "unflatten" [ "-l 1000" ] dotWithRefs
-                                                (_, outWithoutRefs, _) <- readProcessWithExitCode "dot" [ "-Tsvg" ] unflattenedDotWithoutRefs
-                                                (_, outWithRefs, _) <- readProcessWithExitCode "dot" [ "-Tsvg" ] unflattenedDotWithRefs
+                                                -- (_, unflattenedDotWithoutRefs, _) <- readProcessWithExitCode "unflatten" [ "-l 1000" ] dotWithoutRefs
+                                                -- (_, unflattenedDotWithRefs, _) <- readProcessWithExitCode "unflatten" [ "-l 1000" ] dotWithRefs
+                                                (_, outWithoutRefs, _) <- readProcessWithExitCode "dot" [ "-Tsvg" ] dotWithoutRefs
+                                                (_, outWithRefs, _) <- readProcessWithExitCode "dot" [ "-Tsvg" ] dotWithRefs
                                                 return $ RawBlock "html" ((if (withGraph graphMode) then (createGraphWithToggle outWithoutRefs outWithRefs) else "") ++ 
                                                                           (if (withGraph graphMode) && withStats then "<br>\n" else "") ++ 
                                                                           (if withStats then "Module Statistics:<br>\n" ++ unlines (map (++"<br>") (lines stats)) else "") ++ 
