@@ -38,20 +38,12 @@ analyzeWithClaferMooViz = do
   liftIO $ do 
   fileName <- readFile "static/clafer/name.txt"
   return $ RawBlock "html" (unlines [
-    "<div><form " ++
-    " id=\"analyzewithclafermoovizform\" " ++
-    " action=\"http://gsd.uwaterloo.ca:5002/\" " ++
-    " method=\"get\" " ++
-    " enctype=\"application/x-www-form-urlencoded\" " ++
-    " target=\"_blank\">" ++
-    "<input \"" ++
-    "    type=\"hidden\" " ++
-    "    name=\"claferFileURL\" " ++
-    "    value=\"http://gsd.uwaterloo.ca:5001/clafer/" ++ fileName ++  ".cfr\">" ++
-    "<input type=\"submit\" value=\" Analyze with ClaferMooViz \">" ++
+    "<div>" ++
+    "<a href=\"http://gsd.uwaterloo.ca:5002/?claferFileURL=http://gsd.uwaterloo.ca:5001/clafer/" ++ 
+    fileName ++  
+    ".cfr\" target=\"_blank\">Analyze with ClaferMooVisualizer</a>" ++
     "</div><br>\n"
     ])
-
 
 summary graphMode withStats withLinks = do
         let argsWithoutRefs = defaultClaferArgs{mode=(if withGraph graphMode then graphMode else Just Graph), keep_unused=Just True, show_references=Just False}
