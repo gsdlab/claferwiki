@@ -15,6 +15,8 @@ plugin = mkPageTransformM readBlock
 
 readBlock :: Block -> PluginM Block
 readBlock block@(CodeBlock (id, classes, namevals) contents)
+  | "clafer" `elem` classes && "mooviz" `elem` classes 
+    = analyzeWithClaferMooViz 
   | "clafer" `elem` classes && "summary" `elem` classes 
     = summary (Just Graph) True True
   | "clafer" `elem` classes && "graph" `elem` classes
@@ -31,7 +33,26 @@ readBlock x = return x
 
 withGraph Nothing = False
 withGraph _       = True
-                                                
+             
+analyzeWithClaferMooViz = do
+  liftIO $ do 
+  fileName <- readFile "static/clafer/name.txt"
+  return $ RawBlock "html" (unlines [
+    "<div><form " ++
+    " id=\"analyzewithclafermoovizform\" " ++
+    " action=\"http://gsd.uwaterloo.ca:5002/\" " ++
+    " method=\"get\" " ++
+    " enctype=\"application/x-www-form-urlencoded\" " ++
+    " target=\"_blank\">" ++
+    "<input \"" ++
+    "    type=\"hidden\" " ++
+    "    name=\"claferFileURL\" " ++
+    "    value=\"http://gsd.uwaterloo.ca:5001/clafer/" ++ fileName ++  ".cfr\">" ++
+    "<input type=\"submit\" value=\" Analyze with ClaferMooViz \">" ++
+    "</div><br>\n"
+    ])
+
+
 summary graphMode withStats withLinks = do
         let argsWithoutRefs = defaultClaferArgs{mode=(if withGraph graphMode then graphMode else Just Graph), keep_unused=Just True, show_references=Just False}
         let argsWithRefs = defaultClaferArgs{mode=(if withGraph graphMode then graphMode else Just Graph), keep_unused=Just True, show_references=Just True}
@@ -61,11 +82,15 @@ summary graphMode withStats withLinks = do
                                                 -- (_, unflattenedDotWithRefs, _) <- readProcessWithExitCode "unflatten" [ "-l 1000" ] dotWithRefs
                                                 (_, outWithoutRefs, _) <- readProcessWithExitCode "dot" [ "-Tsvg" ] dotWithoutRefs
                                                 (_, outWithRefs, _) <- readProcessWithExitCode "dot" [ "-Tsvg" ] dotWithRefs
-                                                return $ RawBlock "html" ((if (withGraph graphMode) then (createGraphWithToggle outWithoutRefs outWithRefs) else "") ++ 
+                                                return $ RawBlock "html" ((if (withGraph graphMode) 
+                                                                            then (createGraphWithToggle outWithoutRefs outWithRefs) 
+                                                                            else "") ++ 
                                                                           (if (withGraph graphMode) && withStats then "<br>\n" else "") ++ 
-                                                                          (if withStats then "Module Statistics:<br>\n" ++ unlines (map (++"<br>") (lines stats)) else "") ++ 
-                                                                          (if withLinks && (withStats || (withGraph graphMode)) then "<br>\n" else "") ++
-                                                                          (if withLinks then "Module Downloads: <a href=/static/clafer/" ++ fileName ++ ".cfr>[.cfr]</a> <a href=/static/clafer/" ++ fileName ++ ".html>[.html]</a>" else ""))
+                                                                          (if withStats 
+                                                                            then "<div><b>Module Statistics:</b> \n| " ++ (unlines (map (++ " | " ) (lines stats))) ++ "</div><br>\n" 
+                                                                            else "") ++ 
+                                                                          (if withLinks && (withStats || (withGraph graphMode)) then "\n" else "") ++
+                                                                          (if withLinks then "<div><b>Module Downloads:</b> | <a href=\"/clafer/" ++ fileName ++ ".cfr\">[.cfr]</a> | <a href=\"/clafer/" ++ fileName ++ ".html\">[.html]</a> |</div><br>\n" else ""))
                                         Left err -> return $ RawBlock "html" ("<pre>\n" ++ (concatMap handleErr err) ++ "\n</pre>")
                         Left err -> return $ RawBlock "html" ("<pre>\n" ++ (concatMap handleErr err) ++ "\n</pre>")
         else return $ RawBlock "html" "Clafer error: <span class=\"error\">No clafer model found</span>"
