@@ -33,7 +33,7 @@ callClafer (CodeBlock (id, classes, namevals) contents)
     catch (Right (CompilerResult{outputCode = output})) model = do
           let name = uniqueName model
           writeFile ("static/clafer/" ++ name ++ ".html")
-                    (header ++ css ++ "</head>\n<body>\n" ++ output ++ "</body>\n</html>")
+                    (header ++ "<style>" ++ css ++ "</style></head>\n<body>\n" ++ output ++ "</body>\n</html>")
           writeFile "static/clafer/output.html" $ output ++ "\n<!-- # FRAGMENT /-->"
           writeFile "static/clafer/name.txt" name
           writeFile ("static/clafer/" ++ name ++ ".cfr") model
