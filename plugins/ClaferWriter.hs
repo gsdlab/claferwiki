@@ -41,8 +41,10 @@ analyzeWithClaferMooViz = do
     "<div>" ++
     "<a href=\"http://gsd.uwaterloo.ca:5002/?claferFileURL=http://gsd.uwaterloo.ca:5001/clafer/" ++ 
     fileName ++  
-    ".cfr\" target=\"_blank\">Analyze with ClaferMooVisualizer</a>" ++
-    "</div><br>\n"
+    ".cfr\" target=\"_blank\" " ++
+    "style=\"background-color: #ccc;color: white;text-decoration: none;padding: 1px 5px 1px 5px;\" >" ++
+    "Analyze with ClaferMooVisualizer" ++
+    "</a></div><br>\n"
     ])
 
 summary graphMode withStats withLinks = do

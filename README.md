@@ -1,7 +1,7 @@
 Clafer Wiki
 ===========
 
-Version v0.3.2.03-11-2012
+Version v0.3.2.19-01-2013
 
 **ClaferWiki** is a wiki system integrated with [Clafer compiler](https://github.com/gsdlab/clafer). [Clafer](http://clafer.org) is a lightweight yet powerful structural modeling language. ClaferWiki allows for embedding Clafer model fragments in wiki pages and provides model authoring support including code highlighting, parse and semantic error reporting, hyperlinking from identifier use to its definition, and graphical view rendering. 
 
@@ -13,7 +13,7 @@ Contributors
 ------------
 
 * Chris Walker, co-op student May-Aug, 2012. Developer of Clafer Wiki, HTML and GraphViz generators.
-* [Michał‚ Antkiewicz](http://gsd.uwaterloo.ca/mantkiew), Research Engineer. Requirements, development, architecture, testing, technology transfer.
+* [Michał Antkiewicz](http://gsd.uwaterloo.ca/mantkiew), Research Engineer. Requirements, development, architecture, testing, technology transfer.
 * [Jimmy Liang](http://gsd.uwaterloo.ca/jliang), MSc. Candidate. Clafer compiler support, including multi-fragment compilation, source/AST/IR traceability, parsing and compilation error reporting.
 
 Dependencies
