@@ -3,7 +3,7 @@
 
 ```clafer
 /* standalone comment */
-abstract A
+abstract A : B
    bs ->> B *   // bs is ...
    
 abstract B
@@ -29,7 +29,7 @@ abstract G
    i : I ?
    j ?
 
-abstract H
+abstract H : B
 
 abstract I : H
    `K ?
