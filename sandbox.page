@@ -17,11 +17,27 @@ abstract C
 
 abstract D
    y ?
+   `G
 
 AB1 : A    
    [ bs = B1 ]   // this constraint ensures...
 
 B1 : B
+
+abstract G
+   `H ?
+   i : I ?
+   j ?
+
+abstract H
+
+abstract I : H
+   `K ?
+
+abstract K
+   l ?
+   m ?
+   n ?
 ```
 
 ```{.clafer .mooviz}
