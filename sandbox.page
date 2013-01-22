@@ -4,10 +4,19 @@
 ```clafer
 /* standalone comment */
 abstract A
-   bs -> B *   // bs is ...
+   bs ->> B *   // bs is ...
    
 abstract B
    // comment nested under B
+   `C +
+
+
+abstract C
+   x ?
+   `D ?
+
+abstract D
+   y ?
 
 AB1 : A    
    [ bs = B1 ]   // this constraint ensures...
