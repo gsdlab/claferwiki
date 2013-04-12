@@ -1,0 +1,2 @@
+[("test",User {uUsername = "test", uPassword = Password {pSalt = "cohZcCs6yz6YG0[WV^[GATd@]Dzq8<bd", pHashed = "c7c4dac211c63295b7ceb927d6ff4f8608459949cb8cf7ea3f0ae508cfd811f728e71cf2fd22f4aff4c98b2fafad65260b6b88b28236fa089a598ecfc561e243"}, uEmail = ""})
+]

@@ -1,54 +1,66 @@
 Clafer Wiki
 ===========
 
-Version v0.3.1.17-10-2012
+v0.3.2.11-4-2013
 
 **ClaferWiki** is a wiki system integrated with [Clafer compiler](https://github.com/gsdlab/clafer). [Clafer](http://clafer.org) is a lightweight yet powerful structural modeling language. ClaferWiki allows for embedding Clafer model fragments in wiki pages and provides model authoring support including code highlighting, parse and semantic error reporting, hyperlinking from identifier use to its definition, and graphical view rendering. 
 
-ClaferWiki supports informal-to-formal modeling, that is, gradually refining parts of specification in natural language into a Clafer model fragments. Both the rich text and the model fragments can be freely mixed. Informal-to-formal modeling is important during domain modeling. 
+ClaferWiki supports informal-to-formal modeling, that is, gradually refining parts of specification in natural language into a Clafer model fragments. ClaferWiki supports *literate modeling* - both the rich text and the model fragments can be freely mixed. Informal-to-formal modeling is important during domain modeling. 
 
 Also, ClaferWiki acts as a collaborative, lightweight, web-based integrated development environment (IDE) for Clafer. In addition to code highlighting, error reporting, hyperlinking, and graphical view rendering, it also provides model versioning and distributed online/offline editing capabilities as it is based on the Git distributed version control system and the [Gitit wiki](http://gitit.net/).
+
+To see the wiki in action, visit a live instance which contains many example models in Clafer [ModelWiki](http://gsd.uwaterloo.ca:5001).
 
 Contributors
 ------------
 
 * Chris Walker, co-op student May-Aug, 2012. Developer of Clafer Wiki, HTML and GraphViz generators.
-* [Michał‚ Antkiewicz](http://gsd.uwaterloo.ca/mantkiew), Research Engineer. Requirements, development, architecture, testing, technology transfer.
+* [Michał Antkiewicz](http://gsd.uwaterloo.ca/mantkiew), Research Engineer. Requirements, development, architecture, testing, technology transfer.
 * [Jimmy Liang](http://gsd.uwaterloo.ca/jliang), MSc. Candidate. Clafer compiler support, including multi-fragment compilation, source/AST/IR traceability, parsing and compilation error reporting.
 
-Dependencies
-------------
+Getting Clafer Tools
+--------------------
 
+Binary distributions of Clafer, ClaferIG, and ClaferWiki for Windows, Mac, and Linux, can be downloaded from [Clafer Tools - Binary Distributions](http://gsd.uwaterloo.ca/node/516). 
+Clafer Wiki requires Haskell Platform and MinGW to run on Windows. 
+
+In case these binaries do not work on your particular machine configuration, the tools can be easily built from source code, as described below.
+
+The following tools are not part of the binary distribution and they have to be downloaded separately:
+
+* [ClaferMOO](https://github.com/gsdlab/ClaferMooStandalone) is a set of scripts in Python (cross-platform). 
+* [ClaferMooVisualizer](https://github.com/gsdlab/ClaferMooVisualizer) is a client/server web application written JavaScript.
+* [ClaferConfigurator](https://github.com/gsdlab/ClaferConfigurator) is a client/server web application written JavaScript.
+
+### Dependencies for running
+
+* [Clafer compiler](https://github.com/gsdlab/clafer/) 0.3.2
 * [The Haskell Platform](http://hackage.haskell.org/platform) 2012.2.0.0
   * on Ubuntu Precise, there is Haskell Platform 2012.1.0.0
   * alternatively, GHC 7.4.1
 * [Git](http://git-scm.com) 
 * [Gitit wiki](http://gitit.net) 0.10.0.1
-* [Clafer compiler](https://github.com/gsdlab/clafer/) 0.3.1
-  * the binary distribution from [clafer-tools-0.3.1](https://github.com/gsdlab/claferig/downloads) cannot be used becase the wiki calls the compiler using API.
   
-Installation
-------------
+### Installation
 
-* install the Haskell Platrorm
-* install Git
-* install Clafer compiler from source code
-* in some `<source directory>` where you want to have the wiki source code,
+1. install the Haskell Platform
+2. install Git
+3. install Clafer compiler from source code in some `<source directory>` where you want to have the wiki source code,
   * execute `git clone git://github.com/gsdlab/claferwiki.git`
-  * execute `make dependencies` to install `pandoc` with code highlighting support and `gitit` wiki 
-  * execute `make install to=<target directory>` 
+4. execute `make dependencies` to install `pandoc` with code highlighting support and `gitit` 
+4. execute `make install to=<target directory>` 
 
 ### Important: Branches must correspond
 
-Clafer, ClaferIG, and ClaferWiki are following the *simultaneous release model*. 
+Clafer, ClaferIG, ClaferWiki, ClaferMoo, and ClaferMooVisualizer are following the *simultaneous release model*. 
 The branch `master` contains releases, whereas the branch `develop` contains code under development. 
 When building the tools, the branches should match:
-Releases `clafer/master` and `claferwiki/master` are guaranteed to work well together.
-Development versions `clafer/develop` and `claferwiki/develop` should work well together but this might not always be the case.
+Releases `clafer/master` and `claferIG/master` are guaranteed to work well together.
+Development versions `clafer/develop` and `claferIG/develop` should work well together but this might not always be the case.
 
 
-Running
--------
+Usage
+=====
 
 * in the `<target directory>` execute `claferwiki.sh` to start the wiki server
 
