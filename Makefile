@@ -1,7 +1,7 @@
 dependencies:
-	cabal update
-	cabal install -fhighlighting pandoc
-	cabal install gitit
+	cabal install
+	cabal install -fhighlighting pandoc-1.9.4.5 
+	cabal install gitit-0.10.0.1
 
 install:
 	mkdir -p $(to)

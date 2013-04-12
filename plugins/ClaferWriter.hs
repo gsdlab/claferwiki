@@ -48,8 +48,8 @@ analyzeWithClaferMooViz = do
     ])
 
 summary graphMode withStats withLinks = do
-        let argsWithoutRefs = defaultClaferArgs{mode=(if withGraph graphMode then graphMode else Just Graph), keep_unused=Just True, show_references=Just False}
-        let argsWithRefs = defaultClaferArgs{mode=(if withGraph graphMode then graphMode else Just Graph), keep_unused=Just True, show_references=Just True}
+        let argsWithoutRefs = defaultClaferArgs{mode=(if withGraph graphMode then graphMode else Just Graph), keep_unused=Just True, show_references=Just False, noalloyruncommand=Just True}
+        let argsWithRefs = defaultClaferArgs{mode=(if withGraph graphMode then graphMode else Just Graph), keep_unused=Just True, show_references=Just True, noalloyruncommand=Just True}
         liftIO $ do
         fileExists <- doesFileExist "static/clafer/name.txt"
         if fileExists--file may not exist if an error occurred
