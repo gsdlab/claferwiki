@@ -2,7 +2,7 @@ module ClaferCompiler (plugin) where
 
 import Network.Gitit.Interface
 import System.Directory (doesFileExist, removeFile)
-import Control.Monad.Trans (liftIO)
+-- import Control.Monad.Trans (liftIO)
 import System.Process (readProcessWithExitCode)
 import System.Exit (ExitCode(ExitSuccess))
 -- from the utf8-string package on HackageDB:

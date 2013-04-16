@@ -1,7 +1,7 @@
 module ClaferCleanup (plugin) where
 
 import Network.Gitit.Interface
-import Control.Monad.Trans (liftIO)
+-- import Control.Monad.Trans (liftIO)
 import Control.Monad (when)
 import System.Directory (createDirectoryIfMissing, doesFileExist, removeFile)
 import Language.Clafer.Css

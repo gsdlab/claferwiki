@@ -1,7 +1,7 @@
 module ClaferWriter (plugin) where
 
 import Network.Gitit.Interface
-import Control.Monad.Trans (liftIO)
+-- import Control.Monad.Trans (liftIO)
 import System.Process (readProcessWithExitCode)
 import System.Directory (doesFileExist)
 import System.Exit (ExitCode(ExitSuccess))
