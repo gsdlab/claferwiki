@@ -37,6 +37,11 @@ Car
 
 First, we have a correct model. Since there are parse errors in other code blocks on the page, this correct code block is not getting rendered in HTML since compilation is not executed due to parse errors. 
 
+```clafer
+A
+   C $
+```
+
 ```{.clafer}
 Company
    employs => Person
