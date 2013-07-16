@@ -26,7 +26,7 @@ callClafer (CodeBlock (id, classes, namevals) contents)
   notCompiled <- doesFileExist "static/clafer/temp.txt"
   if notCompiled
      then do model <- readFile "static/clafer/temp.txt"
-             catch (compileFragments defaultClaferArgs{mode=Just Html, keep_unused=Just True, add_comments=Just True, noalloyruncommand=Just True} model)  model
+             catch (compileFragments defaultClaferArgs{mode=Html, keep_unused=True, add_comments=True, noalloyruncommand=True} model)  model
              return (CodeBlock (id, classes, namevals) contents)
      else return (CodeBlock (id, classes, namevals) contents)
   where

@@ -18,22 +18,20 @@ readBlock block@(CodeBlock (id, classes, namevals) contents)
   | "clafer" `elem` classes && "mooviz" `elem` classes 
     = analyzeWithClaferMooViz 
   | "clafer" `elem` classes && "summary" `elem` classes 
-    = summary (Just Graph) True True
+    = summary Graph True True
   | "clafer" `elem` classes && "graph" `elem` classes
-    = summary (Just Graph)  ("stats" `elem` classes) ("links" `elem` classes) 
+    = summary Graph  ("stats" `elem` classes) ("links" `elem` classes) 
   | "clafer" `elem` classes && "cvlGraph" `elem` classes
-    = summary (Just CVLGraph) ("stats" `elem` classes) ("links" `elem` classes) 
+    = summary CVLGraph ("stats" `elem` classes) ("links" `elem` classes) 
   | "clafer" `elem` classes && not ("graph" `elem` classes) && not ("cvlGraph" `elem` classes) && (("stats" `elem` classes) || ("links" `elem` classes) )
-    = summary Nothing ("stats" `elem` classes) ("links" `elem` classes) 
+    = summary Alloy ("stats" `elem` classes) ("links" `elem` classes) 
   | "clafer"  `elem` classes && not ("graph" `elem` classes) && not ("cvlGraph" `elem` classes) && not ("stats" `elem` classes) && not ("links" `elem` classes)
     = liftIO $ do
     contents <- getBlock
     return $ RawBlock "html" ("<div class=\"code\">" ++ contents ++ "</div>")
 readBlock x = return x
 
-withGraph Nothing = False
-withGraph _       = True
-             
+          
 analyzeWithClaferMooViz = do
   liftIO $ do 
   fileName <- readFile "static/clafer/name.txt"
@@ -47,9 +45,13 @@ analyzeWithClaferMooViz = do
     "</a></div><br>\n"
     ])
 
+withGraph Graph = True
+withGraph CVLGraph = True
+withGraph _     = False
+
 summary graphMode withStats withLinks = do
-        let argsWithoutRefs = defaultClaferArgs{mode=(if withGraph graphMode then graphMode else Just Graph), keep_unused=Just True, show_references=Just False, noalloyruncommand=Just True}
-        let argsWithRefs = defaultClaferArgs{mode=(if withGraph graphMode then graphMode else Just Graph), keep_unused=Just True, show_references=Just True, noalloyruncommand=Just True}
+        let argsWithoutRefs = defaultClaferArgs{mode=(if withGraph graphMode then graphMode else Graph), keep_unused=True, show_references=False, noalloyruncommand=True}
+        let argsWithRefs = defaultClaferArgs{mode=(if withGraph graphMode then graphMode else Graph), keep_unused=True, show_references=True, noalloyruncommand=True}
         liftIO $ do
         fileExists <- doesFileExist "static/clafer/name.txt"
         if fileExists--file may not exist if an error occurred
