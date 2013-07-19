@@ -21,7 +21,7 @@ install:
 	cp -f  plugins/ClaferWriter.hs $(to)/plugins
 	
 update:
-	cp -f  gitit.cnf $(to)
+	#cp -f  gitit.cnf $(to)
 	cp -f  claferwiki.sh $(to)
 	cp -f  README.md $(to)
 	cp -f  static/img/logo.png $(to)/static/img
