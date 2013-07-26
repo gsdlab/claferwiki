@@ -12,7 +12,7 @@ A Merchandise Financial Planning (MFP) system deals with three main types of hie
 
 MFP systems have the concept of workflows or workbooks which they use to manage and complete their entire plan.
 
-```clafer
+```{.clafer .links}
 abstract MFPsystem
 	2..3 hierarchies
 		calendar -> CalendarHierarchy
