@@ -111,10 +111,9 @@ hideRefs =
   "var gwor=document.getElementById('graphWithoutRefs'); gwor.style.display='block'; gwor.scrollLeft=this.scrollLeft;this.style.display='none';"
     
 --this is added so that it won't break if the wiki contains code blocks with no headers
-first [] = []
-first (x:xs) = x
+rest :: [String] -> [String]
 rest [] = []
-rest (x:xs) = xs
+rest (_:xs) = xs
 
 getBlock = do
   contents <- readFile "static/clafer/output.html"

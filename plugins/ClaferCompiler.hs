@@ -1,5 +1,8 @@
 module ClaferCompiler (plugin) where
 
+import Control.Monad.State (StateT)
+import Control.Monad.Reader (ReaderT)
+import Network.Gitit.Types
 import Network.Gitit.Interface
 import System.Directory (doesFileExist, removeFile)
 -- import Control.Monad.Trans (liftIO)
@@ -15,6 +18,7 @@ import Language.Clafer
 import Language.ClaferT
 import Language.Clafer.ClaferArgs
 import Language.Clafer.Css
+import Data.String.Utils (join)
 import Language.Clafer.Generator.Html (highlightErrors)
 
 plugin :: Plugin
@@ -22,29 +26,31 @@ plugin = mkPageTransformM callClafer
 
 callClafer :: Block -> PluginM Block
 callClafer (CodeBlock (id, classes, namevals) contents)
-  | first classes == "clafer" = liftIO $ do
+  | first classes == "clafer" = do
+  pname <- getPageName
+  liftIO $ do
   notCompiled <- doesFileExist "static/clafer/temp.txt"
   if notCompiled
      then do model <- readFile "static/clafer/temp.txt"
-             catch (compileFragments defaultClaferArgs{mode=Html, keep_unused=True, add_comments=True, noalloyruncommand=True} model)  model
+             catch pname (compileFragments defaultClaferArgs{mode=Html, keep_unused=True, add_comments=True, noalloyruncommand=True} model)  model
              return (CodeBlock (id, classes, namevals) contents)
      else return (CodeBlock (id, classes, namevals) contents)
   where
-    catch (Right (CompilerResult{outputCode = output})) model = do
+    catch pname' (Right (CompilerResult{outputCode = output})) model = do
           let name = uniqueName model
           writeFile ("static/clafer/" ++ name ++ ".html")
                     (header ++ "<style>" ++ css ++ "</style></head>\n<body>\n" ++ output ++ "</body>\n</html>")
           writeFile "static/clafer/output.html" $ output ++ "\n<!-- # FRAGMENT /-->"
-          writeFile "static/clafer/name.txt" name
-          writeFile ("static/clafer/" ++ name ++ ".cfr") model
+          writeFile "static/clafer/name.txt" pname'
+          writeFile ("static/clafer/" ++ pname' ++ ".cfr") model
           removeFile "static/clafer/temp.txt"
-    catch (Left err) model = do
+    catch pname' (Left err) model = do
           let name = uniqueName model
           let output = highlightErrors model err
           writeFile ("static/clafer/" ++ name ++ ".html") (header ++ css ++ "</head>\n<body>\n" ++ output ++ "</body>\n</html>")
           writeFile "static/clafer/output.html" $ output ++ "\n<!-- # FRAGMENT /-->"
-          writeFile "static/clafer/name.txt" name
-          writeFile ("static/clafer/" ++ name ++ ".cfr") model
+          writeFile "static/clafer/name.txt" pname'
+          writeFile ("static/clafer/" ++ pname' ++ ".cfr") model
           removeFile "static/clafer/temp.txt"
 
 callClafer x = return x
@@ -69,9 +75,14 @@ compileFragments args model =
         fragments' model               = takeWhile (/= "//# FRAGMENT") model : fragments' (dropWhile (/= "//# FRAGMENT") model)
 
 -- this is added so that it won't break if the wiki contains code blocks with no headers
+first :: [String] -> String
 first [] = []
-first (x:xs) = x
+first (x:_) = x
 
 -- | Generate a unique filename given the file's contents.
 uniqueName :: String -> String
 uniqueName = showDigest . sha1 . fromString
+
+getPageName:: ReaderT PluginData (StateT Context IO) String
+getPageName = getContext >>= return . join "_" . words . pgPageName . ctxLayout
+

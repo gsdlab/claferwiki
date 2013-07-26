@@ -19,7 +19,3 @@ readBlock (CodeBlock (id, classes, namevals) contents)
     _ <- appendFile filepath "\n//# SUMMARY\n"
     return $ CodeBlock (id, classes, namevals) contents-}
 readBlock x = return x
-
---this is added so that it won't break if the wiki contains code blocks with no headers
-first [] = []
-first (x:xs) = x
