@@ -30,7 +30,7 @@ Oracle: MFPsystem
 ## 2.2. Hierarchy, Hierarchy Levels Hierarchy Level Instance
 Users may edit data at different levels of each hierarchy (product, location, and calendar). A hierarchy level can spread to one or more lower related levels within the same hierarchy, or aggregates to one or more higher levels within the same hierarchy.
 
-```{.clafer .links}
+```clafer
 abstract Hierarchy
 abstract CalendarHierarchy: Hierarchy
 	levels -> HierarchyLevel +
