@@ -84,5 +84,8 @@ uniqueName :: String -> String
 uniqueName = showDigest . sha1 . fromString
 
 getPageName:: ReaderT PluginData (StateT Context IO) String
-getPageName = getContext >>= return . join "_" . words . pgPageName . ctxLayout
+getPageName = getContext >>= return . join "_" . words . getSingleName . pgPageName . ctxLayout
+  where
+    getSingleName str = if ('/' `notElem` str) then str
+      else tail $ dropWhile (/='/') str
 
