@@ -9,7 +9,7 @@ import Data.ByteString.Lazy.UTF8 (fromString)
 import Data.Digest.Pure.SHA (sha1, showDigest)
 import System.FilePath ((</>))
 import Control.Monad.Trans (liftIO)
-import Data.String.Utils (join)
+import Data.String.Utils (replace)
 
 plugin :: Plugin
 plugin = mkPageTransformM claferCompile
@@ -35,10 +35,7 @@ first [] = []
 first (x:_) = x
 
 getPageName:: ReaderT PluginData (StateT Context IO) String
-getPageName = getContext >>= return . join "_" . words . getSingleName . pgPageName . ctxLayout
-  where
-    getSingleName str = if ('/' `notElem` str) then str
-      else tail $ dropWhile (/='/') str
+getPageName = getContext >>= return . replace " " "_" . replace "/" "_" . words . getSingleName . pgPageName . ctxLayout
 
 -- translates the tags in the code block into the corresponding clafer tags. Unfortunately, character that are not alphanumeric, and in the attributes, break the code block.
 flagTrans :: [String] -> String -> [String]

@@ -18,7 +18,7 @@ import Language.Clafer
 import Language.ClaferT
 import Language.Clafer.ClaferArgs
 import Language.Clafer.Css
-import Data.String.Utils (join)
+import Data.String.Utils (replace)
 import Language.Clafer.Generator.Html (highlightErrors)
 
 plugin :: Plugin
@@ -84,8 +84,4 @@ uniqueName :: String -> String
 uniqueName = showDigest . sha1 . fromString
 
 getPageName:: ReaderT PluginData (StateT Context IO) String
-getPageName = getContext >>= return . join "_" . words . getSingleName . pgPageName . ctxLayout
-  where
-    getSingleName str = if ('/' `notElem` str) then str
-      else tail $ dropWhile (/='/') str
-
+getPageName = getContext >>= return . replace " " "_" . replace "/" "_" . words . getSingleName . pgPageName . ctxLayout
