@@ -35,7 +35,7 @@ first [] = []
 first (x:_) = x
 
 getPageName:: ReaderT PluginData (StateT Context IO) String
-getPageName = getContext >>= return . replace " " "_" . replace "/" "_" . words . pgPageName . ctxLayout
+getPageName = getContext >>= return . replace " " "_" . replace "/" "_" . pgPageName . ctxLayout
 
 -- translates the tags in the code block into the corresponding clafer tags. Unfortunately, character that are not alphanumeric, and in the attributes, break the code block.
 flagTrans :: [String] -> String -> [String]

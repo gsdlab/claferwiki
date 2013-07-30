@@ -84,4 +84,4 @@ uniqueName :: String -> String
 uniqueName = showDigest . sha1 . fromString
 
 getPageName:: ReaderT PluginData (StateT Context IO) String
-getPageName = getContext >>= return . replace " " "_" . replace "/" "_" . words . pgPageName . ctxLayout
+getPageName = getContext >>= return . replace " " "_" . replace "/" "_" . pgPageName . ctxLayout
