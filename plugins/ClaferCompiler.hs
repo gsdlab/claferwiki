@@ -6,20 +6,15 @@ import Network.Gitit.Types
 import Network.Gitit.Interface
 import System.Directory (doesFileExist, removeFile)
 -- import Control.Monad.Trans (liftIO)
-import System.Process (readProcessWithExitCode)
-import System.Exit (ExitCode(ExitSuccess))
 -- from the utf8-string package on HackageDB:
 import Data.ByteString.Lazy.UTF8 (fromString)
 -- from the SHA package on HackageDB:
 import Data.Digest.Pure.SHA (sha1, showDigest)
-import System.FilePath
-import Data.Maybe (fromJust)
 import Language.Clafer
-import Language.ClaferT
-import Language.Clafer.ClaferArgs
 import Language.Clafer.Css
 import Data.String.Utils (replace)
 import Language.Clafer.Generator.Html (highlightErrors)
+import Prelude hiding (id)
 
 plugin :: Plugin
 plugin = mkPageTransformM callClafer
@@ -56,11 +51,10 @@ callClafer (CodeBlock (id, classes, namevals) contents)
 callClafer x = return x
 
 compileFragments :: ClaferArgs -> InputModel -> Either [ClaferErr] CompilerResult
-compileFragments args model =
+compileFragments args' model =
   do
-   result <- runClafer args $
+   result <- runClafer args' $
               do
-               let name = uniqueName model
                addFragment $ fragments model
                parse
                compile
@@ -69,10 +63,10 @@ compileFragments args model =
       where
         addFragment []     = return ()
         addFragment (x:xs) = addModuleFragment x >> addFragment xs
-        fragments model = map unlines $ fragments' $ lines model
+        fragments model' = map unlines $ fragments' $ lines model'
         fragments' []                  = []
         fragments' ("//# FRAGMENT":xs) = fragments' xs
-        fragments' model               = takeWhile (/= "//# FRAGMENT") model : fragments' (dropWhile (/= "//# FRAGMENT") model)
+        fragments' model'               = takeWhile (/= "//# FRAGMENT") model' : fragments' (dropWhile (/= "//# FRAGMENT") model')
 
 -- this is added so that it won't break if the wiki contains code blocks with no headers
 first :: [String] -> String

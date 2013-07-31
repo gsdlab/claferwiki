@@ -4,17 +4,15 @@ import Network.Gitit.Interface
 -- import Control.Monad.Trans (liftIO)
 import System.Process (readProcessWithExitCode)
 import System.Directory (doesFileExist)
-import System.Exit (ExitCode(ExitSuccess))
-import System.FilePath ((</>))
 import Language.Clafer
 import Language.ClaferT
-import Language.Clafer.ClaferArgs
+import Control.Monad.IO.Class (MonadIO)
 
 plugin :: Plugin
 plugin = mkPageTransformM readBlock
 
 readBlock :: Block -> PluginM Block
-readBlock block@(CodeBlock (id, classes, namevals) contents)
+readBlock (CodeBlock (_, classes, _) _)
   | "clafer" `elem` classes && "mooviz" `elem` classes 
     = analyzeWithClaferMooViz 
   | "clafer" `elem` classes && "summary" `elem` classes 
@@ -31,7 +29,8 @@ readBlock block@(CodeBlock (id, classes, namevals) contents)
     return $ RawBlock "html" ("<div class=\"code\">" ++ contents ++ "</div>")
 readBlock x = return x
 
-          
+
+analyzeWithClaferMooViz :: (MonadIO m) => m Block      
 analyzeWithClaferMooViz = do
   liftIO $ do 
   fileName <- readFile "static/clafer/name.txt"
@@ -45,10 +44,12 @@ analyzeWithClaferMooViz = do
     "</a></div><br>\n"
     ])
 
+withGraph :: ClaferMode -> Bool
 withGraph Graph = True
 withGraph CVLGraph = True
 withGraph _     = False
 
+summary :: (MonadIO m) => ClaferMode -> Bool -> Bool -> m Block
 summary graphMode withStats withLinks = do
         let argsWithoutRefs = defaultClaferArgs{mode=(if withGraph graphMode then graphMode else Graph), keep_unused=True, show_references=False, noalloyruncommand=True}
         let argsWithRefs = defaultClaferArgs{mode=(if withGraph graphMode then graphMode else Graph), keep_unused=True, show_references=True, noalloyruncommand=True}
@@ -69,7 +70,7 @@ summary graphMode withStats withLinks = do
                         compile
                         generate     
                 case graphWithoutRefs of
-                        Right CompilerResult { extension = ext,
+                        Right CompilerResult { extension = _,
                                                outputCode = dotWithoutRefs,
                                                statistics = stats } -> do
                                 case graphWithRefs of
@@ -91,11 +92,14 @@ summary graphMode withStats withLinks = do
                         Left err -> return $ RawBlock "html" ("<pre>\n" ++ (concatMap handleErr err) ++ "\n</pre>")
         else return $ RawBlock "html" "Clafer error: <span class=\"error\">No clafer model found</span>"
 
-handleErr (ClaferErr msg) = "Clafer encountered an error: " ++ msg
-handleErr (ParseErr ErrPos{modelPos = Pos l c} msg) = "Clafer encountered a parse error at line " ++ show l ++ ", column " ++ show c ++ " " ++ msg
-handleErr (SemanticErr ErrPos{modelPos = Pos l c} msg) = "Clafer encountered a compilation error at line " ++ show l ++ ", column " ++ show c ++ " " ++ msg                                                
+handleErr :: CErr ErrPos -> [Char]
+handleErr (ClaferErr mesg) = "Clafer encountered an error: " ++ mesg
+handleErr (ParseErr ErrPos{modelPos = Pos l c} mesg) = "Clafer encountered a parse error at line " ++ show l ++ ", column " ++ show c ++ " " ++ mesg
+handleErr (SemanticErr ErrPos{modelPos = Pos l c} mesg) = "Clafer encountered a compilation error at line " ++ show l ++ ", column " ++ show c ++ " " ++ mesg
+handleErr (ParseErr ErrPos{modelPos = PosPos _ l c} mesg) = "Clafer encountered a parse error at line " ++ show l ++ ", column " ++ show c ++ " " ++ mesg
+handleErr (SemanticErr ErrPos{modelPos = PosPos _ l c} mesg) = "Clafer encountered a compilation error at line " ++ show l ++ ", column " ++ show c ++ " " ++ mesg                                                                                                
 
-
+createGraphWithToggle :: String -> String -> String
 createGraphWithToggle outWithoutRefs outWithRefs = unlines [
     "<div id=\"graphWithoutRefs\" style=\"display:block;width:100%;border:solid lightgray 1px;overflow-x:auto;\" ondblclick=\"" ++ showRefs  ++ "\">",
     outWithoutRefs, 
@@ -104,9 +108,11 @@ createGraphWithToggle outWithoutRefs outWithRefs = unlines [
     outWithRefs, 
     "</div>" ]
 
+showRefs :: String 
 showRefs =
   "var gwr=document.getElementById('graphWithRefs'); gwr.style.display='block'; gwr.scrollLeft=this.scrollLeft; this.style.display='none';"
-  
+
+hideRefs :: String
 hideRefs = 
   "var gwor=document.getElementById('graphWithoutRefs'); gwor.style.display='block'; gwor.scrollLeft=this.scrollLeft;this.style.display='none';"
     
@@ -115,6 +121,7 @@ rest :: [String] -> [String]
 rest [] = []
 rest (_:xs) = xs
 
+getBlock :: IO String
 getBlock = do
   contents <- readFile "static/clafer/output.html"
   let fileLines = lines contents;

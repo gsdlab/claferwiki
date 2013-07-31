@@ -23,5 +23,5 @@ library
                    gitit == 0.10.0.1,
                    clafer == 0.3.3
   hs-source-dirs:  src
-  ghc-options:     -Wall
+  ghc-options:     -Wall -fno-warn-unused-do-bind -fno-warn-orphans
 

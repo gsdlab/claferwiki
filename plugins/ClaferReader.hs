@@ -1,7 +1,7 @@
 module ClaferReader (plugin) where
 
 import Network.Gitit.Interface
--- import Control.Monad.Trans (liftIO)
+import Prelude hiding (id)
 
 plugin :: Plugin
 plugin = mkPageTransformM readBlock

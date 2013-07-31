@@ -31,7 +31,6 @@ import System.Directory
 import Data.ByteString.Lazy.UTF8 (fromString)
 import Data.Digest.Pure.SHA
 import System.FilePath
-import Control.Monad.Trans (liftIO)
 
 plugin :: Plugin
 plugin = mkPageTransformM transformBlock

@@ -12,7 +12,7 @@ plugin = PageTransform $ \doc -> do
   meta <- askMeta
   case lookup "language" meta of
        Just s | map toLower s == "pig latin" ->
-         return $ processWith pigLatinStr doc
+         return $ bottomUp pigLatinStr doc
        _ -> return doc
 
 pigLatinStr :: Inline -> Inline
