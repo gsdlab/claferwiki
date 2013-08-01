@@ -1,4 +1,4 @@
-module Language.Clafer.Wiki.ClaferCompiler (plugin) where
+module Network.Gitit.Plugin.ClaferCompiler (plugin) where
 
 import Control.Monad.State (StateT)
 import Control.Monad.Reader (ReaderT)

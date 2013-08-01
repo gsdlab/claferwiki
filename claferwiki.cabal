@@ -14,7 +14,8 @@ license-file:   LICENSE
 tested-with:    GHC == 7.6.3
 data-files: claferwiki.sh,
             gitit.cnf,
-            README.md
+            README.md,
+            static/img/logo.png
 
 library 
   build-tools  :   ghc >= 7.6.3
@@ -35,7 +36,7 @@ library
   hs-source-dirs:  src
   ghc-options:     -Wall -fno-warn-unused-do-bind -fno-warn-orphans
   exposed-modules:
-            Language.Clafer.Wiki.ClaferCleanup
-            Language.Clafer.Wiki.ClaferCompiler
-            Language.Clafer.Wiki.ClaferReader
-            Language.Clafer.Wiki.ClaferWriter
+            Network.Gitit.Plugin.ClaferCleanup
+            Network.Gitit.Plugin.ClaferCompiler
+            Network.Gitit.Plugin.ClaferReader
+            Network.Gitit.Plugin.ClaferWriter
