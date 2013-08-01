@@ -4,7 +4,7 @@
 -- Limitations:  it is assumed that My page is
 -- formatted with markdown, and contains no metadata.
 
-module Subst (plugin) where
+module Language.Clafer.Wiki.Subst (plugin) where
 
 import Control.Monad.CatchIO (try)
 import Data.FileStore (FileStoreError, retrieve)

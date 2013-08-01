@@ -1,4 +1,4 @@
-module ClaferReader (plugin) where
+module Language.Clafer.Wiki.ClaferReader (plugin) where
 
 import Network.Gitit.Interface
 import Prelude hiding (id)

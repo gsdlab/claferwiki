@@ -1,4 +1,4 @@
-module Clafer (plugin) where
+module Language.Clafer.Wiki.Clafer (plugin) where
 
 import Network.Gitit.Interface
 import System.Process (readProcessWithExitCode)

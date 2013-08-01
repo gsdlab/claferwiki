@@ -15,7 +15,7 @@ is hardwired into it.
 
 By: Gwern Branwen; placed in the public domain -}
 
-module WebArchiver (plugin) where
+module Language.Clafer.Wiki.WebArchiver (plugin) where
 
 import Control.Concurrent (forkIO)
 import Network.URL.Archiver as A (checkArchive)

@@ -1,4 +1,4 @@
-module PigLatin (plugin) where
+module Language.Clafer.Wiki.Example.PigLatin (plugin) where
 
 -- This plugin converts a page to pig latin if the 'language' metadata
 -- field is set to 'pig latin'. This demonstrates how to get access to

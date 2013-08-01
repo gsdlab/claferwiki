@@ -1,4 +1,4 @@
-module ImgTex (plugin) where
+module Language.Clafer.Wiki.ImgTex (plugin) where
 {-
 
 This plugin provides a clear math LaTeX output.

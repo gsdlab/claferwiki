@@ -1,4 +1,4 @@
-module CapitalizeEmphasis (plugin) where
+module Language.Clafer.Wiki.Example.CapitalizeEmphasis (plugin) where
 
 -- This plugin converts emphasized text to ALL CAPS.
 -- Not a very useful feature, but useful as an example

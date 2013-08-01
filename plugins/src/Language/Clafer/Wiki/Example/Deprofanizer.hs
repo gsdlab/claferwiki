@@ -1,4 +1,4 @@
-module Deprofanizer (plugin) where
+module Language.Clafer.Wiki.Example.Deprofanizer (plugin) where
 
 -- This plugin replaces profane words with "XXXXX".
 

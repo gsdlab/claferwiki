@@ -1,4 +1,4 @@
-module ClaferWriter (plugin) where
+module Language.Clafer.Wiki.ClaferWriter (plugin) where
 
 import Network.Gitit.Interface
 -- import Control.Monad.Trans (liftIO)

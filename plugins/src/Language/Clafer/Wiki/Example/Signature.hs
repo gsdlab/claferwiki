@@ -1,4 +1,4 @@
-module Signature (plugin) where
+module Language.Clafer.Wiki.Signature (plugin) where
 
 -- This plugin replaces $SIG$ with the username and timestamp
 -- of the last edit, prior to saving the page in the repository.

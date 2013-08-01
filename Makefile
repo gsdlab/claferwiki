@@ -15,10 +15,10 @@ install:
 	cp -f  static/css/custom.css $(to)/static/css/custom.css
 	cp -f  static/css/clafer.css $(to)/static/css/clafer.css
 	mkdir -p $(to)/plugins
-	cp -f  plugins/ClaferCleanup.hs $(to)/plugins
-	cp -f  plugins/ClaferReader.hs $(to)/plugins
-	cp -f  plugins/ClaferCompiler.hs $(to)/plugins
-	cp -f  plugins/ClaferWriter.hs $(to)/plugins
+	cp -f  plugins/src/Language/Clafer/Wiki/ClaferCleanup.hs $(to)/plugins
+	cp -f  plugins/src/Language/Clafer/Wiki/ClaferReader.hs $(to)/plugins
+	cp -f  plugins/src/Language/Clafer/Wiki/ClaferCompiler.hs $(to)/plugins
+	cp -f  plugins/src/Language/Clafer/Wiki/ClaferWriter.hs $(to)/plugins
 	
 update:
 	#cp -f  gitit.cnf $(to)
@@ -27,7 +27,7 @@ update:
 	cp -f  static/img/logo.png $(to)/static/img
 	cp -f  static/css/custom.css $(to)/static/css/custom.css
 	cp -f  static/css/clafer.css $(to)/static/css/clafer.css
-	cp -f  plugins/ClaferCleanup.hs $(to)/plugins
-	cp -f  plugins/ClaferReader.hs $(to)/plugins
-	cp -f  plugins/ClaferCompiler.hs $(to)/plugins
-	cp -f  plugins/ClaferWriter.hs $(to)/plugins
+	cp -f  plugins/src/Language/Clafer/Wiki/ClaferCleanup.hs $(to)/plugins
+	cp -f  plugins/src/Language/Clafer/Wiki/ClaferReader.hs $(to)/plugins
+	cp -f  plugins/src/Language/Clafer/Wiki/ClaferCompiler.hs $(to)/plugins
+	cp -f  plugins/src/Language/Clafer/Wiki/ClaferWriter.hs $(to)/plugins

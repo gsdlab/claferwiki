@@ -1,4 +1,4 @@
-module Dot (plugin) where
+module Language.Clafer.Wiki.Dot (plugin) where
 
 -- This plugin allows you to include a graphviz dot diagram
 -- in a page like this:

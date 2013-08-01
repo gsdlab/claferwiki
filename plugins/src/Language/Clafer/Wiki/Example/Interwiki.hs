@@ -15,7 +15,7 @@
 
   (Written by Gwern Branwen; put in public domain, 2009) -}
 
-module Interwiki (plugin) where
+module Language.Clafer.Wiki.Interwiki (plugin) where
 
 import Network.Gitit.Interface
 
