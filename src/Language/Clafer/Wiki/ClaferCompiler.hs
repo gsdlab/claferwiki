@@ -5,10 +5,7 @@ import Control.Monad.Reader (ReaderT)
 import Network.Gitit.Types
 import Network.Gitit.Interface
 import System.Directory (doesFileExist, removeFile)
--- import Control.Monad.Trans (liftIO)
--- from the utf8-string package on HackageDB:
 import Data.ByteString.Lazy.UTF8 (fromString)
--- from the SHA package on HackageDB:
 import Data.Digest.Pure.SHA (sha1, showDigest)
 import Language.Clafer
 import Language.Clafer.Css

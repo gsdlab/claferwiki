@@ -39,7 +39,7 @@ First, we have a correct model. Since there are parse errors in other code block
 
 ```clafer
 A
-   C $
+   C
 ```
 
 ```{.clafer}
