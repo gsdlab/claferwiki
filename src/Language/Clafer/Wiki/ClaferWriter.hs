@@ -33,16 +33,16 @@ readBlock x = return x
 analyzeWithClaferMooViz :: (MonadIO m) => m Block      
 analyzeWithClaferMooViz = do
   liftIO $ do 
-  fileName <- readFile "static/clafer/name.txt"
-  return $ RawBlock "html" (unlines [
-    "<div>" ++
-    "<a href=\"http://gsd.uwaterloo.ca:5002/?claferFileURL=http://gsd.uwaterloo.ca:5001/clafer/" ++ 
-    fileName ++  
-    ".cfr\" target=\"_blank\" " ++
-    "style=\"background-color: #ccc;color: white;text-decoration: none;padding: 1px 5px 1px 5px;\" >" ++
-    "Analyze with ClaferMooVisualizer" ++
-    "</a></div><br>\n"
-    ])
+    fileName <- readFile "static/clafer/name.txt"
+    return $ RawBlock "html" (unlines [
+      "<div>" ++
+      "<a href=\"http://gsd.uwaterloo.ca:5002/?claferFileURL=http://gsd.uwaterloo.ca:5001/clafer/" ++ 
+      fileName ++  
+      ".cfr\" target=\"_blank\" " ++
+      "style=\"background-color: #ccc;color: white;text-decoration: none;padding: 1px 5px 1px 5px;\" >" ++
+      "Analyze with ClaferMooVisualizer" ++
+      "</a></div><br>\n"
+      ])
 
 withGraph :: ClaferMode -> Bool
 withGraph Graph = True
@@ -54,43 +54,43 @@ summary graphMode withStats withLinks = do
         let argsWithoutRefs = defaultClaferArgs{mode=(if withGraph graphMode then graphMode else Graph), keep_unused=True, show_references=False, noalloyruncommand=True}
         let argsWithRefs = defaultClaferArgs{mode=(if withGraph graphMode then graphMode else Graph), keep_unused=True, show_references=True, noalloyruncommand=True}
         liftIO $ do
-        fileExists <- doesFileExist "static/clafer/name.txt"
-        if fileExists--file may not exist if an error occurred
-        then do 
-                fileName <- readFile "static/clafer/name.txt"
-                content <- readFile $ "static/clafer/" ++ fileName ++ ".cfr"
-                graphWithoutRefs <- runClaferT argsWithoutRefs $ do
-                        addModuleFragment content
-                        parse
-                        compile
-                        generate
-                graphWithRefs <- runClaferT argsWithRefs $ do
-                        addModuleFragment content
-                        parse
-                        compile
-                        generate     
-                case graphWithoutRefs of
-                        Right CompilerResult { extension = _,
-                                               outputCode = dotWithoutRefs,
-                                               statistics = stats } -> do
-                                case graphWithRefs of
-                                        Right CompilerResult { outputCode = dotWithRefs } -> do
-                                                -- (_, unflattenedDotWithoutRefs, _) <- readProcessWithExitCode "unflatten" [ "-l 1000" ] dotWithoutRefs
-                                                -- (_, unflattenedDotWithRefs, _) <- readProcessWithExitCode "unflatten" [ "-l 1000" ] dotWithRefs
-                                                (_, outWithoutRefs, _) <- readProcessWithExitCode "dot" [ "-Tsvg" ] dotWithoutRefs
-                                                (_, outWithRefs, _) <- readProcessWithExitCode "dot" [ "-Tsvg" ] dotWithRefs
-                                                return $ RawBlock "html" ((if (withGraph graphMode) 
-                                                                            then (createGraphWithToggle outWithoutRefs outWithRefs) 
-                                                                            else "") ++ 
-                                                                          (if (withGraph graphMode) && withStats then "<br>\n" else "") ++ 
-                                                                          (if withStats 
-                                                                            then "<div><b>Module Statistics:</b> \n| " ++ (unlines (map (++ " | " ) (lines stats))) ++ "</div><br>\n" 
-                                                                            else "") ++ 
-                                                                          (if withLinks && (withStats || (withGraph graphMode)) then "\n" else "") ++
-                                                                          (if withLinks then "<div><b>Module Downloads:</b> | <a href=\"/clafer/" ++ fileName ++ ".cfr\">[.cfr]</a> | <a href=\"/clafer/" ++ fileName ++ ".html\">[.html]</a> |</div><br>\n" else ""))
-                                        Left err -> return $ RawBlock "html" ("<pre>\n" ++ (concatMap handleErr err) ++ "\n</pre>")
-                        Left err -> return $ RawBlock "html" ("<pre>\n" ++ (concatMap handleErr err) ++ "\n</pre>")
-        else return $ RawBlock "html" "Clafer error: <span class=\"error\">No clafer model found</span>"
+          fileExists <- doesFileExist "static/clafer/name.txt"
+          if fileExists--file may not exist if an error occurred
+          then do 
+                  fileName <- readFile "static/clafer/name.txt"
+                  content <- readFile $ "static/clafer/" ++ fileName ++ ".cfr"
+                  graphWithoutRefs <- runClaferT argsWithoutRefs $ do
+                          addModuleFragment content
+                          parse
+                          compile
+                          generate
+                  graphWithRefs <- runClaferT argsWithRefs $ do
+                          addModuleFragment content
+                          parse
+                          compile
+                          generate     
+                  case graphWithoutRefs of
+                          Right CompilerResult { extension = _,
+                                                 outputCode = dotWithoutRefs,
+                                                 statistics = stats } -> do
+                                  case graphWithRefs of
+                                          Right CompilerResult { outputCode = dotWithRefs } -> do
+                                                  -- (_, unflattenedDotWithoutRefs, _) <- readProcessWithExitCode "unflatten" [ "-l 1000" ] dotWithoutRefs
+                                                  -- (_, unflattenedDotWithRefs, _) <- readProcessWithExitCode "unflatten" [ "-l 1000" ] dotWithRefs
+                                                  (_, outWithoutRefs, _) <- readProcessWithExitCode "dot" [ "-Tsvg" ] dotWithoutRefs
+                                                  (_, outWithRefs, _) <- readProcessWithExitCode "dot" [ "-Tsvg" ] dotWithRefs
+                                                  return $ RawBlock "html" ((if (withGraph graphMode) 
+                                                                              then (createGraphWithToggle outWithoutRefs outWithRefs) 
+                                                                              else "") ++ 
+                                                                            (if (withGraph graphMode) && withStats then "<br>\n" else "") ++ 
+                                                                            (if withStats 
+                                                                              then "<div><b>Module Statistics:</b> \n| " ++ (unlines (map (++ " | " ) (lines stats))) ++ "</div><br>\n" 
+                                                                              else "") ++ 
+                                                                            (if withLinks && (withStats || (withGraph graphMode)) then "\n" else "") ++
+                                                                            (if withLinks then "<div><b>Module Downloads:</b> | <a href=\"/clafer/" ++ fileName ++ ".cfr\">[.cfr]</a> | <a href=\"/clafer/" ++ fileName ++ ".html\">[.html]</a> |</div><br>\n" else ""))
+                                          Left err -> return $ RawBlock "html" ("<pre>\n" ++ (concatMap handleErr err) ++ "\n</pre>")
+                          Left err -> return $ RawBlock "html" ("<pre>\n" ++ (concatMap handleErr err) ++ "\n</pre>")
+          else return $ RawBlock "html" "Clafer error: <span class=\"error\">No clafer model found</span>"
 
 handleErr :: CErr ErrPos -> [Char]
 handleErr (ClaferErr mesg) = "Clafer encountered an error: " ++ mesg

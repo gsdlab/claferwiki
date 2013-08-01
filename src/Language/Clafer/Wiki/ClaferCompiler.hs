@@ -24,29 +24,29 @@ callClafer (CodeBlock (id, classes, namevals) contents)
   | first classes == "clafer" = do
   pname <- getPageName
   liftIO $ do
-  notCompiled <- doesFileExist "static/clafer/temp.txt"
-  if notCompiled
-     then do model <- readFile "static/clafer/temp.txt"
-             catch pname (compileFragments defaultClaferArgs{mode=Html, keep_unused=True, add_comments=True, noalloyruncommand=True} model)  model
-             return (CodeBlock (id, classes, namevals) contents)
-     else return (CodeBlock (id, classes, namevals) contents)
-  where
-    catch pname' (Right (CompilerResult{outputCode = output})) model = do
-          let name = uniqueName model
-          writeFile ("static/clafer/" ++ name ++ ".html")
-                    (header ++ "<style>" ++ css ++ "</style></head>\n<body>\n" ++ output ++ "</body>\n</html>")
-          writeFile "static/clafer/output.html" $ output ++ "\n<!-- # FRAGMENT /-->"
-          writeFile "static/clafer/name.txt" pname'
-          writeFile ("static/clafer/" ++ pname' ++ ".cfr") model
-          removeFile "static/clafer/temp.txt"
-    catch pname' (Left err) model = do
-          let name = uniqueName model
-          let output = highlightErrors model err
-          writeFile ("static/clafer/" ++ name ++ ".html") (header ++ css ++ "</head>\n<body>\n" ++ output ++ "</body>\n</html>")
-          writeFile "static/clafer/output.html" $ output ++ "\n<!-- # FRAGMENT /-->"
-          writeFile "static/clafer/name.txt" pname'
-          writeFile ("static/clafer/" ++ pname' ++ ".cfr") model
-          removeFile "static/clafer/temp.txt"
+    notCompiled <- doesFileExist "static/clafer/temp.txt"
+    if notCompiled
+       then do model <- readFile "static/clafer/temp.txt"
+               catch pname (compileFragments defaultClaferArgs{mode=Html, keep_unused=True, add_comments=True, noalloyruncommand=True} model)  model
+               return (CodeBlock (id, classes, namevals) contents)
+       else return (CodeBlock (id, classes, namevals) contents)
+    where
+      catch pname' (Right (CompilerResult{outputCode = output})) model = do
+            let name = uniqueName model
+            writeFile ("static/clafer/" ++ name ++ ".html")
+                      (header ++ "<style>" ++ css ++ "</style></head>\n<body>\n" ++ output ++ "</body>\n</html>")
+            writeFile "static/clafer/output.html" $ output ++ "\n<!-- # FRAGMENT /-->"
+            writeFile "static/clafer/name.txt" pname'
+            writeFile ("static/clafer/" ++ pname' ++ ".cfr") model
+            removeFile "static/clafer/temp.txt"
+      catch pname' (Left err) model = do
+            let name = uniqueName model
+            let output = highlightErrors model err
+            writeFile ("static/clafer/" ++ name ++ ".html") (header ++ css ++ "</head>\n<body>\n" ++ output ++ "</body>\n</html>")
+            writeFile "static/clafer/output.html" $ output ++ "\n<!-- # FRAGMENT /-->"
+            writeFile "static/clafer/name.txt" pname'
+            writeFile ("static/clafer/" ++ pname' ++ ".cfr") model
+            removeFile "static/clafer/temp.txt"
 
 callClafer x = return x
 
