@@ -3,7 +3,7 @@ version:        0.3.3
 stability:      experimental
 author:         Chris Walker, Michal Antkiewicz, Luke Michael Brown
 maintainer:     mantkiew@gsd.uwaterloo.ca
-synopsis:       A wiki-based IDE for modeling with Clafer
+synopsis:       A wiki-based IDE for literate modeling with Clafer
 homepage:       http://github.com/gsdlab/claferwiki
 category:       Wiki
 cabal-version:  >= 1.16
