@@ -1,4 +1,4 @@
-module Clafer (plugin) where
+module Language.Clafer.Wiki.Clafer (plugin) where
 
 import Network.Gitit.Interface
 import System.Process (readProcessWithExitCode)
@@ -9,15 +9,17 @@ import Data.ByteString.Lazy.UTF8 (fromString)
 import Data.Digest.Pure.SHA (sha1, showDigest)
 import System.FilePath ((</>))
 import Control.Monad.Trans (liftIO)
+import Data.String.Utils (replace)
 
 plugin :: Plugin
 plugin = mkPageTransformM claferCompile
 
 claferCompile :: Block -> PluginM Block
 claferCompile (CodeBlock (id, classes, namevals) contents) | first classes == "clafer" = do
+  pname <- getPageName
   let (name, outfile) =  case lookup "name" namevals of
                                 Just fn   -> ([Str fn], fn ++ ".cfr")
-                                Nothing   -> ([], uniqueName contents ++ ".cfr")
+                                Nothing   -> ([], pname ++ ".cfr")
   let filepath = "static/clafer/" ++ outfile
   liftIO $ do
     _ <- writeFile filepath contents
@@ -28,12 +30,12 @@ claferCompile (CodeBlock (id, classes, namevals) contents) | first classes == "c
 claferCompile x = return x
 
 --this is added so that it won't break if the wiki contains code blocks with no headers
+first :: [String] -> String
 first [] = []
-first (x:xs) = x
+first (x:_) = x
 
--- generate a unique filename based on the file's contents
-uniqueName :: String -> String
-uniqueName = showDigest . sha1 . fromString
+getPageName:: ReaderT PluginData (StateT Context IO) String
+getPageName = getContext >>= return . replace " " "_" . replace "/" "_" . pgPageName . ctxLayout
 
 -- translates the tags in the code block into the corresponding clafer tags. Unfortunately, character that are not alphanumeric, and in the attributes, break the code block.
 flagTrans :: [String] -> String -> [String]

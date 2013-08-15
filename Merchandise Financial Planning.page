@@ -450,3 +450,6 @@ abstract Rule
 		[ this.derivedByAnotherMeasures.derivedByThisRule = Rule ||
 		  this.derivesOtherMeasures.derivesUsingThisRule = Rule ]
 ```
+
+```{.clafer .links}
+```
