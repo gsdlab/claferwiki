@@ -1,4 +1,4 @@
-module ClaferCleanup (plugin) where
+module Network.Gitit.Plugin.ClaferCleanup (plugin) where
 
 import Network.Gitit.Interface
 -- import Control.Monad.Trans (liftIO)
