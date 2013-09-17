@@ -13,6 +13,7 @@ static/clafer/*.html
 
 *.hi
 *.o
+dist/
 
 ############
 ## Windows
