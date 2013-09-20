@@ -1,6 +1,6 @@
 # gitit wiki configuration file
 
-port: 5001
+port: 8091
 # sets the port on which the web server will run.
 
 wiki-title: Clafer Wiki
@@ -10,7 +10,7 @@ repository-type: Git
 # specifies the type of repository used for wiki content.
 # Options are Git, Darcs, and Mercurial.
 
-repository-path: .
+repository-path: wikidata
 # specifies the path of the repository directory.  If it does not
 # exist, gitit will create it on startup.
 
