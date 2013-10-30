@@ -8,13 +8,32 @@ import Language.Clafer
 import Language.ClaferT
 import Control.Monad.IO.Class (MonadIO)
 
+serverURL :: String
+serverURL = "http://t3-necsis.cs.uwaterloo.ca"
+
 plugin :: Plugin
 plugin = mkPageTransformM readBlock
+
+addOpenInIDE :: PluginM Block
+addOpenInIDE = do
+  liftIO $ do 
+    fileName <- readFile "static/clafer/name.txt"
+    return $ RawBlock "html" (unlines [
+      "<div>" ++
+      "<a href=\"" ++ serverURL ++ ":8094/?claferFileURL=" ++ serverURL ++ ":8091/clafer/" ++ 
+      fileName ++  
+      ".cfr\" target=\"_blank\" " ++
+      "style=\"background-color: #ccc;color: white;text-decoration: none;padding: 1px 5px 1px 5px;\" >" ++
+      "Open in ClaferIDE" ++
+      "</a></div><br>\n"
+      ])
 
 readBlock :: Block -> PluginM Block
 readBlock (CodeBlock (_, classes, _) _)
   | "clafer" `elem` classes && "mooviz" `elem` classes 
     = analyzeWithClaferMooViz 
+  | "clafer" `elem` classes && "ide" `elem` classes 
+    = addOpenInIDE
   | "clafer" `elem` classes && "summary" `elem` classes 
     = summary Graph True True
   | "clafer" `elem` classes && "graph" `elem` classes
@@ -30,13 +49,13 @@ readBlock (CodeBlock (_, classes, _) _)
 readBlock x = return x
 
 
-analyzeWithClaferMooViz :: (MonadIO m) => m Block      
+analyzeWithClaferMooViz :: PluginM Block      
 analyzeWithClaferMooViz = do
   liftIO $ do 
     fileName <- readFile "static/clafer/name.txt"
     return $ RawBlock "html" (unlines [
       "<div>" ++
-      "<a href=\"http://gsd.uwaterloo.ca:5002/?claferFileURL=http://gsd.uwaterloo.ca:5001/clafer/" ++ 
+      "<a href=\"" ++ serverURL ++ ":8092/?claferFileURL=" ++ serverURL ++ ":8091/clafer/" ++ 
       fileName ++  
       ".cfr\" target=\"_blank\" " ++
       "style=\"background-color: #ccc;color: white;text-decoration: none;padding: 1px 5px 1px 5px;\" >" ++
