@@ -16,8 +16,8 @@ addOpenInIDE :: PluginM Block
 addOpenInIDE = do
   config' <- askConfig
   let serverPort = show $ portNumber config'
-  serverURL <- liftIO getHostName
   liftIO $ do 
+    serverURL <- getHostName
     fileName <- readFile "static/clafer/name.txt"
     return $ RawBlock "html" (unlines [
       "<div>" ++
@@ -55,8 +55,8 @@ analyzeWithClaferMooViz = do
   config' <- askConfig
   let 
     serverPort = show $ portNumber config'
-    serverURL = baseUrl config'
   liftIO $ do 
+    serverURL <- getHostName
     fileName <- readFile "static/clafer/name.txt"
     return $ RawBlock "html" (unlines [
       "<div>" ++
@@ -112,7 +112,9 @@ summary graphMode withStats withLinks = do
                                                                               else "") ++ 
                                                                             (if withLinks && (withStats || (withGraph graphMode)) then "\n" else "") ++
                                                                             (if withLinks then "<div><b>Module Downloads:</b> | <a href=\"/clafer/" ++ fileName ++ ".cfr\">[.cfr]</a> | <a href=\"/clafer/" ++ fileName ++ ".html\">[.html]</a> |</div><br>\n" else ""))
+                                          Right _ -> return $ RawBlock "html" "WikiError: no compiler result"
                                           Left err -> return $ RawBlock "html" ("<pre>\n" ++ (concatMap handleErr err) ++ "\n</pre>")
+                          Right _ -> return $ RawBlock "html" "WikiError: no compiler result"
                           Left err -> return $ RawBlock "html" ("<pre>\n" ++ (concatMap handleErr err) ++ "\n</pre>")
           else return $ RawBlock "html" "Clafer error: <span class=\"error\">No clafer model found</span>"
 
