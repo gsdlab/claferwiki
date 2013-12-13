@@ -4,6 +4,7 @@ import Network.Gitit.Interface
 -- import Control.Monad.Trans (liftIO)
 import System.Process (readProcessWithExitCode)
 import System.Directory (doesFileExist)
+import Network.BSD (getHostName)
 import Language.Clafer
 import Language.ClaferT
 import Control.Monad.IO.Class (MonadIO)
@@ -11,10 +12,29 @@ import Control.Monad.IO.Class (MonadIO)
 plugin :: Plugin
 plugin = mkPageTransformM readBlock
 
+addOpenInIDE :: PluginM Block
+addOpenInIDE = do
+  config' <- askConfig
+  let serverPort = show $ portNumber config'
+  serverURL <- liftIO getHostName
+  liftIO $ do 
+    fileName <- readFile "static/clafer/name.txt"
+    return $ RawBlock "html" (unlines [
+      "<div>" ++
+      "<a href=\"" ++ serverURL ++ ":8094/?claferFileURL=" ++ serverURL ++ ":" ++ serverPort ++ "/clafer/" ++ 
+      fileName ++  
+      ".cfr\" target=\"_blank\" " ++
+      "style=\"background-color: #ccc;color: white;text-decoration: none;padding: 1px 5px 1px 5px;\" >" ++
+      "Open in ClaferIDE" ++
+      "</a></div><br>\n"
+      ])
+
 readBlock :: Block -> PluginM Block
 readBlock (CodeBlock (_, classes, _) _)
   | "clafer" `elem` classes && "mooviz" `elem` classes 
     = analyzeWithClaferMooViz 
+  | "clafer" `elem` classes && "ide" `elem` classes 
+    = addOpenInIDE
   | "clafer" `elem` classes && "summary" `elem` classes 
     = summary Graph True True
   | "clafer" `elem` classes && "graph" `elem` classes
@@ -30,13 +50,17 @@ readBlock (CodeBlock (_, classes, _) _)
 readBlock x = return x
 
 
-analyzeWithClaferMooViz :: (MonadIO m) => m Block      
+analyzeWithClaferMooViz :: PluginM Block      
 analyzeWithClaferMooViz = do
+  config' <- askConfig
+  let 
+    serverPort = show $ portNumber config'
+    serverURL = baseUrl config'
   liftIO $ do 
     fileName <- readFile "static/clafer/name.txt"
     return $ RawBlock "html" (unlines [
       "<div>" ++
-      "<a href=\"http://gsd.uwaterloo.ca:5002/?claferFileURL=http://gsd.uwaterloo.ca:5001/clafer/" ++ 
+      "<a href=\"" ++ serverURL ++ ":8092/?claferFileURL=" ++ serverURL ++ ":" ++ serverPort ++ "/clafer/" ++ 
       fileName ++  
       ".cfr\" target=\"_blank\" " ++
       "style=\"background-color: #ccc;color: white;text-decoration: none;padding: 1px 5px 1px 5px;\" >" ++
@@ -51,8 +75,8 @@ withGraph _     = False
 
 summary :: (MonadIO m) => ClaferMode -> Bool -> Bool -> m Block
 summary graphMode withStats withLinks = do
-        let argsWithoutRefs = defaultClaferArgs{mode=(if withGraph graphMode then graphMode else Graph), keep_unused=True, show_references=False, noalloyruncommand=True}
-        let argsWithRefs = defaultClaferArgs{mode=(if withGraph graphMode then graphMode else Graph), keep_unused=True, show_references=True, noalloyruncommand=True}
+        let argsWithoutRefs = defaultClaferArgs{mode=[(if withGraph graphMode then graphMode else Graph)], keep_unused=True, show_references=False, noalloyruncommand=True}
+        let argsWithRefs = defaultClaferArgs{mode=[(if withGraph graphMode then graphMode else Graph)], keep_unused=True, show_references=True, noalloyruncommand=True}
         liftIO $ do
           fileExists <- doesFileExist "static/clafer/name.txt"
           if fileExists--file may not exist if an error occurred
@@ -70,11 +94,11 @@ summary graphMode withStats withLinks = do
                           compile
                           generate     
                   case graphWithoutRefs of
-                          Right CompilerResult { extension = _,
+                          Right [ CompilerResult { extension = _,
                                                  outputCode = dotWithoutRefs,
-                                                 statistics = stats } -> do
+                                                 statistics = stats } ] -> do
                                   case graphWithRefs of
-                                          Right CompilerResult { outputCode = dotWithRefs } -> do
+                                          Right [ CompilerResult { outputCode = dotWithRefs } ] -> do
                                                   -- (_, unflattenedDotWithoutRefs, _) <- readProcessWithExitCode "unflatten" [ "-l 1000" ] dotWithoutRefs
                                                   -- (_, unflattenedDotWithRefs, _) <- readProcessWithExitCode "unflatten" [ "-l 1000" ] dotWithRefs
                                                   (_, outWithoutRefs, _) <- readProcessWithExitCode "dot" [ "-Tsvg" ] dotWithoutRefs
