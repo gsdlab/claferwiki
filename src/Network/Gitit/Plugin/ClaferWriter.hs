@@ -4,6 +4,7 @@ import Network.Gitit.Interface
 -- import Control.Monad.Trans (liftIO)
 import System.Process (readProcessWithExitCode)
 import System.Directory (doesFileExist)
+import Network.BSD (getHostName)
 import Language.Clafer
 import Language.ClaferT
 import Control.Monad.IO.Class (MonadIO)
@@ -14,9 +15,8 @@ plugin = mkPageTransformM readBlock
 addOpenInIDE :: PluginM Block
 addOpenInIDE = do
   config' <- askConfig
-  let 
-    serverPort = show $ portNumber config'
-    serverURL = baseUrl config'
+  let serverPort = show $ portNumber config'
+  serverURL <- liftIO getHostName
   liftIO $ do 
     fileName <- readFile "static/clafer/name.txt"
     return $ RawBlock "html" (unlines [

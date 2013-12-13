@@ -24,6 +24,7 @@ library
   build-depends:   
                    base >= 4.6.0.1 && < 5,
                    directory >= 1.2.0.1,
+                   network >= 2.4.0.0,
                    process >= 1.1.0.2,
                    time >= 1.4.0.1,
 
