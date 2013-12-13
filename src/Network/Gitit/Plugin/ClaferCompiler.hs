@@ -24,11 +24,11 @@ callClafer (CodeBlock (id, classes, namevals) contents)
     notCompiled <- doesFileExist "static/clafer/temp.txt"
     if notCompiled
        then do model <- readFile "static/clafer/temp.txt"
-               catch pname (compileFragments defaultClaferArgs{mode=Html, keep_unused=True, add_comments=True, noalloyruncommand=True} model)  model
+               catch pname (compileFragments defaultClaferArgs{mode=[Html], keep_unused=True, add_comments=True, noalloyruncommand=True} model)  model
                return (CodeBlock (id, classes, namevals) contents)
        else return (CodeBlock (id, classes, namevals) contents)
     where
-      catch pname' (Right (CompilerResult{outputCode = output})) model = do
+      catch pname' (Right ( [CompilerResult{outputCode = output} ])) model = do
             let name = uniqueName model
             writeFile ("static/clafer/" ++ name ++ ".html")
                       (header ++ "<style>" ++ css ++ "</style></head>\n<body>\n" ++ output ++ "</body>\n</html>")
@@ -47,16 +47,16 @@ callClafer (CodeBlock (id, classes, namevals) contents)
 
 callClafer x = return x
 
-compileFragments :: ClaferArgs -> InputModel -> Either [ClaferErr] CompilerResult
+compileFragments :: ClaferArgs -> InputModel -> Either [ClaferErr] [CompilerResult]
 compileFragments args' model =
   do
-   result <- runClafer args' $
+    results <- runClafer args' $
               do
                addFragment $ fragments model
                parse
                compile
                generate
-   return result
+    return results
       where
         addFragment []     = return ()
         addFragment (x:xs) = addModuleFragment x >> addFragment xs

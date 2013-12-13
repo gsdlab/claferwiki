@@ -70,8 +70,8 @@ withGraph _     = False
 
 summary :: (MonadIO m) => ClaferMode -> Bool -> Bool -> m Block
 summary graphMode withStats withLinks = do
-        let argsWithoutRefs = defaultClaferArgs{mode=(if withGraph graphMode then graphMode else Graph), keep_unused=True, show_references=False, noalloyruncommand=True}
-        let argsWithRefs = defaultClaferArgs{mode=(if withGraph graphMode then graphMode else Graph), keep_unused=True, show_references=True, noalloyruncommand=True}
+        let argsWithoutRefs = defaultClaferArgs{mode=[(if withGraph graphMode then graphMode else Graph)], keep_unused=True, show_references=False, noalloyruncommand=True}
+        let argsWithRefs = defaultClaferArgs{mode=[(if withGraph graphMode then graphMode else Graph)], keep_unused=True, show_references=True, noalloyruncommand=True}
         liftIO $ do
           fileExists <- doesFileExist "static/clafer/name.txt"
           if fileExists--file may not exist if an error occurred
@@ -89,11 +89,11 @@ summary graphMode withStats withLinks = do
                           compile
                           generate     
                   case graphWithoutRefs of
-                          Right CompilerResult { extension = _,
+                          Right [ CompilerResult { extension = _,
                                                  outputCode = dotWithoutRefs,
-                                                 statistics = stats } -> do
+                                                 statistics = stats } ] -> do
                                   case graphWithRefs of
-                                          Right CompilerResult { outputCode = dotWithRefs } -> do
+                                          Right [ CompilerResult { outputCode = dotWithRefs } ] -> do
                                                   -- (_, unflattenedDotWithoutRefs, _) <- readProcessWithExitCode "unflatten" [ "-l 1000" ] dotWithoutRefs
                                                   -- (_, unflattenedDotWithRefs, _) <- readProcessWithExitCode "unflatten" [ "-l 1000" ] dotWithRefs
                                                   (_, outWithoutRefs, _) <- readProcessWithExitCode "dot" [ "-Tsvg" ] dotWithoutRefs
