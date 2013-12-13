@@ -8,19 +8,20 @@ import Language.Clafer
 import Language.ClaferT
 import Control.Monad.IO.Class (MonadIO)
 
-serverURL :: String
-serverURL = "http://t3-necsis.cs.uwaterloo.ca"
-
 plugin :: Plugin
 plugin = mkPageTransformM readBlock
 
 addOpenInIDE :: PluginM Block
 addOpenInIDE = do
+  config' <- askConfig
+  let 
+    serverPort = show $ portNumber config'
+    serverURL = baseUrl config'
   liftIO $ do 
     fileName <- readFile "static/clafer/name.txt"
     return $ RawBlock "html" (unlines [
       "<div>" ++
-      "<a href=\"" ++ serverURL ++ ":8094/?claferFileURL=" ++ serverURL ++ ":8091/clafer/" ++ 
+      "<a href=\"" ++ serverURL ++ ":8094/?claferFileURL=" ++ serverURL ++ ":" ++ serverPort ++ "/clafer/" ++ 
       fileName ++  
       ".cfr\" target=\"_blank\" " ++
       "style=\"background-color: #ccc;color: white;text-decoration: none;padding: 1px 5px 1px 5px;\" >" ++
@@ -51,11 +52,15 @@ readBlock x = return x
 
 analyzeWithClaferMooViz :: PluginM Block      
 analyzeWithClaferMooViz = do
+  config' <- askConfig
+  let 
+    serverPort = show $ portNumber config'
+    serverURL = baseUrl config'
   liftIO $ do 
     fileName <- readFile "static/clafer/name.txt"
     return $ RawBlock "html" (unlines [
       "<div>" ++
-      "<a href=\"" ++ serverURL ++ ":8092/?claferFileURL=" ++ serverURL ++ ":8091/clafer/" ++ 
+      "<a href=\"" ++ serverURL ++ ":8092/?claferFileURL=" ++ serverURL ++ ":" ++ serverPort ++ "/clafer/" ++ 
       fileName ++  
       ".cfr\" target=\"_blank\" " ++
       "style=\"background-color: #ccc;color: white;text-decoration: none;padding: 1px 5px 1px 5px;\" >" ++
