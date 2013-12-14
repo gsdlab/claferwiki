@@ -27,6 +27,7 @@ library
                    network >= 2.4.0.0,
                    process >= 1.1.0.2,
                    time >= 1.4.0.1,
+                   split >= 0.2.2,
 
                    mtl >= 2.1.2,
                    transformers >= 0.3.0.0,
@@ -40,7 +41,4 @@ library
   hs-source-dirs:  src
   ghc-options:     -Wall -fno-warn-unused-do-bind -fno-warn-orphans
   exposed-modules:
-            Network.Gitit.Plugin.ClaferCleanup
-            Network.Gitit.Plugin.ClaferCompiler
-            Network.Gitit.Plugin.ClaferReader
-            Network.Gitit.Plugin.ClaferWriter
+            Network.Gitit.Plugin.ClaferWiki
