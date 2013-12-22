@@ -12,7 +12,7 @@ import Network.BSD (getHostName)
 import System.Directory (createDirectoryIfMissing, doesFileExist)
 
 import Language.Clafer
-import Language.Clafer.Css 
+import Language.Clafer.Css as Css
 import Language.Clafer.Generator.Html (highlightErrors)
 
 plugin :: Plugin
@@ -36,22 +36,25 @@ claferWiki (Pandoc meta blocks) = do
 		serverPort = show $ portNumber config
 		claferModes :: [ ClaferMode ]
 		claferModes = mapMaybe addMode blocks
+		
 		allCompilationResults = compileFragments fragments claferModes
+		
 		htmlCode = extractOutput allCompilationResults Html
 		htmlCodeFragments = splitOn "\n<!-- # FRAGMENT /-->\n" htmlCode
+		
 		newBlocks = replaceClaferWikiBlocks pageName serverURL serverPort  htmlCodeFragments blocks
 
 	-- save original model
 	liftIO $ writeFile ("static/clafer/" ++ pageName ++ ".cfr") completeModel
 	-- save html version
-	liftIO $ writeFile ("static/clafer/" ++ pageName ++ ".html") htmlCode
+	liftIO $ writeFile ("static/clafer/" ++ pageName ++ ".html") $ selfContained htmlCode
 
 	return $ Pandoc meta newBlocks
 	where
 		fragments :: [ String ]
 		fragments = mapMaybe addFragment blocks
 		fragmentedModel = intercalate "//# FRAGMENT\n" fragments
-		completeModel = concat fragments
+		completeModel = intercalate "\n" fragments
 		
 		addFragment :: Block -> Maybe String
 		addFragment (CodeBlock (_, [ "clafer" ], _) code) = Just $ code ++ "\n"
@@ -71,6 +74,17 @@ claferWiki (Pandoc meta blocks) = do
 				Nothing -> "Error: No " ++ show claferMode ++ " output!"
 		extractOutput (Left err) _ = highlightErrors fragmentedModel err
 		extractOutput _	_ = ""
+
+		selfContained htmlCode = 
+			concat [
+				Css.header,
+				"<style>",
+				Css.css,
+				"</style>",
+				"</head>\n<body>\n",
+				htmlCode,
+				"</body>\n</html>"
+			]
 
 replaceClaferWikiBlocks :: String -> String -> String -> [ String ] -> [ Block ]  -> [ Block ]
 replaceClaferWikiBlocks fileName serverURL serverPort (fragment:fragments) ((CodeBlock (_, [ "clafer" ], _) _):blocks) = 
