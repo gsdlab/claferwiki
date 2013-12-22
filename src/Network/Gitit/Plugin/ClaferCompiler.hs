@@ -2,16 +2,20 @@ module Network.Gitit.Plugin.ClaferCompiler (plugin) where
 
 import Control.Monad.State (StateT)
 import Control.Monad.Reader (ReaderT)
+import qualified Data.Map as Map
+import Data.ByteString.Lazy.UTF8 (fromString)
+import Data.Digest.Pure.SHA (sha1, showDigest)
+import Data.String.Utils (replace)
 import Network.Gitit.Types
 import Network.Gitit.Interface
 import System.Directory (doesFileExist, removeFile)
-import Data.ByteString.Lazy.UTF8 (fromString)
-import Data.Digest.Pure.SHA (sha1, showDigest)
+
 import Language.Clafer
 import Language.Clafer.Css
-import Data.String.Utils (replace)
 import Language.Clafer.Generator.Html (highlightErrors)
+
 import Prelude hiding (id)
+
 
 plugin :: Plugin
 plugin = mkPageTransformM callClafer
@@ -28,7 +32,8 @@ callClafer (CodeBlock (id, classes, namevals) contents)
                return (CodeBlock (id, classes, namevals) contents)
        else return (CodeBlock (id, classes, namevals) contents)
     where
-      catch pname' (Right ( [CompilerResult{outputCode = output} ])) model = do
+      catch pname' (Right compilerResultMap) model = do
+            let (Just CompilerResult{outputCode = output}) = Map.lookup Html compilerResultMap
             let name = uniqueName model
             writeFile ("static/clafer/" ++ name ++ ".html")
                       (header ++ "<style>" ++ css ++ "</style></head>\n<body>\n" ++ output ++ "</body>\n</html>")
@@ -48,7 +53,7 @@ callClafer (CodeBlock (id, classes, namevals) contents)
 
 callClafer x = return x
 
-compileFragments :: ClaferArgs -> InputModel -> Either [ClaferErr] [CompilerResult]
+compileFragments :: ClaferArgs -> InputModel -> Either [ClaferErr] (Map.Map ClaferMode CompilerResult)
 compileFragments args' model =
   do
     results <- runClafer args' $
