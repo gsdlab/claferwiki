@@ -1,5 +1,6 @@
 module Network.Gitit.Plugin.ClaferWriter (plugin) where
 
+import qualified Data.Map as Map
 import Network.Gitit.Interface
 -- import Control.Monad.Trans (liftIO)
 import System.Process (readProcessWithExitCode)
@@ -75,8 +76,9 @@ withGraph _     = False
 
 summary :: (MonadIO m) => ClaferMode -> Bool -> Bool -> m Block
 summary graphMode withStats withLinks = do
-        let argsWithoutRefs = defaultClaferArgs{mode=[(if withGraph graphMode then graphMode else Graph)], keep_unused=True, show_references=False, noalloyruncommand=True}
-        let argsWithRefs = defaultClaferArgs{mode=[(if withGraph graphMode then graphMode else Graph)], keep_unused=True, show_references=True, noalloyruncommand=True}
+        let gMode = if withGraph graphMode then graphMode else Graph
+        let argsWithoutRefs = defaultClaferArgs{mode=[ gMode ], keep_unused=True, show_references=False, noalloyruncommand=True}
+        let argsWithRefs = defaultClaferArgs{mode=[gMode], keep_unused=True, show_references=True, noalloyruncommand=True}
         liftIO $ do
           fileExists <- doesFileExist "static/clafer/name.txt"
           if fileExists--file may not exist if an error occurred
@@ -94,11 +96,12 @@ summary graphMode withStats withLinks = do
                           compile
                           generate     
                   case graphWithoutRefs of
-                          Right [ CompilerResult { extension = _,
-                                                 outputCode = dotWithoutRefs,
-                                                 statistics = stats } ] -> do
+                          Right compilerResultWithoutRefsMap -> do
+                                  let (Just CompilerResult { outputCode = dotWithoutRefs,
+                                                             statistics = stats }) = Map.lookup gMode compilerResultWithoutRefsMap
                                   case graphWithRefs of
-                                          Right [ CompilerResult { outputCode = dotWithRefs } ] -> do
+                                          Right compilerResultWithRefsMap -> do
+                                                  let (Just CompilerResult { outputCode = dotWithRefs }) = Map.lookup gMode compilerResultWithRefsMap
                                                   -- (_, unflattenedDotWithoutRefs, _) <- readProcessWithExitCode "unflatten" [ "-l 1000" ] dotWithoutRefs
                                                   -- (_, unflattenedDotWithRefs, _) <- readProcessWithExitCode "unflatten" [ "-l 1000" ] dotWithRefs
                                                   (_, outWithoutRefs, _) <- readProcessWithExitCode "dot" [ "-Tsvg" ] dotWithoutRefs
@@ -112,9 +115,7 @@ summary graphMode withStats withLinks = do
                                                                               else "") ++ 
                                                                             (if withLinks && (withStats || (withGraph graphMode)) then "\n" else "") ++
                                                                             (if withLinks then "<div><b>Module Downloads:</b> | <a href=\"/clafer/" ++ fileName ++ ".cfr\">[.cfr]</a> | <a href=\"/clafer/" ++ fileName ++ ".html\">[.html]</a> |</div><br>\n" else ""))
-                                          Right _ -> return $ RawBlock "html" "WikiError: no compiler result"
                                           Left err -> return $ RawBlock "html" ("<pre>\n" ++ (concatMap handleErr err) ++ "\n</pre>")
-                          Right _ -> return $ RawBlock "html" "WikiError: no compiler result"
                           Left err -> return $ RawBlock "html" ("<pre>\n" ++ (concatMap handleErr err) ++ "\n</pre>")
           else return $ RawBlock "html" "Clafer error: <span class=\"error\">No clafer model found</span>"
 
