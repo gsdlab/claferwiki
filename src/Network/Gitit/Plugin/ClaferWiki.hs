@@ -5,6 +5,7 @@ import Network.Gitit.Interface
 import Control.Monad (when)
 import Data.List
 import Data.List.Split
+import qualified Data.Map as Map
 import Data.Maybe
 import Data.String.Utils (replace)
 import Network.BSD (getHostName)
@@ -33,13 +34,10 @@ claferWiki (Pandoc meta blocks) = do
 	
 	let
 		serverPort = show $ portNumber config
-		fragments :: [ String ]
-		fragments = mapMaybe addFragment blocks
-		completeModel = concat fragments
-		fragmentedModel = intercalate "//# FRAGMENT\n" fragments
---		modes :: [ ClaferMode ]
---		modes = mapMaybe addMode blocks
-		htmlCode = compileFragments fragments fragmentedModel
+		claferModes :: [ ClaferMode ]
+		claferModes = mapMaybe addMode blocks
+		allCompilationResults = compileFragments fragments claferModes
+		htmlCode = extractOutput allCompilationResults Html
 		htmlCodeFragments = splitOn "\n<!-- # FRAGMENT /-->\n" htmlCode
 		newBlocks = replaceClaferWikiBlocks pageName serverURL serverPort  htmlCodeFragments blocks
 
@@ -50,6 +48,11 @@ claferWiki (Pandoc meta blocks) = do
 
 	return $ Pandoc meta newBlocks
 	where
+		fragments :: [ String ]
+		fragments = mapMaybe addFragment blocks
+		fragmentedModel = intercalate "//# FRAGMENT\n" fragments
+		completeModel = concat fragments
+		
 		addFragment :: Block -> Maybe String
 		addFragment (CodeBlock (_, [ "clafer" ], _) code) = Just $ code ++ "\n"
 		addFragment _                                     = Nothing
@@ -60,6 +63,14 @@ claferWiki (Pandoc meta blocks) = do
 		addMode (CodeBlock (_, [ "clafer", "summary" ], _) _) = Just Graph
 		addMode (CodeBlock (_, [ "clafer", "cvlgraph" ], _) _) = Just CVLGraph
 		addMode _ = Nothing
+
+		extractOutput :: Either [ClaferErr] (Map.Map ClaferMode CompilerResult) -> ClaferMode -> String
+		extractOutput (Right compilerResultMap) claferMode = 
+			case (Map.lookup claferMode compilerResultMap) of
+				Just CompilerResult{outputCode = output} -> output
+				Nothing -> "Error: No " ++ show claferMode ++ " output!"
+		extractOutput (Left err) _ = highlightErrors fragmentedModel err
+		extractOutput _	_ = ""
 
 replaceClaferWikiBlocks :: String -> String -> String -> [ String ] -> [ Block ]  -> [ Block ]
 replaceClaferWikiBlocks fileName serverURL serverPort (fragment:fragments) ((CodeBlock (_, [ "clafer" ], _) _):blocks) = 
@@ -90,24 +101,14 @@ replaceClaferWikiBlocks fileName serverURL serverPort fragments (block:blocks) =
 replaceClaferWikiBlocks _ _ _ _ [] = []
 
 
-compileFragments :: [ String ] -> String          -> String
-compileFragments    fragments     fragmentedModel = 
+compileFragments :: [ String ] -> [ ClaferMode ] -> Either [ClaferErr] (Map.Map ClaferMode CompilerResult)
+compileFragments    fragments     claferModes    = 
 	-- compile all clafer code
-	let 
-		htmlArgs = defaultClaferArgs{mode=[Html], keep_unused=True, add_comments=True}
-		results = runClafer htmlArgs $ do
-			mapM_ addModuleFragment $ fragments
+	runClafer defaultClaferArgs{mode=claferModes, keep_unused=True, add_comments=True } $ do
+			mapM_ addModuleFragment fragments
 			parse
 			compile
 			generate
-	in 
-		extractOutput results
-	where
-		extractOutput :: Either [ClaferErr] [CompilerResult] -> String
-		extractOutput (Right ( [CompilerResult{outputCode = output} ])) = output
-		extractOutput (Left err) = highlightErrors fragmentedModel err
-		extractOutput _	= ""
-
 
 analyzeWithClaferMooViz :: String -> String -> String -> Block
 analyzeWithClaferMooViz fileName serverURL serverPort = 
