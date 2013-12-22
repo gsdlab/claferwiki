@@ -121,18 +121,13 @@ replaceClaferWikiBlocks (CodeBlock (_, [ "clafer" ], _) _) = do
 	return $ RawBlock "html" ("<div class=\"code\">" ++ fragment ++ "</div>")
 
 replaceClaferWikiBlocks (CodeBlock (_, [ "clafer", "links" ], _) _) = do
-	wikiEnv <- get 
-	return $ RawBlock "html" (
-			"<div><b>Module Downloads:</b> | <a href=\"/clafer/" ++ 
-			(we_fileName wikiEnv) ++ 
-			".cfr\">[.cfr]</a> | <a href=\"/clafer/" ++ 
-			(we_fileName wikiEnv) ++ ".html\">[.html]</a> |</div><br>\n"
-		)
+	fileName <- gets we_fileName
+	return $ RawBlock "html" $ renderLinks fileName
 		
 
 replaceClaferWikiBlocks (CodeBlock (_, [ "clafer", "stats" ], _) _) = do
-	wikiEnv <- get 
-	return $ RawBlock "html" ("<div><b>Module Statistics:</b> \n| " ++ (intercalate " | " $ lines $ we_stats wikiEnv) ++ "|</div><br>\n")
+	stats <- gets we_stats
+	return $ RawBlock "html" $ renderStats stats
 
 replaceClaferWikiBlocks (CodeBlock (_, [ "clafer", "graph" ], _) _) = do
 	wikiEnv <- get 
@@ -143,18 +138,61 @@ replaceClaferWikiBlocks (CodeBlock (_, [ "clafer", "cvlGraph" ], _) _) =  do
 	return $ RawBlock "html" ("<div>" ++ "CVLGraph" ++ "</div>")
 
 replaceClaferWikiBlocks (CodeBlock (_, [ "clafer", "summary" ], _) _) =  do
-	wikiEnv <- get 
-	return $ RawBlock "html" ("<div>" ++ "Summary" ++ "</div>")
+	fileName <- gets we_fileName
+	stats <- gets we_stats
+	return $ RawBlock "html" $ renderSummary fileName stats
 
 replaceClaferWikiBlocks (CodeBlock (_, [ "clafer", "mooviz" ], _) _) =  do
 	wikiEnv <- get 
-	return $ analyzeWithClaferMooViz (we_fileName wikiEnv) (we_serverURL wikiEnv) (we_serverPort wikiEnv)
+	return $ renderAnalyzeWithClaferMooViz (we_fileName wikiEnv) (we_serverURL wikiEnv) (we_serverPort wikiEnv)
 
 replaceClaferWikiBlocks (CodeBlock (_, [ "clafer", "ide" ], _) _) =  do
 	wikiEnv <- get 
-	return $ addOpenInIDE (we_fileName wikiEnv) (we_serverURL wikiEnv) (we_serverPort wikiEnv)
+	return $ renderAddOpenInIDE (we_fileName wikiEnv) (we_serverURL wikiEnv) (we_serverPort wikiEnv)
 
 replaceClaferWikiBlocks block = return block
+
+renderLinks :: String -> String
+renderLinks fileName = 
+	"<div><b>Module Downloads:</b> | <a href=\"/clafer/" ++ 
+	fileName ++ 
+	".cfr\">[.cfr]</a> | <a href=\"/clafer/" ++ 
+	fileName ++ 
+	".html\">[.html]</a> |</div><br>\n"
+	
+renderStats :: String -> String
+renderStats stats =
+	"<div><b>Module Statistics:</b> \n| " ++ 
+	(intercalate " | " $ lines stats ) ++ 
+	" |</div><br>\n"
+
+
+renderGraph :: String -> String
+renderGraph _ = 
+	renderGraphWithToggle "SVG without refs" "SVG with refs"
+
+renderGraphWithToggle :: String -> String -> String
+renderGraphWithToggle outWithoutRefs outWithRefs = unlines [
+    "<div id=\"graphWithoutRefs\" style=\"display:block;width:100%;border:solid lightgray 1px;overflow-x:auto;\" ondblclick=\"" ++ renderShowRefs  ++ "\">",
+    outWithoutRefs, 
+    "</div>",
+    "<div id=\"graphWithRefs\" style=\"display:none;width:100%;border:solid lightgray 1px;overflow-x:auto;\" ondblclick=\"" ++ renderHideRefs  ++ "\">",
+    outWithRefs, 
+    "</div>" ]
+
+renderShowRefs :: String 
+renderShowRefs =
+  "var gwr=document.getElementById('graphWithRefs'); gwr.style.display='block'; gwr.scrollLeft=this.scrollLeft; this.style.display='none';"
+
+renderHideRefs :: String
+renderHideRefs = 
+  "var gwor=document.getElementById('graphWithoutRefs'); gwor.style.display='block'; gwor.scrollLeft=this.scrollLeft;this.style.display='none';"
+
+renderSummary :: String -> String -> String
+renderSummary fileName stats =
+	renderGraph fileName ++ 
+	renderStats stats ++
+	renderLinks fileName
 
 
 compileFragments :: [ String ] -> [ ClaferMode ] -> Either [ClaferErr] (Map.Map ClaferMode CompilerResult)
@@ -166,8 +204,8 @@ compileFragments    fragments     claferModes    =
 			compile
 			generate
 
-analyzeWithClaferMooViz :: String -> String -> String -> Block
-analyzeWithClaferMooViz fileName serverURL serverPort = 
+renderAnalyzeWithClaferMooViz :: String -> String -> String -> Block
+renderAnalyzeWithClaferMooViz fileName serverURL serverPort = 
     RawBlock "html" (unlines [
       "<div>" ++
       "<a href=\"" ++ serverURL ++ ":8092/?claferFileURL=" ++ serverURL ++ ":" ++ serverPort ++ "/clafer/" ++ 
@@ -178,8 +216,8 @@ analyzeWithClaferMooViz fileName serverURL serverPort =
       "</a></div><br>\n"
       ])
 
-addOpenInIDE :: String -> String -> String -> Block
-addOpenInIDE fileName serverURL serverPort =
+renderAddOpenInIDE :: String -> String -> String -> Block
+renderAddOpenInIDE fileName serverURL serverPort =
 	RawBlock "html" (unlines [
       "<div>" ++
       "<a href=\"" ++ serverURL ++ ":8094/?claferFileURL=" ++ serverURL ++ ":" ++ serverPort ++ "/clafer/" ++ 
