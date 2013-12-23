@@ -7,10 +7,12 @@ import Control.Monad.Trans.State
 import Data.List
 import Data.List.Split
 import qualified Data.Map as Map
+import qualified Data.Set as Set
 import Data.Maybe
 import Data.String.Utils (replace)
 import Network.BSD (getHostName)
 import System.Directory (createDirectoryIfMissing, doesFileExist)
+import System.Process (readProcessWithExitCode)
 
 import Language.Clafer
 import Language.Clafer.Css as Css
@@ -19,6 +21,8 @@ import Language.Clafer.Generator.Html (highlightErrors)
 plugin :: Plugin
 plugin = mkPageTransformM claferWiki
 
+-- claferWiki collects Clafer code from .clafer code blocks, renders as HTML and graph, 
+-- and replaces the original blocks with RawBlocks containing the results
 claferWiki :: Pandoc -> PluginM Pandoc
 claferWiki (Pandoc meta blocks) = do
 	-- make sure the directories and clafer.css exist
@@ -26,8 +30,7 @@ claferWiki (Pandoc meta blocks) = do
 		createDirectoryIfMissing True "static/clafer/"
 		createDirectoryIfMissing True "static/css/"
 		cssExist <- doesFileExist "static/css/clafer.css"
-		when cssExist $ writeFile "static/css/clafer.css" css
-	-- collect clafer model fragments
+		unless cssExist $ writeFile "static/css/clafer.css" css
 
 	serverURL <- liftIO $ getHostName
 	pageName <- getPageName
@@ -35,9 +38,10 @@ claferWiki (Pandoc meta blocks) = do
 	
 	let
 		serverPort = show $ portNumber config
+		-- collects compiler modes depending on the kinds of blocks on the page 
 		claferModes :: [ ClaferMode ]
 		claferModes = mapMaybe addMode blocks
-		
+		-- produce the required outputs in a single compilation
 		allCompilationResults = compileFragments fragments claferModes
 		
 		htmlCode = extractOutput allCompilationResults Html
@@ -45,14 +49,31 @@ claferWiki (Pandoc meta blocks) = do
 		
 		stats = case extractCompilerResult allCompilationResults Html of
 					Just CompilerResult{statistics = s} -> s
-					Nothing 					   		-> ""
+					Nothing 					   		-> "No model."
 
+		dotGraph = case extractCompilerResult allCompilationResults Graph of
+				Just CompilerResult{outputCode = o} -> o
+				Nothing 					    	-> ""
+
+		dotCVLGraph = case extractCompilerResult allCompilationResults CVLGraph of
+					Just CompilerResult{outputCode = o} -> o
+					Nothing 					    -> ""
+
+	(_, svgGraph, _) <- liftIO $ readProcessWithExitCode "dot" [ "-Tsvg" ] dotGraph
+	(_, svgCVLGraph, _) <- liftIO $ readProcessWithExitCode "dot" [ "-Tsvg" ] dotCVLGraph
+
+		-- using the WikiEnv as state, replace clafer code blocks with appropriate results:
+		-- html rendering of clafer code, graph rendering, download links, ide, configurator, and visualizer buttons
+	let 
 		initialWikiEnv = WikiEnv {
 							we_fileName = pageName,
 							we_serverURL = serverURL,
 							we_serverPort = serverPort, 
-							we_fragments = fragments,
-							we_stats = stats
+							we_htmlCodeFragments = htmlCodeFragments,
+							we_stats = stats,
+							we_graphNo = 0,		-- needed to construct unique IDs of <div> for graphs
+							we_svgGraph = svgGraph,
+							we_svgCVLGraph = svgCVLGraph
 						 }
 		newBlocks = evalState (mapM replaceClaferWikiBlocks blocks) initialWikiEnv
 
@@ -63,6 +84,7 @@ claferWiki (Pandoc meta blocks) = do
 
 	return $ Pandoc meta newBlocks
 	where
+		-- collect clafer model fragments
 		fragments :: [ String ]
 		fragments = mapMaybe addFragment blocks
 		fragmentedModel = intercalate "//# FRAGMENT\n" fragments
@@ -76,6 +98,7 @@ claferWiki (Pandoc meta blocks) = do
 		addMode (CodeBlock (_, [ "clafer" ], _) _) = Just Html
 		addMode (CodeBlock (_, [ "clafer", "graph" ], _) _) = Just Graph
 		addMode (CodeBlock (_, [ "clafer", "summary" ], _) _) = Just Graph
+		addMode (CodeBlock (_, [ "clafer", "cvlGraph" ], _) _) = Just CVLGraph
 		addMode (CodeBlock (_, [ "clafer", "cvlgraph" ], _) _) = Just CVLGraph
 		addMode _ = Nothing
 
@@ -107,44 +130,59 @@ data WikiEnv = WikiEnv {
 					we_fileName :: String,
 					we_serverURL :: String,
 					we_serverPort :: String, 
-					we_fragments :: [ String ],
-					we_stats :: String
+					we_htmlCodeFragments :: [ String ],
+					we_stats :: String,
+					we_graphNo :: Int,
+					we_svgGraph :: String,
+					we_svgCVLGraph :: String
 			   }
-
 
 
 replaceClaferWikiBlocks :: Block -> State WikiEnv Block
 replaceClaferWikiBlocks (CodeBlock (_, [ "clafer" ], _) _) = do
 	wikiEnv <- get 
-	let (fragment:fragments) = we_fragments wikiEnv
-	put $ wikiEnv { we_fragments = fragments }
+	let (fragment:fragments) = we_htmlCodeFragments wikiEnv
+	put $ wikiEnv { we_htmlCodeFragments = fragments }
 	return $ RawBlock "html" ("<div class=\"code\">" ++ fragment ++ "</div>")
 
 replaceClaferWikiBlocks (CodeBlock (_, [ "clafer", "links" ], _) _) = do
 	fileName <- gets we_fileName
 	return $ RawBlock "html" $ renderLinks fileName
 		
-
 replaceClaferWikiBlocks (CodeBlock (_, [ "clafer", "stats" ], _) _) = do
 	stats <- gets we_stats
 	return $ RawBlock "html" $ renderStats stats
 
 replaceClaferWikiBlocks (CodeBlock (_, [ "clafer", "graph" ], _) _) = do
 	wikiEnv <- get 
-	return $ RawBlock "html" ("<div>" ++ "Graph" ++ "</div>")
+	graphNo <- gets we_graphNo
+	svgGraph <- gets we_svgGraph
+	put $ wikiEnv { we_graphNo = graphNo + 1 }
+	return $ RawBlock "html" $ renderGraphWithToggle "svgGraph without refs" svgGraph  graphNo
 
 replaceClaferWikiBlocks (CodeBlock (_, [ "clafer", "cvlGraph" ], _) _) =  do
 	wikiEnv <- get 
-	return $ RawBlock "html" ("<div>" ++ "CVLGraph" ++ "</div>")
+	graphNo <- gets we_graphNo
+	svgCVLGraph <- gets we_svgCVLGraph
+	put $ wikiEnv { we_graphNo = graphNo + 1 }
+	return $ RawBlock "html" $ renderGraphWithToggle "svgCVLGraph without refs" svgCVLGraph graphNo
 
 replaceClaferWikiBlocks (CodeBlock (_, [ "clafer", "summary" ], _) _) =  do
+	wikiEnv <- get
 	fileName <- gets we_fileName
 	stats <- gets we_stats
-	return $ RawBlock "html" $ renderSummary fileName stats
+	graphNo <- gets we_graphNo
+	svgGraph <- gets we_svgGraph
+	put $ wikiEnv { we_graphNo = graphNo + 1 }
+	return $ RawBlock "html" $ renderSummary fileName stats "svgGraph without refs" svgGraph graphNo
 
 replaceClaferWikiBlocks (CodeBlock (_, [ "clafer", "mooviz" ], _) _) =  do
 	wikiEnv <- get 
 	return $ renderAnalyzeWithClaferMooViz (we_fileName wikiEnv) (we_serverURL wikiEnv) (we_serverPort wikiEnv)
+
+replaceClaferWikiBlocks (CodeBlock (_, [ "clafer", "config" ], _) _) =  do
+	wikiEnv <- get 
+	return $ renderConfigureWithClaferConfigurator (we_fileName wikiEnv) (we_serverURL wikiEnv) (we_serverPort wikiEnv)
 
 replaceClaferWikiBlocks (CodeBlock (_, [ "clafer", "ide" ], _) _) =  do
 	wikiEnv <- get 
@@ -167,42 +205,45 @@ renderStats stats =
 	" |</div><br>\n"
 
 
-renderGraph :: String -> String
-renderGraph _ = 
-	renderGraphWithToggle "SVG without refs" "SVG with refs"
-
-renderGraphWithToggle :: String -> String -> String
-renderGraphWithToggle outWithoutRefs outWithRefs = unlines [
-    "<div id=\"graphWithoutRefs\" style=\"display:block;width:100%;border:solid lightgray 1px;overflow-x:auto;\" ondblclick=\"" ++ renderShowRefs  ++ "\">",
-    outWithoutRefs, 
+renderGraphWithToggle :: String           -> String        -> Int      -> String
+renderGraphWithToggle    svgGraphWithoutRefs svgGraphWithRefs graphNo   = unlines [
+    "<div id=\"" ++ renderGraphId False graphNo ++  "\" style=\"display:block;width:100%;border:solid lightgray 1px;overflow-x:auto;\" ondblclick=\"" ++ renderShowRefs graphNo ++ "\">",
+    svgGraphWithoutRefs, 
     "</div>",
-    "<div id=\"graphWithRefs\" style=\"display:none;width:100%;border:solid lightgray 1px;overflow-x:auto;\" ondblclick=\"" ++ renderHideRefs  ++ "\">",
-    outWithRefs, 
+    "<div id=\"" ++ renderGraphId True graphNo ++  "\" style=\"display:none;width:100%;border:solid lightgray 1px;overflow-x:auto;\" ondblclick=\"" ++ renderHideRefs graphNo ++ "\">",
+    svgGraphWithRefs, 
     "</div>" ]
 
-renderShowRefs :: String 
-renderShowRefs =
-  "var gwr=document.getElementById('graphWithRefs'); gwr.style.display='block'; gwr.scrollLeft=this.scrollLeft; this.style.display='none';"
+renderShowRefs :: Int    -> String 
+renderShowRefs    graphNo =
+  "var gwr=document.getElementById('" ++ renderGraphId True graphNo ++  "'); gwr.style.display='block'; gwr.scrollLeft=this.scrollLeft; this.style.display='none';"
 
-renderHideRefs :: String
-renderHideRefs = 
-  "var gwor=document.getElementById('graphWithoutRefs'); gwor.style.display='block'; gwor.scrollLeft=this.scrollLeft;this.style.display='none';"
+renderHideRefs :: Int    -> String
+renderHideRefs    graphNo = 
+  "var gwor=document.getElementById('" ++ renderGraphId False graphNo ++  "'); gwor.style.display='block'; gwor.scrollLeft=this.scrollLeft;this.style.display='none';"
 
-renderSummary :: String -> String -> String
-renderSummary fileName stats =
-	renderGraph fileName ++ 
+renderGraphId :: Bool -> Int    -> String
+renderGraphId    True    graphNo = "graphWithRefs" ++ show graphNo
+renderGraphId    False   graphNo = "graphWithoutRefs" ++ show graphNo
+
+renderSummary :: String -> String -> String           -> String        -> Int    -> String
+renderSummary    fileName  stats     svgGraphWithoutRefs svgGraphWithRefs graphNo =
+	renderGraphWithToggle svgGraphWithoutRefs svgGraphWithRefs graphNo ++ 
 	renderStats stats ++
 	renderLinks fileName
 
 
 compileFragments :: [ String ] -> [ ClaferMode ] -> Either [ClaferErr] (Map.Map ClaferMode CompilerResult)
 compileFragments    fragments     claferModes    = 
-	-- compile all clafer code
-	runClafer defaultClaferArgs{mode=claferModes, keep_unused=True, add_comments=True } $ do
-			mapM_ addModuleFragment fragments
-			parse
-			compile
-			generate
+	let 
+		noDuplicatesClaferModes =  Set.toList $ Set.fromList claferModes
+	in
+		-- compile all clafer code
+		runClafer defaultClaferArgs{mode=noDuplicatesClaferModes, keep_unused=True, add_comments=True, show_references=True } $ do
+				mapM_ addModuleFragment fragments
+				parse
+				compile
+				generate
 
 renderAnalyzeWithClaferMooViz :: String -> String -> String -> Block
 renderAnalyzeWithClaferMooViz fileName serverURL serverPort = 
@@ -213,6 +254,18 @@ renderAnalyzeWithClaferMooViz fileName serverURL serverPort =
       ".cfr\" target=\"_blank\" " ++
       "style=\"background-color: #ccc;color: white;text-decoration: none;padding: 1px 5px 1px 5px;\" >" ++
       "Analyze with ClaferMooVisualizer" ++
+      "</a></div><br>\n"
+      ])
+
+renderConfigureWithClaferConfigurator :: String -> String -> String -> Block
+renderConfigureWithClaferConfigurator fileName serverURL serverPort = 
+    RawBlock "html" (unlines [
+      "<div>" ++
+      "<a href=\"" ++ serverURL ++ ":8093/?claferFileURL=" ++ serverURL ++ ":" ++ serverPort ++ "/clafer/" ++ 
+      fileName ++  
+      ".cfr\" target=\"_blank\" " ++
+      "style=\"background-color: #ccc;color: white;text-decoration: none;padding: 1px 5px 1px 5px;\" >" ++
+      "Configure with ClaferConfigurator" ++
       "</a></div><br>\n"
       ])
 
