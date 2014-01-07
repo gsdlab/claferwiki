@@ -24,7 +24,7 @@ plugin = mkPageTransformM claferWiki
 -- claferWiki collects Clafer code from .clafer code blocks, renders as HTML and graph, 
 -- and replaces the original blocks with RawBlocks containing the results
 claferWiki :: Pandoc -> PluginM Pandoc
-claferWiki pandoc@(Pandoc meta blocks) = do
+claferWiki pandoc@(Pandoc _ blocks) = do
 	-- make sure the directories and clafer.css exist
 	liftIO $ do 
 		createDirectoryIfMissing True "static/clafer/"
@@ -53,13 +53,15 @@ claferWiki pandoc@(Pandoc meta blocks) = do
 
 		dotGraph = case extractCompilerResult allCompilationResults Graph of
 				Just CompilerResult{outputCode = o} -> o
-				Nothing 					    	-> ""
+				Nothing 							-> ""
 
 		dotCVLGraph = case extractCompilerResult allCompilationResults CVLGraph of
 					Just CompilerResult{outputCode = o} -> o
 					Nothing 					    -> ""
 
-	(_, svgGraph, _) <- liftIO $ readProcessWithExitCode "dot" [ "-Tsvg" ] dotGraph
+	-- render the graphs to SVG using dot
+	(_, svgGraphWithoutRefs, _) <- liftIO $ readProcessWithExitCode "dot" [ "-Tsvg" ] dotGraph	
+	(_, svgGraphWithRefs, _) <- liftIO $ readProcessWithExitCode "dot" [ "-Tsvg" ] $ changeTransparentToLightGray dotGraph
 	(_, svgCVLGraph, _) <- liftIO $ readProcessWithExitCode "dot" [ "-Tsvg" ] dotCVLGraph
 
 		-- using the WikiEnv as state, replace clafer code blocks with appropriate results:
@@ -72,17 +74,18 @@ claferWiki pandoc@(Pandoc meta blocks) = do
 							we_htmlCodeFragments = htmlCodeFragments,
 							we_stats = stats,
 							we_graphNo = 0,		-- needed to construct unique IDs of <div> for graphs
-							we_svgGraph = svgGraph,
+							we_svgGraphWithRefs = svgGraphWithRefs,
+							we_svgGraphWithoutRefs = svgGraphWithoutRefs,
 							we_svgCVLGraph = svgCVLGraph
 						 }
-		newBlocks = evalState (mapM replaceClaferWikiBlocks blocks) initialWikiEnv
+		newPandoc = evalState (bottomUpM replaceClaferWikiBlocks pandoc) initialWikiEnv
 
 	-- save original model
 	liftIO $ writeFile ("static/clafer/" ++ pageName ++ ".cfr") completeModel
 	-- save html version
 	liftIO $ writeFile ("static/clafer/" ++ pageName ++ ".html") $ selfContained htmlCode
 
-	return $ Pandoc meta newBlocks
+	return $ newPandoc
 	where
 		-- collect clafer model fragments
 		fragments :: [ String ]
@@ -133,7 +136,8 @@ data WikiEnv = WikiEnv {
 					we_htmlCodeFragments :: [ String ],
 					we_stats :: String,
 					we_graphNo :: Int,
-					we_svgGraph :: String,
+					we_svgGraphWithRefs :: String,
+					we_svgGraphWithoutRefs :: String,
 					we_svgCVLGraph :: String
 			   }
 
@@ -156,25 +160,34 @@ replaceClaferWikiBlocks (CodeBlock (_, [ "clafer", "stats" ], _) _) = do
 replaceClaferWikiBlocks (CodeBlock (_, [ "clafer", "graph" ], _) _) = do
 	wikiEnv <- get 
 	graphNo <- gets we_graphNo
-	svgGraph <- gets we_svgGraph
+	svgGraphWithRefs <- gets we_svgGraphWithRefs
+	svgGraphWithoutRefs <- gets we_svgGraphWithoutRefs
 	put $ wikiEnv { we_graphNo = graphNo + 1 }
-	return $ RawBlock "html" $ renderGraphWithToggle "svgGraph without refs" svgGraph  graphNo
+	return $ RawBlock "html" $ renderGraphWithToggle svgGraphWithoutRefs svgGraphWithRefs  graphNo
 
 replaceClaferWikiBlocks (CodeBlock (_, [ "clafer", "cvlGraph" ], _) _) =  do
 	wikiEnv <- get 
 	graphNo <- gets we_graphNo
 	svgCVLGraph <- gets we_svgCVLGraph
 	put $ wikiEnv { we_graphNo = graphNo + 1 }
-	return $ RawBlock "html" $ renderGraphWithToggle "svgCVLGraph without refs" svgCVLGraph graphNo
+	return $ RawBlock "html" $ renderGraph svgCVLGraph
+
+replaceClaferWikiBlocks (CodeBlock (_, [ "clafer", "cvlgraph" ], _) _) =  do
+	wikiEnv <- get 
+	graphNo <- gets we_graphNo
+	svgCVLGraph <- gets we_svgCVLGraph
+	put $ wikiEnv { we_graphNo = graphNo + 1 }
+	return $ RawBlock "html" $ renderGraph svgCVLGraph
 
 replaceClaferWikiBlocks (CodeBlock (_, [ "clafer", "summary" ], _) _) =  do
 	wikiEnv <- get
 	fileName <- gets we_fileName
 	stats <- gets we_stats
 	graphNo <- gets we_graphNo
-	svgGraph <- gets we_svgGraph
+	svgGraphWithRefs <- gets we_svgGraphWithRefs
+	svgGraphWithoutRefs <- gets we_svgGraphWithoutRefs
 	put $ wikiEnv { we_graphNo = graphNo + 1 }
-	return $ RawBlock "html" $ renderSummary fileName stats "svgGraph without refs" svgGraph graphNo
+	return $ RawBlock "html" $ renderSummary fileName stats svgGraphWithoutRefs svgGraphWithRefs graphNo
 
 replaceClaferWikiBlocks (CodeBlock (_, [ "clafer", "mooviz" ], _) _) =  do
 	wikiEnv <- get 
@@ -214,6 +227,12 @@ renderGraphWithToggle    svgGraphWithoutRefs svgGraphWithRefs graphNo   = unline
     svgGraphWithRefs, 
     "</div>" ]
 
+renderGraph :: String  -> String
+renderGraph    svgGraph = unlines [
+    "<div style=\"display:block;width:100%;border:solid lightgray 1px;overflow-x:auto;\">",
+    svgGraph, 
+    "</div>" ]
+
 renderShowRefs :: Int    -> String 
 renderShowRefs    graphNo =
   "var gwr=document.getElementById('" ++ renderGraphId True graphNo ++  "'); gwr.style.display='block'; gwr.scrollLeft=this.scrollLeft; this.style.display='none';"
@@ -239,7 +258,7 @@ compileFragments    fragments     claferModes    =
 		noDuplicatesClaferModes =  Set.toList $ Set.fromList claferModes
 	in
 		-- compile all clafer code
-		runClafer defaultClaferArgs{mode=noDuplicatesClaferModes, keep_unused=True, add_comments=True, show_references=True } $ do
+		runClafer defaultClaferArgs{mode=noDuplicatesClaferModes, keep_unused=True, add_comments=True, show_references=False } $ do
 				mapM_ addModuleFragment fragments
 				parse
 				compile
@@ -283,3 +302,6 @@ renderAddOpenInIDE fileName serverURL serverPort =
 
 getPageName:: PluginM String
 getPageName = getContext >>= return . replace " " "_" . replace "/" "_" . pgPageName . ctxLayout
+
+changeTransparentToLightGray :: String -> String
+changeTransparentToLightGray = replace "transparent" "lightgray"
