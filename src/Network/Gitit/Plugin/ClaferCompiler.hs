@@ -41,7 +41,6 @@ callClafer (CodeBlock (id, classes, namevals) contents)
             writeFile "static/clafer/name.txt" pname'
             writeFile ("static/clafer/" ++ pname' ++ ".cfr") model
             removeFile "static/clafer/temp.txt"
-      catch _ (Right _) _ = return ()
       catch pname' (Left err) model = do
             let name = uniqueName model
             let output = highlightErrors model err
