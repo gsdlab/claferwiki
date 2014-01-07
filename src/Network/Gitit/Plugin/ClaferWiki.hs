@@ -45,7 +45,7 @@ plugin = mkPageTransformM claferWiki
 -- claferWiki collects Clafer code from .clafer code blocks, renders as HTML and graph, 
 -- and replaces the original blocks with RawBlocks containing the results
 claferWiki :: Pandoc -> PluginM Pandoc
-claferWiki pandoc@(Pandoc _ blocks) = do
+claferWiki pandoc = do
 	-- make sure the directories and clafer.css exist
 	liftIO $ do 
 		createDirectoryIfMissing True "static/clafer/"
@@ -59,9 +59,6 @@ claferWiki pandoc@(Pandoc _ blocks) = do
 	
 	let
 		serverPort = show $ portNumber config
-		-- collects compiler modes depending on the kinds of blocks on the page 
-		claferModes :: [ ClaferMode ]
-		claferModes = mapMaybe addMode blocks
 		-- produce the required outputs in a single compilation
 		allCompilationResults = compileFragments fragments claferModes
 		
@@ -111,6 +108,11 @@ claferWiki pandoc@(Pandoc _ blocks) = do
 		-- collect clafer model fragments
 		fragments :: [ String ]
 		fragments = queryWith addFragment pandoc
+
+		-- collects compiler modes depending on the kinds of blocks on the page 
+		claferModes :: [ ClaferMode ]
+		claferModes = queryWith addMode pandoc
+
 		fragmentedModel = intercalate "//# FRAGMENT\n" fragments
 		completeModel = intercalate "\n" fragments
 		
@@ -118,13 +120,13 @@ claferWiki pandoc@(Pandoc _ blocks) = do
 		addFragment (CodeBlock (_, [ "clafer" ], _) code) = [ code ++ "\n" ]
 		addFragment _                                     = []
 
-		addMode :: Block -> Maybe ClaferMode
-		addMode (CodeBlock (_, [ "clafer" ], _) _) = Just Html
-		addMode (CodeBlock (_, [ "clafer", "graph" ], _) _) = Just Graph
-		addMode (CodeBlock (_, [ "clafer", "summary" ], _) _) = Just Graph
-		addMode (CodeBlock (_, [ "clafer", "cvlGraph" ], _) _) = Just CVLGraph
-		addMode (CodeBlock (_, [ "clafer", "cvlgraph" ], _) _) = Just CVLGraph
-		addMode _ = Nothing
+		addMode :: Block -> [ClaferMode]
+		addMode (CodeBlock (_, [ "clafer" ], _) _)				= [Html]
+		addMode (CodeBlock (_, [ "clafer", "graph" ], _) _)		= [Graph]
+		addMode (CodeBlock (_, [ "clafer", "summary" ], _) _)	= [Graph]
+		addMode (CodeBlock (_, [ "clafer", "cvlGraph" ], _) _)	= [CVLGraph]
+		addMode (CodeBlock (_, [ "clafer", "cvlgraph" ], _) _)	= [CVLGraph]
+		addMode _ 												= []
 
 
 		extractCompilerResult :: Either [ClaferErr] (Map.Map ClaferMode CompilerResult) -> ClaferMode -> Maybe CompilerResult
@@ -319,4 +321,4 @@ getPageName:: PluginM String
 getPageName = getContext >>= return . replace " " "_" . replace "/" "_" . pgPageName . ctxLayout
 
 changeTransparentToLightGray :: String -> String
-changeTransparentToLightGray = replace "transparent" "lightgray"
+changeTransparentToLightGray = replace "color=transparent" "color=lightgray"
