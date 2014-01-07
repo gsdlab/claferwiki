@@ -24,7 +24,7 @@ plugin = mkPageTransformM claferWiki
 -- claferWiki collects Clafer code from .clafer code blocks, renders as HTML and graph, 
 -- and replaces the original blocks with RawBlocks containing the results
 claferWiki :: Pandoc -> PluginM Pandoc
-claferWiki (Pandoc meta blocks) = do
+claferWiki pandoc@(Pandoc meta blocks) = do
 	-- make sure the directories and clafer.css exist
 	liftIO $ do 
 		createDirectoryIfMissing True "static/clafer/"
@@ -86,13 +86,13 @@ claferWiki (Pandoc meta blocks) = do
 	where
 		-- collect clafer model fragments
 		fragments :: [ String ]
-		fragments = mapMaybe addFragment blocks
+		fragments = queryWith addFragment pandoc
 		fragmentedModel = intercalate "//# FRAGMENT\n" fragments
 		completeModel = intercalate "\n" fragments
 		
-		addFragment :: Block -> Maybe String
-		addFragment (CodeBlock (_, [ "clafer" ], _) code) = Just $ code ++ "\n"
-		addFragment _                                     = Nothing
+		addFragment :: Block -> [String]
+		addFragment (CodeBlock (_, [ "clafer" ], _) code) = [ code ++ "\n" ]
+		addFragment _                                     = []
 
 		addMode :: Block -> Maybe ClaferMode
 		addMode (CodeBlock (_, [ "clafer" ], _) _) = Just Html
