@@ -187,17 +187,11 @@ replaceClaferWikiBlocks (CodeBlock (_, [ "clafer", "graph" ], _) _) = do
 	return $ RawBlock "html" $ renderGraphWithToggle svgGraphWithoutRefs svgGraphWithRefs  graphNo
 
 replaceClaferWikiBlocks (CodeBlock (_, [ "clafer", "cvlGraph" ], _) _) =  do
-	wikiEnv <- get 
-	graphNo <- gets we_graphNo
 	svgCVLGraph <- gets we_svgCVLGraph
-	put $ wikiEnv { we_graphNo = graphNo + 1 }
 	return $ RawBlock "html" $ renderGraph svgCVLGraph
 
 replaceClaferWikiBlocks (CodeBlock (_, [ "clafer", "cvlgraph" ], _) _) =  do
-	wikiEnv <- get 
-	graphNo <- gets we_graphNo
 	svgCVLGraph <- gets we_svgCVLGraph
-	put $ wikiEnv { we_graphNo = graphNo + 1 }
 	return $ RawBlock "html" $ renderGraph svgCVLGraph
 
 replaceClaferWikiBlocks (CodeBlock (_, [ "clafer", "summary" ], _) _) =  do
