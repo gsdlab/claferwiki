@@ -29,7 +29,6 @@ import Data.List
 import Data.List.Split
 import qualified Data.Map as Map
 import qualified Data.Set as Set
-import Data.Maybe
 import Data.String.Utils (replace)
 import Network.BSD (getHostName)
 import System.Directory (createDirectoryIfMissing, doesFileExist)
