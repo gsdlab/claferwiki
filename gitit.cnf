@@ -125,7 +125,7 @@ plugins:
 # starts with Network.Gitit.Plugin., gitit will assume that the plugin is
 # an installed module and will not try to find a source file.
 # Examples:
-plugins: Network.Gitit.Plugin.ClaferCleanup, Network.Gitit.Plugin.ClaferReader, Network.Gitit.Plugin.ClaferCompiler, Network.Gitit.Plugin.ClaferWriter
+plugins: Network.Gitit.Plugin.ClaferWiki
 # plugins: plugins/DotPlugin
 # plugins: Network.Gitit.Plugin.InterwikiLinks
 

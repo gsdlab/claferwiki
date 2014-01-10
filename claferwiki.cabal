@@ -28,6 +28,7 @@ library
                    network >= 2.4.0.0,
                    process >= 1.1.0.2,
                    time >= 1.4.0.1,
+                   split >= 0.2.2,
 
                    mtl >= 2.1.2,
                    transformers >= 0.3.0.0,
@@ -35,13 +36,11 @@ library
                    MissingH >= 1.2.0.2,
                    SHA >= 1.6.1,
                    utf8-string >= 0.3.7,
+                   pandoc-types == 1.10.*,
                    gitit >= 0.10.3.1,
 
                    clafer == 0.3.5
   hs-source-dirs:  src
   ghc-options:     -Wall -fno-warn-unused-do-bind -fno-warn-orphans
   exposed-modules:
-            Network.Gitit.Plugin.ClaferCleanup
-            Network.Gitit.Plugin.ClaferCompiler
-            Network.Gitit.Plugin.ClaferReader
-            Network.Gitit.Plugin.ClaferWriter
+            Network.Gitit.Plugin.ClaferWiki
