@@ -1,7 +1,7 @@
 Clafer Wiki
 ===========
 
-v0.3.5.??-??-????
+v0.3.5.10-01-2014
 
 **ClaferWiki** is a wiki system integrated with [Clafer compiler](https://github.com/gsdlab/clafer). [Clafer](http://clafer.org) is a lightweight yet powerful structural modeling language. ClaferWiki allows for embedding Clafer model fragments in wiki pages and provides model authoring support including code highlighting, parse and semantic error reporting, hyperlinking from identifier use to its definition, and graphical view rendering. 
 
@@ -139,7 +139,7 @@ Need help?
 * See [Project's website](http://gsd.uwaterloo.ca/clafer) for news, technical reports and more
   * Check out a [Clafer tutorial](http://gsd.uwaterloo.ca/node/310)
   * Try live instance of [ClaferWiki](http://t3-necsis.cs.uwaterloo.ca:8091)
-  * Try [Online translator](http://gsd.uwaterloo.ca/clafer/translator)
+  * Try live instance of [ClaferIDE](http://t3-necsis.cs.uwaterloo.ca:8094)
 * Take a look at incomplete [Clafer wiki](https://github.com/gsdlab/clafer/wiki)
 * Browse example models in the [test suite](https://github.com/gsdlab/clafer/tree/master/test/positive) and [MOO examples](https://github.com/gsdlab/clafer/tree/master/spl_configurator/dataset)
 * Post questions, report bugs, suggest improvements [GSD Lab Bug Tracker](http://gsd.uwaterloo.ca:8888/questions/). Tag your entries with `claferwiki` (so that we know what they are related to) and with `michal` (so that Michał gets a notification).

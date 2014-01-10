@@ -138,7 +138,6 @@ claferWiki pandoc = do
 				Just CompilerResult{outputCode = output} -> output
 				Nothing -> "Error: No " ++ show claferMode ++ " output!"
 		extractOutput (Left err) _ = highlightErrors fragmentedModel err
-		extractOutput _	_ = ""
 
 		selfContained htmlCode = 
 			concat [
