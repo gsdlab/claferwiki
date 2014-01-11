@@ -1,15 +1,13 @@
 Clafer Wiki
 ===========
 
-v0.3.5.10-01-2014
+v0.3.5.15-01-2014
 
 **ClaferWiki** is a wiki system integrated with [Clafer compiler](https://github.com/gsdlab/clafer). [Clafer](http://clafer.org) is a lightweight yet powerful structural modeling language. ClaferWiki allows for embedding Clafer model fragments in wiki pages and provides model authoring support including code highlighting, parse and semantic error reporting, hyperlinking from identifier use to its definition, and graphical view rendering. 
 
 ClaferWiki supports informal-to-formal modeling, that is, gradually refining parts of specification in natural language into a Clafer model fragments. ClaferWiki supports *literate modeling* - both the rich text and the model fragments can be freely mixed. Informal-to-formal modeling is important during domain modeling. 
 
 Also, ClaferWiki acts as a collaborative, lightweight, web-based integrated development environment (IDE) for Clafer. In addition to code highlighting, error reporting, hyperlinking, and graphical view rendering, it also provides model versioning and distributed online/offline editing capabilities as it is based on the Git distributed version control system and the [Gitit wiki](http://gitit.net/).
-
-To see the wiki in action, visit a live instance which contains many example models in Clafer [ModelWiki](http://gsd.uwaterloo.ca:5001).
 
 ### Live demo
 
@@ -27,27 +25,19 @@ Contributors
 Getting Clafer Tools
 --------------------
 
-Binary distributions of release 0.3.5 of 
-Clafer, 
-ClaferIG, 
-ClaferWiki,
-ClaferIDE,  
-ClaferMoo, 
-ClaferMooVisualizer, 
-and ClaferConfigurator 
-for Windows, Mac, and Linux, 
-can be downloaded from [Clafer Tools - Binary Distributions](http://gsd.uwaterloo.ca/node/516). 
+Binary distributions of the release 0.3.5 of Clafer Tools for Windows, Mac, and Linux, 
+can be downloaded from [Clafer Tools - Binary Distributions](http://http://gsd.uwaterloo.ca/clafer-tools-binary-distributions). 
 Clafer Wiki requires Haskell Platform and MinGW to run on Windows. 
 
-In case these binaries do not work on your particular machine configuration, the tools can be easily built from source code, as described below.
+In case these binaries do not work on your particular machine configuration, the tools can be built from source code, as described below.
 
 ### Dependencies for running
 
-* [Clafer compiler](https://github.com/gsdlab/clafer/) 0.3.5
-* [The Haskell Platform](http://hackage.haskell.org/platform) 2013.2.0.0
-  * alternatively, GHC 7.6.3
+* [Clafer compiler](https://github.com/gsdlab/clafer/) v0.3.5.
+* [The Haskell Platform](http://hackage.haskell.org/platform) v2013.2.0.0.
+  * alternatively, GHC v7.6.3.
 * [Git](http://git-scm.com) 
-* [Gitit wiki](http://gitit.net) 0.10.3.1
+* [Gitit wiki](http://gitit.net) v0.10.3.1.
   
 ### Installation
 
@@ -61,11 +51,11 @@ In case these binaries do not work on your particular machine configuration, the
 
 ### Important: Branches must correspond
 
-Clafer, ClaferIG, ClaferWiki, ClaferMoo,  ClaferMooVisualizer, and ClaferConfigurator are following the *simultaneous release model*. 
+All related projects are following the *simultaneous release model*. 
 The branch `master` contains releases, whereas the branch `develop` contains code under development. 
-When building the tools, the branches should match:
-Releases `clafer/master` and `claferIG/master` are guaranteed to work well together.
-Development versions `clafer/develop` and `claferIG/develop` should work well together but this might not always be the case.
+When building the tools, the branches should match.
+Releases from branches 'master` are guaranteed to work well together.
+Development versions from branches `develop` should work well together but this might not always be the case.
 
 Usage
 =====
@@ -136,10 +126,12 @@ How it works
 
 Need help?
 ==========
-* See [Project's website](http://gsd.uwaterloo.ca/clafer) for news, technical reports and more
-  * Check out a [Clafer tutorial](http://gsd.uwaterloo.ca/node/310)
-  * Try live instance of [ClaferWiki](http://t3-necsis.cs.uwaterloo.ca:8091)
-  * Try live instance of [ClaferIDE](http://t3-necsis.cs.uwaterloo.ca:8094)
-* Take a look at incomplete [Clafer wiki](https://github.com/gsdlab/clafer/wiki)
+* See [language's website](http://clafer.org) for news, technical reports and more
+  * Check out a [Clafer tutorial](http://t3-necsis.cs.uwaterloo.ca:8091/Tutorial/Intro)
+  * Try a live instance of [ClaferWiki](http://t3-necsis.cs.uwaterloo.ca:8091)
+  * Try a live instance of [ClaferIDE](http://t3-necsis.cs.uwaterloo.ca:8094)
+  * Try a live instance of [ClaferConfigurator](http://t3-necsis.cs.uwaterloo.ca:8093)
+  * Try a live instance of [ClaferMooVisualizer](http://t3-necsis.cs.uwaterloo.ca:8092)
+* Take a look at (incomplete) [Clafer wiki](https://github.com/gsdlab/clafer/wiki)
 * Browse example models in the [test suite](https://github.com/gsdlab/clafer/tree/master/test/positive) and [MOO examples](https://github.com/gsdlab/clafer/tree/master/spl_configurator/dataset)
 * Post questions, report bugs, suggest improvements [GSD Lab Bug Tracker](http://gsd.uwaterloo.ca:8888/questions/). Tag your entries with `claferwiki` (so that we know what they are related to) and with `michal` (so that Michał gets a notification).
