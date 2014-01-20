@@ -23,12 +23,12 @@ module Network.Gitit.Plugin.ClaferWiki (plugin) where
 
 import Network.Gitit.Interface
 
+import Control.Applicative
 import Control.Monad
 import Control.Monad.Trans.State
 import Data.List
 import Data.List.Split
 import qualified Data.Map as Map
-import qualified Data.Set as Set
 import Data.String.Utils (replace)
 import Network.BSD (getHostName)
 import System.Directory (createDirectoryIfMissing, doesFileExist)
@@ -64,17 +64,11 @@ claferWiki pandoc = do
 		htmlCode = extractOutput allCompilationResults Html
 		htmlCodeFragments = splitOn "\n<!-- # FRAGMENT /-->\n" htmlCode
 		
-		stats = case extractCompilerResult allCompilationResults Html of
-					Just CompilerResult{statistics = s} -> s
-					Nothing 					   		-> "No model."
+		stats = maybe "No model." statistics $ extractCompilerResult allCompilationResults Html
 
-		dotGraph = case extractCompilerResult allCompilationResults Graph of
-				Just CompilerResult{outputCode = o} -> o
-				Nothing 							-> ""
+		dotGraph = maybe "" outputCode $ extractCompilerResult allCompilationResults Graph 
 
-		dotCVLGraph = case extractCompilerResult allCompilationResults CVLGraph of
-					Just CompilerResult{outputCode = o} -> o
-					Nothing 					    -> ""
+		dotCVLGraph = maybe "" outputCode $ extractCompilerResult allCompilationResults CVLGraph
 
 	-- render the graphs to SVG using dot
 	(_, svgGraphWithoutRefs, _) <- liftIO $ readProcessWithExitCode "dot" [ "-Tsvg" ] dotGraph	
@@ -110,7 +104,7 @@ claferWiki pandoc = do
 
 		-- collects compiler modes depending on the kinds of blocks on the page 
 		claferModes :: [ ClaferMode ]
-		claferModes = queryWith addMode pandoc
+		claferModes = nub $ queryWith addMode pandoc
 
 		fragmentedModel = intercalate "//# FRAGMENT\n" fragments
 		completeModel = intercalate "\n" fragments
@@ -127,10 +121,8 @@ claferWiki pandoc = do
 		addMode (CodeBlock (_, [ "clafer", "cvlgraph" ], _) _)	= [CVLGraph]
 		addMode _ 												= []
 
-
 		extractCompilerResult :: Either [ClaferErr] (Map.Map ClaferMode CompilerResult) -> ClaferMode -> Maybe CompilerResult
-		extractCompilerResult (Right compilerResultMap) claferMode = Map.lookup claferMode compilerResultMap
-		extractCompilerResult (Left _)                  _          = Nothing
+		extractCompilerResult result claferMode = either (const Nothing) (Map.lookup claferMode) result
 
 		extractOutput :: Either [ClaferErr] (Map.Map ClaferMode CompilerResult) -> ClaferMode -> String
 		extractOutput (Right compilerResultMap) claferMode = 
@@ -269,15 +261,17 @@ renderSummary    fileName  stats     svgGraphWithoutRefs svgGraphWithRefs graphN
 
 compileFragments :: [ String ] -> [ ClaferMode ] -> Either [ClaferErr] (Map.Map ClaferMode CompilerResult)
 compileFragments    fragments     claferModes    = 
-	let 
-		noDuplicatesClaferModes =  Set.toList $ Set.fromList claferModes
-	in
-		-- compile all clafer code
-		runClafer defaultClaferArgs{mode=noDuplicatesClaferModes, keep_unused=True, add_comments=True, show_references=False } $ do
-				mapM_ addModuleFragment fragments
-				parse
-				compile
-				generate
+	-- compile all clafer code
+	runClafer defaultClaferArgs{
+				mode=claferModes,
+				keep_unused=True,
+				add_comments=True,
+				show_references=False } $ do
+											mapM_ addModuleFragment fragments
+											parse
+											compile
+											generate
+
 
 renderAnalyzeWithClaferMooViz :: String -> String -> String -> Block
 renderAnalyzeWithClaferMooViz fileName serverURL serverPort = 
@@ -316,7 +310,7 @@ renderAddOpenInIDE fileName serverURL serverPort =
       ])
 
 getPageName:: PluginM String
-getPageName = getContext >>= return . replace " " "_" . replace "/" "_" . pgPageName . ctxLayout
+getPageName = replace " " "_" . replace "/" "_" . pgPageName . ctxLayout <$> getContext
 
 changeTransparentToLightGray :: String -> String
 changeTransparentToLightGray = replace "color=transparent" "color=lightgray"
