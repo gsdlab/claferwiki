@@ -1,7 +1,7 @@
 Clafer Wiki
 ===========
 
-v0.3.5.17-01-2014
+v0.3.5.20-01-2014
 
 **ClaferWiki** is a wiki system integrated with [Clafer compiler](https://github.com/gsdlab/clafer). [Clafer](http://clafer.org) is a lightweight yet powerful structural modeling language. ClaferWiki allows for embedding Clafer model fragments in wiki pages and provides model authoring support including code highlighting, parse and semantic error reporting, hyperlinking from identifier use to its definition, and graphical view rendering. 
 
