@@ -38,11 +38,11 @@ import Language.Clafer
 import Language.Clafer.Css as Css
 import Language.Clafer.Generator.Html (highlightErrors)
 
+-- | claferWiki collects Clafer code from .clafer code blocks, renders as HTML and graph, 
+--   and replaces the original blocks with RawBlocks containing the results
 plugin :: Plugin
 plugin = mkPageTransformM claferWiki
 
--- claferWiki collects Clafer code from .clafer code blocks, renders as HTML and graph, 
--- and replaces the original blocks with RawBlocks containing the results
 claferWiki :: Pandoc -> PluginM Pandoc
 claferWiki pandoc = do
 	-- make sure the directories and clafer.css exist
@@ -142,10 +142,12 @@ claferWiki pandoc = do
 				"</body>\n</html>"
 			]
 
+-- | Environment (state) for rewriting the page
 data WikiEnv = WikiEnv {
 					we_fileName :: String,
 					we_serverURL :: String,
 					we_serverPort :: String, 
+					-- | code fragments are consumed
 					we_htmlCodeFragments :: [ String ],
 					we_stats :: String,
 					we_graphNo :: Int,
