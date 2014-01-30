@@ -39,7 +39,12 @@ In case these binaries do not work on your particular machine configuration, the
 * [Git](http://git-scm.com) 
 * [Gitit wiki](http://gitit.net) v0.10.3.1.
   
-### Installation
+### Installation from Hackage
+
+1. `cabal update`
+2. `cabal install claferwiki`
+
+### Installation from source code
 
 1. install the Haskell Platform
 2. install Git

@@ -19,6 +19,10 @@
  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  SOFTWARE.
 -}
+-- | A plugin for Gitit which integrates the Clafer compiler and links to other
+-- Clafer web tools: <http://https://github.com/gsdlab/ClaferIDE ClaferIDE>,
+-- <http://https://github.com/gsdlab/ClaferConfigurator ClaferConfigurator>, and
+-- <http://https://github.com/gsdlab/ClaferMooVisualizer ClaferMooVisualizer>
 module Network.Gitit.Plugin.ClaferWiki (plugin) where
 
 import Network.Gitit.Interface
