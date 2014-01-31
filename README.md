@@ -47,10 +47,11 @@ Regardless of the installation method, the following are required:
 
 ### Installation from source code
 
-3. In some `<source directory>` where you want to have the wiki source code
+1. In some `<source directory>` where you want to have the wiki source code
    * execute `git clone git://github.com/gsdlab/claferwiki.git`
-4. execute `make install to=<target directory>`
-  * this will copy the wiki files and `cabal install` the package `claferwiki`
+2. execute `cabal install`
+3. execute `make install to=<target directory>`
+  * this will copy the wiki files
 
 ### Important: Branches must correspond
 
