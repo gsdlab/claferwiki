@@ -1,5 +1,5 @@
 echo "-----------------------------------------"
-echo "| ClaferWiki v0.3.5.20-01-2014          |"
+echo "| ClaferWiki v0.3.5.1                   |"
 echo "| https://github.com/gsdlab/claferwiki/ |"
 echo "| By Michal Antkiewicz, Chris Walker    |"
 echo "| Generative Software Development Lab   |"

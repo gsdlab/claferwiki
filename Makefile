@@ -1,7 +1,3 @@
-dependencies:
-	cabal install -fhighlighting pandoc
-	cabal install gitit
-
 install:
 	mkdir -p $(to)
 	cp -f  gitit.cnf $(to)

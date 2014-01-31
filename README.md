@@ -1,7 +1,7 @@
 Clafer Wiki
 ===========
 
-v0.3.5.20-01-2014
+v0.3.5.1.1
 
 **ClaferWiki** is a wiki system integrated with [Clafer compiler](https://github.com/gsdlab/clafer). [Clafer](http://clafer.org) is a lightweight yet powerful structural modeling language. ClaferWiki allows for embedding Clafer model fragments in wiki pages and provides model authoring support including code highlighting, parse and semantic error reporting, hyperlinking from identifier use to its definition, and graphical view rendering. 
 
@@ -19,21 +19,19 @@ Contributors
 ------------
 
 * Chris Walker, co-op student May-Aug, 2012. Developer of Clafer Wiki, HTML and GraphViz generators.
-* [Michał Antkiewicz](http://gsd.uwaterloo.ca/mantkiew), Research Engineer. Requirements, development, architecture, testing, technology transfer.
-* [Jimmy Liang](http://gsd.uwaterloo.ca/jliang), MSc. Candidate. Clafer compiler support, including multi-fragment compilation, source/AST/IR traceability, parsing and compilation error reporting.
+* [Michał Antkiewicz](http://gsd.uwaterloo.ca/mantkiew), Requirements, development, architecture, testing, technology transfer.
+* [Jimmy Liang](http://gsd.uwaterloo.ca/jliang), Clafer compiler support, including multi-fragment compilation, source/AST/IR traceability, parsing and compilation error reporting.
 
-Getting Clafer Tools
---------------------
+Getting the Clafer Wiki
+-----------------------
 
-Binary distributions of the release 0.3.5 of Clafer Tools for Windows, Mac, and Linux, 
-can be downloaded from [Clafer Tools - Binary Distributions](http://http://gsd.uwaterloo.ca/clafer-tools-binary-distributions). 
-Clafer Wiki requires Haskell Platform and MinGW to run on Windows. 
-
-In case these binaries do not work on your particular machine configuration, the tools can be built from source code, as described below.
+Clafer can be installed either from Hackage or from the source code.
 
 ### Dependencies for running
 
-* [Clafer compiler](https://github.com/gsdlab/clafer/) v0.3.5.
+Regardless of the installation method, the following are required:
+
+* [Clafer compiler](https://github.com/gsdlab/clafer/) v0.3.5.1.
 * [The Haskell Platform](http://hackage.haskell.org/platform) v2013.2.0.0.
   * alternatively, GHC v7.6.3.
 * [Git](http://git-scm.com) 
@@ -43,15 +41,15 @@ In case these binaries do not work on your particular machine configuration, the
 
 1. `cabal update`
 2. `cabal install claferwiki`
+3. `cd <cabal's lib or share folder>/claferwiki-0.3.5.1`  (`lib` on Windows or `share` on Linux and Mac)
+  * execute `make install to=<target directory>`
+  * this will copy the wiki files and `cabal install` the package `claferwiki`
 
 ### Installation from source code
 
-1. install the Haskell Platform
-2. install Git
-3. install Clafer compiler from source code in some `<source directory>` where you want to have the wiki source code,
-4. execute `git clone git://github.com/gsdlab/claferwiki.git`
-5. execute `make dependencies` to install `pandoc` with code highlighting support and `gitit` 
-6. execute `make install to=<target directory>`
+3. In some `<source directory>` where you want to have the wiki source code
+   * execute `git clone git://github.com/gsdlab/claferwiki.git`
+4. execute `make install to=<target directory>`
   * this will copy the wiki files and `cabal install` the package `claferwiki`
 
 ### Important: Branches must correspond
@@ -137,6 +135,6 @@ Need help?
   * Try a live instance of [ClaferIDE](http://t3-necsis.cs.uwaterloo.ca:8094)
   * Try a live instance of [ClaferConfigurator](http://t3-necsis.cs.uwaterloo.ca:8093)
   * Try a live instance of [ClaferMooVisualizer](http://t3-necsis.cs.uwaterloo.ca:8092)
-* Take a look at (incomplete) [Clafer wiki](https://github.com/gsdlab/clafer/wiki)
+* Take a look at (incomplete) [Clafer by examples wiki](https://github.com/gsdlab/clafer/wiki)
 * Browse example models in the [test suite](https://github.com/gsdlab/clafer/tree/master/test/positive) and [MOO examples](https://github.com/gsdlab/clafer/tree/master/spl_configurator/dataset)
 * Post questions, report bugs, suggest improvements [GSD Lab Bug Tracker](http://gsd.uwaterloo.ca:8888/questions/). Tag your entries with `claferwiki` (so that we know what they are related to) and with `michal` (so that Michał gets a notification).
