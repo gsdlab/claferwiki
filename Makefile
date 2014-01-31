@@ -3,7 +3,7 @@ all:
 
 install:
 	@if test ! -d ".git"; then \
-		cp -f  -r .git $(to)
+		cp -f  -r .git $(to); \
 	fi
 	mkdir -p $(to)
 	cp -f  gitit.cnf $(to)
