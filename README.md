@@ -41,9 +41,9 @@ Regardless of the installation method, the following are required:
 
 1. `cabal update`
 2. `cabal install claferwiki`
-3. `cd <cabal's lib or share folder>/claferwiki-0.3.5.1`  (`lib` on Windows or `share` on Linux and Mac)
+3. `cd <cabal's lib or share folder>`  (`C:\Users\<user>\AppData\Roaming\cabal\i386-windows-ghc-7.6.3\claferwiki-0.3.5.1` on Windows or `.cabal/share/x86_64-linux-ghc-7.6.3/claferwiki-0.3.5.1/` on Linux)
   * execute `make install to=<target directory>`
-  * this will copy the wiki files and `cabal install` the package `claferwiki`
+  * this will copy the wiki files
 
 ### Installation from source code
 
