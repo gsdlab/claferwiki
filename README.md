@@ -1,7 +1,7 @@
 Clafer Wiki
 ===========
 
-v0.3.5.1.1
+v0.3.6
 
 **ClaferWiki** is a wiki system integrated with [Clafer compiler](https://github.com/gsdlab/clafer). [Clafer](http://clafer.org) is a lightweight yet powerful structural modeling language. ClaferWiki allows for embedding Clafer model fragments in wiki pages and provides model authoring support including code highlighting, parse and semantic error reporting, hyperlinking from identifier use to its definition, and graphical view rendering. 
 
@@ -31,7 +31,7 @@ Clafer can be installed either from Hackage or from the source code.
 
 Regardless of the installation method, the following are required:
 
-* [Clafer compiler](https://github.com/gsdlab/clafer/) v0.3.5.1.
+* [Clafer compiler](https://github.com/gsdlab/clafer/) v0.3.6.
 * [The Haskell Platform](http://hackage.haskell.org/platform) v2013.2.0.0.
   * alternatively, GHC v7.6.3.
 * [Git](http://git-scm.com) 
@@ -41,7 +41,7 @@ Regardless of the installation method, the following are required:
 
 1. `cabal update`
 2. `cabal install claferwiki`
-3. `cd <cabal's lib or share folder>`  (`C:\Users\<user>\AppData\Roaming\cabal\i386-windows-ghc-7.6.3\claferwiki-0.3.5.1` on Windows or `.cabal/share/x86_64-linux-ghc-7.6.3/claferwiki-0.3.5.1/` on Linux)
+3. `cd <cabal's lib or share folder>`  (`C:\Users\<user>\AppData\Roaming\cabal\i386-windows-ghc-7.6.3\claferwiki-0.3.6` on Windows or `.cabal/share/x86_64-linux-ghc-7.6.3/claferwiki-0.3.6/` on Linux)
   * execute `make install to=<target directory>`
   * this will copy the wiki files
 
