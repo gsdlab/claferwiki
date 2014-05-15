@@ -7,7 +7,7 @@ synopsis:       A wiki-based IDE for literate modeling with Clafer
 description:    A wiki-based IDE for literate modeling with Clafer. A Plugin for the Gitit wiki which collects code blocks written in Clafer (.clafer), compiles them, renders into HTML and Dot, and replaces the code blocks with the results.
 homepage:       http://github.com/gsdlab/claferwiki
 category:       Wiki
-cabal-version:  >= 1.16
+cabal-version:  >= 1.18
 build-type:     Simple
 copyright:      Michał Antkiewicz, Chris Walker, Luke Michael Brown
 license:        MIT

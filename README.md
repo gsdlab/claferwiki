@@ -33,6 +33,7 @@ Regardless of the installation method, the following are required:
 
 * [Clafer compiler](https://github.com/gsdlab/clafer/) v0.3.6.
 * [The Haskell Platform](http://hackage.haskell.org/platform) v2013.2.0.0.
+  * Cabal >= 1.18
   * alternatively, GHC v7.6.3.
 * [Git](http://git-scm.com) 
 * [Gitit wiki](http://gitit.net) v0.10.3.1.
@@ -49,8 +50,10 @@ Regardless of the installation method, the following are required:
 
 1. In some `<source directory>` where you want to have the wiki source code
    * execute `git clone git://github.com/gsdlab/claferwiki.git`
-2. execute `cabal install`
-3. execute `make install to=<target directory>`
+2. execute `cabal update`
+3. execute `make init`
+4. execute `make`
+5. execute `make install to=<target directory>`
   * this will copy the wiki files
 
 ### Important: Branches must correspond
