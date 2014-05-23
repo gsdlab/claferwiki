@@ -1,8 +1,9 @@
 #################
-## Cabal-dev
+## Cabal
 #################
 
-cabal-dev
+.cabal-sandbox
+cabal.sandbox.config
 
 #################
 ## Clafer Wiki
