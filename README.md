@@ -1,7 +1,7 @@
 Clafer Wiki
 ===========
 
-v0.3.5.1.1
+v0.3.6
 
 **ClaferWiki** is a wiki system integrated with [Clafer compiler](https://github.com/gsdlab/clafer). [Clafer](http://clafer.org) is a lightweight yet powerful structural modeling language. ClaferWiki allows for embedding Clafer model fragments in wiki pages and provides model authoring support including code highlighting, parse and semantic error reporting, hyperlinking from identifier use to its definition, and graphical view rendering. 
 
@@ -18,8 +18,8 @@ If the demo is down or you encounter a bug, please email [Michal Antkiewicz](mai
 Contributors
 ------------
 
+* [Michał Antkiewicz](http://gsd.uwaterloo.ca/mantkiew), Main developer. Requirements, development, architecture, testing, technology transfer.
 * Chris Walker, co-op student May-Aug, 2012. Developer of Clafer Wiki, HTML and GraphViz generators.
-* [Michał Antkiewicz](http://gsd.uwaterloo.ca/mantkiew), Requirements, development, architecture, testing, technology transfer.
 * [Jimmy Liang](http://gsd.uwaterloo.ca/jliang), Clafer compiler support, including multi-fragment compilation, source/AST/IR traceability, parsing and compilation error reporting.
 
 Getting the Clafer Wiki
@@ -31,8 +31,9 @@ Clafer can be installed either from Hackage or from the source code.
 
 Regardless of the installation method, the following are required:
 
-* [Clafer compiler](https://github.com/gsdlab/clafer/) v0.3.5.1.
+* [Clafer compiler](https://github.com/gsdlab/clafer/) v0.3.6.
 * [The Haskell Platform](http://hackage.haskell.org/platform) v2013.2.0.0.
+  * Cabal >= 1.18
   * alternatively, GHC v7.6.3.
 * [Git](http://git-scm.com) 
 * [Gitit wiki](http://gitit.net) v0.10.3.1.
@@ -41,7 +42,7 @@ Regardless of the installation method, the following are required:
 
 1. `cabal update`
 2. `cabal install claferwiki`
-3. `cd <cabal's lib or share folder>`  (`C:\Users\<user>\AppData\Roaming\cabal\i386-windows-ghc-7.6.3\claferwiki-0.3.5.1` on Windows or `.cabal/share/x86_64-linux-ghc-7.6.3/claferwiki-0.3.5.1/` on Linux)
+3. `cd <cabal's lib or share folder>`  (`C:\Users\<user>\AppData\Roaming\cabal\i386-windows-ghc-7.6.3\claferwiki-0.3.6` on Windows or `.cabal/share/x86_64-linux-ghc-7.6.3/claferwiki-0.3.6/` on Linux)
   * execute `make install to=<target directory>`
   * this will copy the wiki files
 
@@ -49,8 +50,10 @@ Regardless of the installation method, the following are required:
 
 1. In some `<source directory>` where you want to have the wiki source code
    * execute `git clone git://github.com/gsdlab/claferwiki.git`
-2. execute `cabal install`
-3. execute `make install to=<target directory>`
+2. execute `cabal update`
+3. execute `make init`
+4. execute `make`
+5. execute `make install to=<target directory>`
   * this will copy the wiki files
 
 ### Important: Branches must correspond
@@ -132,7 +135,7 @@ Need help?
 ==========
 * See [language's website](http://clafer.org) for news, technical reports and more
   * Check out a [Clafer tutorial](http://t3-necsis.cs.uwaterloo.ca:8091/Tutorial/Intro)
-  * Try a live instance of [ClaferWiki](http://t3-necsis.cs.uwaterloo.ca:8091)
+  * Try a live instance of [ClaferWiki](http://t3-necsis.cs.uwaterloo.ca:8091) which contains a repository of models for various applications
   * Try a live instance of [ClaferIDE](http://t3-necsis.cs.uwaterloo.ca:8094)
   * Try a live instance of [ClaferConfigurator](http://t3-necsis.cs.uwaterloo.ca:8093)
   * Try a live instance of [ClaferMooVisualizer](http://t3-necsis.cs.uwaterloo.ca:8092)

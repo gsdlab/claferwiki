@@ -1,7 +1,12 @@
 all:
-	cabal install
+	cabal build
 
+init:
+	cabal sandbox init --sandbox=../.clafertools-cabal-sandbox
+	cabal install --only-dependencies
+	
 install:
+	cabal install
 	@if test ! -d ".git"; then \
 		cp -f  -r .git $(to); \
 	fi

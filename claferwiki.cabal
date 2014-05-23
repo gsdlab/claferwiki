@@ -1,5 +1,5 @@
 Name:           claferwiki
-version:        0.3.5.1
+version:        0.3.6
 stability:      experimental
 author:         Michał Antkiewicz, Chris Walker, Luke Michael Brown
 maintainer:     Michał Antkiewicz <mantkiew@gsd.uwaterloo.ca>
@@ -7,7 +7,7 @@ synopsis:       A wiki-based IDE for literate modeling with Clafer
 description:    A wiki-based IDE for literate modeling with Clafer. A Plugin for the Gitit wiki which collects code blocks written in Clafer (.clafer), compiles them, renders into HTML and Dot, and replaces the code blocks with the results.
 homepage:       http://github.com/gsdlab/claferwiki
 category:       Wiki
-cabal-version:  >= 1.16
+cabal-version:  >= 1.18
 build-type:     Simple
 copyright:      Michał Antkiewicz, Chris Walker, Luke Michael Brown
 license:        MIT
@@ -31,7 +31,7 @@ library
                    base >= 4.6.0.1 && < 5,
                    containers >= 0.5.0.0,
                    directory >= 1.2.0.1,
-                   network >= 2.4.0.0,
+                   network >= 2.4.1.2,
                    process >= 1.1.0.2,
                    time >= 1.4.0.1,
                    split >= 0.2.2,
@@ -39,13 +39,13 @@ library
                    mtl >= 2.1.2,
                    transformers >= 0.3.0.0,
                    
-                   MissingH >= 1.2.0.2,
-                   SHA >= 1.6.1,
+                   MissingH >= 1.2.1.0,
+                   SHA >= 1.6.4,
                    utf8-string >= 0.3.7,
                    pandoc-types == 1.10.*,
                    gitit >= 0.10.3.1,
 
-                   clafer == 0.3.5.1
+                   clafer == 0.3.6
   hs-source-dirs:  src
   ghc-options:     -Wall -fno-warn-unused-do-bind -fno-warn-orphans
   exposed-modules:
