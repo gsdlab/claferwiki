@@ -19,6 +19,7 @@
  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  SOFTWARE.
 -}
+{-# LANGUAGE NamedFieldPuns #-}
 -- | A plugin for Gitit which integrates the Clafer compiler and links to other
 -- Clafer web tools: <http://https://github.com/gsdlab/ClaferIDE ClaferIDE>,
 -- <http://https://github.com/gsdlab/ClaferConfigurator ClaferConfigurator>, and
@@ -131,8 +132,9 @@ claferWiki pandoc = do
 		extractOutput :: Either [ClaferErr] (Map.Map ClaferMode CompilerResult) -> ClaferMode -> String
 		extractOutput (Right compilerResultMap) claferMode = 
 			case (Map.lookup claferMode compilerResultMap) of
-				Just CompilerResult{outputCode = output} -> output
-				Nothing -> "Error: No " ++ show claferMode ++ " output!"
+				Just CompilerResult{ outputCode } -> outputCode
+				Just NoCompilerResult{ reason } -> "Error: No " ++ show claferMode ++ " output. Reason:" ++ reason
+				Nothing -> "Error: No " ++ show claferMode ++ " output."
 		extractOutput (Left err) _ = highlightErrors fragmentedModel err
 
 		selfContained htmlCode = 
