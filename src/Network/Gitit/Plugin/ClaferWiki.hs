@@ -1,3 +1,4 @@
+{-# LANGUAGE OverloadedStrings #-}
 {-
  Copyright (C) 2012-2014 Michal Antkiewicz, Chris Walker <http://gsd.uwaterloo.ca>
 
