@@ -3,6 +3,7 @@ all:
 
 init:
 	cabal sandbox init --sandbox=../.clafertools-cabal-sandbox
+	cabal install pandoc-1.13.1 -fhighlighting -fhttps
 	cabal install --only-dependencies
 	
 install:
