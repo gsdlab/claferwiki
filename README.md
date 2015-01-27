@@ -1,7 +1,7 @@
 Clafer Wiki
 ===========
 
-v0.3.7
+v0.3.8
 
 **ClaferWiki** is a wiki system integrated with [Clafer compiler](https://github.com/gsdlab/clafer). [Clafer](http://clafer.org) is a lightweight yet powerful structural modeling language. ClaferWiki allows for embedding Clafer model fragments in wiki pages and provides model authoring support including code highlighting, parse and semantic error reporting, hyperlinking from identifier use to its definition, and graphical view rendering. 
 
@@ -31,7 +31,7 @@ Clafer can be installed either from Hackage or from the source code.
 
 Regardless of the installation method, the following are required:
 
-* [Clafer compiler](https://github.com/gsdlab/clafer/) v0.3.7.
+* [Clafer compiler](https://github.com/gsdlab/clafer/) v0.3.8.
 * [The Haskell Platform](http://hackage.haskell.org/platform) v2013.2.0.0.
   * Cabal >= 1.18
   * alternatively, GHC v7.6.3.
@@ -42,7 +42,7 @@ Regardless of the installation method, the following are required:
 
 1. `cabal update`
 2. `cabal install claferwiki`
-3. `cd <cabal's lib or share folder>`  (`C:\Users\<user>\AppData\Roaming\cabal\i386-windows-ghc-7.6.3\claferwiki-0.3.7` on Windows or `.cabal/share/x86_64-linux-ghc-7.6.3/claferwiki-0.3.7/` on Linux)
+3. `cd <cabal's lib or share folder>`  (`C:\Users\<user>\AppData\Roaming\cabal\i386-windows-ghc-7.6.3\claferwiki-0.3.8` on Windows or `.cabal/share/x86_64-linux-ghc-7.6.3/claferwiki-0.3.8/` on Linux)
   * execute `make install to=<target directory>`
   * this will copy the wiki files
 
@@ -68,6 +68,11 @@ Usage
 =====
 
 * in the `<target directory>` execute `claferwiki.sh` to start the wiki server
+
+The script can either use gitit and clafer installed in the user package space (default) or in the sandbox. The sandbox location can be provided using the parameter `--sandbox` as follows:
+
+* `./claferwiki.sh --sandbox <relative or absolute path to the sandbox>`, or
+* `./claferwiki.sh --sandbox` which will use the default sandbox location `../.clafertools-cabal-sandbox`
 
 Wiki can be configured by editing the `gitit.cnf` file. See [Configuring and customizing gitit](http://gitit.net/README#configuring-and-customizing-gitit).
 

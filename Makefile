@@ -3,9 +3,9 @@ all:
 
 init:
 	cabal sandbox init --sandbox=../.clafertools-cabal-sandbox
-	cabal install pandoc-1.13.1 -fhighlighting -fhttps
+	cabal install pandoc gitit -fhighlighting -fhttps
 	cabal install --only-dependencies
-	
+
 install:
 	cabal install
 	@if test ! -d ".git"; then \
@@ -21,10 +21,13 @@ install:
 	mkdir -p $(to)/static/css
 	cp -f  static/css/custom.css $(to)/static/css/custom.css
 	cp -f  static/css/clafer.css $(to)/static/css/clafer.css
-	
+
 update:
 	cp -f  claferwiki.sh $(to)
 	cp -f  README.md $(to)
 	cp -f  static/img/logo.png $(to)/static/img
 	cp -f  static/css/custom.css $(to)/static/css/custom.css
 	cp -f  static/css/clafer.css $(to)/static/css/clafer.css
+
+clean:
+	cabal clean
