@@ -3,8 +3,7 @@ all:
 
 init:
 	cabal sandbox init --sandbox=../.clafertools-cabal-sandbox
-	cabal install pandoc gitit -fhighlighting -fhttps
-	cabal install --only-dependencies
+	cabal install pandoc gitit-0.10.5.1 -fhighlighting -fhttps -fplugins -fnetwork-uri
 
 install:
 	cabal install
