@@ -17,6 +17,7 @@ data-files: claferwiki.sh,
             gitit.cnf,
             Makefile,
             README.md,
+            CHANGES.md,
             static/img/logo.png,
             static/css/clafer.css,
             static/css/custom.css
