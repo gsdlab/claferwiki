@@ -3,7 +3,8 @@ all:
 
 init:
 	cabal sandbox init --sandbox=../.clafertools-cabal-sandbox
-	cabal install gitit -fplugins -fnetwork-uri
+	cabal install gitit -fhighlighting -fhttps -fplugins -fnetwork-uri
+	cabal install --only-dependencies
 
 install:
 	cabal install

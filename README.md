@@ -1,7 +1,7 @@
 Clafer Wiki
 ===========
 
-v0.3.8
+v0.3.9
 
 **ClaferWiki** is a wiki system integrated with [Clafer compiler](https://github.com/gsdlab/clafer). [Clafer](http://clafer.org) is a lightweight yet powerful structural modeling language. ClaferWiki allows for embedding Clafer model fragments in wiki pages and provides model authoring support including code highlighting, parse and semantic error reporting, hyperlinking from identifier use to its definition, and graphical view rendering. 
 
@@ -31,18 +31,16 @@ Clafer can be installed either from Hackage or from the source code.
 
 Regardless of the installation method, the following are required:
 
-* [Clafer compiler](https://github.com/gsdlab/clafer/) v0.3.8.
-* [The Haskell Platform](http://hackage.haskell.org/platform) v2013.2.0.0.
-  * Cabal >= 1.18
-  * alternatively, GHC v7.6.3.
+* [Clafer compiler](https://github.com/gsdlab/clafer/) v0.3.9.
+* [The Haskell Platform](http://hackage.haskell.org/platform) v2014.2.0.0.
 * [Git](http://git-scm.com) 
-* [Gitit wiki](http://gitit.net) v0.10.3.1.
+* [Gitit wiki](http://gitit.net) v0.10.6.1.
   
 ### Installation from Hackage
 
 1. `cabal update`
 2. `cabal install claferwiki`
-3. `cd <cabal's lib or share folder>`  (`C:\Users\<user>\AppData\Roaming\cabal\i386-windows-ghc-7.6.3\claferwiki-0.3.8` on Windows or `.cabal/share/x86_64-linux-ghc-7.6.3/claferwiki-0.3.8/` on Linux)
+3. `cd <cabal's lib or share folder>`  (`C:\Users\<user>\AppData\Roaming\cabal\i386-windows-ghc-7.8.3\claferwiki-0.3.9` on Windows or `.cabal/share/x86_64-linux-ghc-7.8.3/claferwiki-0.3.9/` on Linux)
   * execute `make install to=<target directory>`
   * this will copy the wiki files
 
@@ -52,6 +50,7 @@ Regardless of the installation method, the following are required:
    * execute `git clone git://github.com/gsdlab/claferwiki.git`
 2. execute `cabal update`
 3. execute `make init`
+4. [install clafer from source code](https://github.com/gsdlab/clafer#installation-from-the-source-code)
 4. execute `make`
 5. execute `make install to=<target directory>`
   * this will copy the wiki files
@@ -138,12 +137,5 @@ How it works
 
 Need help?
 ==========
-* See [language's website](http://clafer.org) for news, technical reports and more
-  * Check out a [Clafer tutorial](http://t3-necsis.cs.uwaterloo.ca:8091/Tutorial/Intro)
-  * Try a live instance of [ClaferWiki](http://t3-necsis.cs.uwaterloo.ca:8091) which contains a repository of models for various applications
-  * Try a live instance of [ClaferIDE](http://t3-necsis.cs.uwaterloo.ca:8094)
-  * Try a live instance of [ClaferConfigurator](http://t3-necsis.cs.uwaterloo.ca:8093)
-  * Try a live instance of [ClaferMooVisualizer](http://t3-necsis.cs.uwaterloo.ca:8092)
-* Take a look at (incomplete) [Clafer by examples wiki](https://github.com/gsdlab/clafer/wiki)
-* Browse example models in the [test suite](https://github.com/gsdlab/clafer/tree/master/test/positive) and [MOO examples](https://github.com/gsdlab/clafer/tree/master/spl_configurator/dataset)
-* Post questions, report bugs, suggest improvements [GSD Lab Bug Tracker](http://gsd.uwaterloo.ca:8888/questions/). Tag your entries with `claferwiki` (so that we know what they are related to) and with `michal` (so that Michał gets a notification).
+* Visit [language's website](http://clafer.org).
+* Report issues to [issue tracker](https://github.com/gsdlab/claferwiki/issues)
