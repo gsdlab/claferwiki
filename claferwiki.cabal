@@ -17,9 +17,11 @@ data-files:             claferwiki.sh
                       , gitit.cnf
                       , Makefile
                       , README.md
+                      , CHANGES.md
                       , static/img/logo.png
                       , static/css/clafer.css
                       , static/css/custom.css
+
 source-repository head
     type:               git
     location:           git://github.com/gsdlab/claferwiki.git
@@ -38,6 +40,7 @@ library
                       , split >= 0.2.2
 
                       , MissingH >= 1.2.1.0
+                      , network-uri >= 2.6
                       , SHA >= 1.6.4
                       , utf8-string >= 0.3.8
                       , gitit >= 0.10.6.1
