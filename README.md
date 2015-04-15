@@ -1,11 +1,11 @@
 Clafer Wiki
 ===========
 
-v0.3.9
+v0.3.10
 
-**ClaferWiki** is a wiki system integrated with [Clafer compiler](https://github.com/gsdlab/clafer). [Clafer](http://clafer.org) is a lightweight yet powerful structural modeling language. ClaferWiki allows for embedding Clafer model fragments in wiki pages and provides model authoring support including code highlighting, parse and semantic error reporting, hyperlinking from identifier use to its definition, and graphical view rendering. 
+**ClaferWiki** is a wiki system integrated with [Clafer compiler](https://github.com/gsdlab/clafer). [Clafer](http://clafer.org) is a lightweight yet powerful structural modeling language. ClaferWiki allows for embedding Clafer model fragments in wiki pages and provides model authoring support including code highlighting, parse and semantic error reporting, hyperlinking from identifier use to its definition, and graphical view rendering.
 
-ClaferWiki supports informal-to-formal modeling, that is, gradually refining parts of specification in natural language into a Clafer model fragments. ClaferWiki supports *literate modeling* - both the rich text and the model fragments can be freely mixed. Informal-to-formal modeling is important during domain modeling. 
+ClaferWiki supports informal-to-formal modeling, that is, gradually refining parts of specification in natural language into a Clafer model fragments. ClaferWiki supports *literate modeling* - both the rich text and the model fragments can be freely mixed. Informal-to-formal modeling is important during domain modeling.
 
 Also, ClaferWiki acts as a collaborative, lightweight, web-based integrated development environment (IDE) for Clafer. In addition to code highlighting, error reporting, hyperlinking, and graphical view rendering, it also provides model versioning and distributed online/offline editing capabilities as it is based on the Git distributed version control system and the [Gitit wiki](http://gitit.net/).
 
@@ -31,16 +31,16 @@ Clafer can be installed either from Hackage or from the source code.
 
 Regardless of the installation method, the following are required:
 
-* [Clafer compiler](https://github.com/gsdlab/clafer/) v0.3.9.
+* [Clafer compiler](https://github.com/gsdlab/clafer/) v0.3.10.
 * [The Haskell Platform](http://hackage.haskell.org/platform) v2014.2.0.0.
-* [Git](http://git-scm.com) 
-* [Gitit wiki](http://gitit.net) v0.10.6.1.
-  
+* [Git](http://git-scm.com)
+* [Gitit wiki](http://gitit.net) v0.10.6.2.
+
 ### Installation from Hackage
 
 1. `cabal update`
-2. `cabal install claferwiki`
-3. `cd <cabal's lib or share folder>`  (`C:\Users\<user>\AppData\Roaming\cabal\i386-windows-ghc-7.8.3\claferwiki-0.3.9` on Windows or `.cabal/share/x86_64-linux-ghc-7.8.3/claferwiki-0.3.9/` on Linux)
+2. `cabal install claferwiki-0.3.10 -fhighlighting -fhttps -fplugins -fnetwork-uri`
+3. `cd <cabal's lib or share folder>`  (`C:\Users\<user>\AppData\Roaming\cabal\i386-windows-ghc-7.8.3\claferwiki-0.3.10` on Windows or `.cabal/share/x86_64-linux-ghc-7.8.3/claferwiki-0.3.10/` on Linux)
   * execute `make install to=<target directory>`
   * this will copy the wiki files
 
@@ -57,8 +57,8 @@ Regardless of the installation method, the following are required:
 
 ### Important: Branches must correspond
 
-All related projects are following the *simultaneous release model*. 
-The branch `master` contains releases, whereas the branch `develop` contains code under development. 
+All related projects are following the *simultaneous release model*.
+The branch `master` contains releases, whereas the branch `develop` contains code under development.
 When building the tools, the branches should match.
 Releases from branches 'master` are guaranteed to work well together.
 Development versions from branches `develop` should work well together but this might not always be the case.
@@ -78,8 +78,8 @@ Wiki can be configured by editing the `gitit.cnf` file. See [Configuring and cus
 Update
 ------
 
-* in the `<source directory>` execute `git pull` 
-* execute `make update to=<target directory>` 
+* in the `<source directory>` execute `git pull`
+* execute `make update to=<target directory>`
   * this will keep the directory structure and your existing git repository with the wiki contents
 
 Features
