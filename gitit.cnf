@@ -1,6 +1,6 @@
 # gitit wiki configuration file
 
-address: 0.0.0.0
+# address: 0.0.0.0
 # sets the IP address on which the web server will listen.
 
 port: 8091

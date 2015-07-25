@@ -35,6 +35,7 @@ Regardless of the installation method, the following are required:
 * [The Haskell Platform](http://hackage.haskell.org/platform) v2014.2.0.0.
 * [Git](http://git-scm.com)
 * [Gitit wiki](http://gitit.net) v0.11.1.
+* GraphViz.
 
 ### Installation from Hackage
 
@@ -54,6 +55,8 @@ Regardless of the installation method, the following are required:
 4. execute `make`
 5. execute `make install to=<target directory>`
   * this will copy the wiki files
+6. in `<target directory>`, execute `git init` to create a git repository for the wiki data
+  * NOTE: see `repository-path:` option in `gitit.cnf`
 
 ### Important: Branches must correspond
 
