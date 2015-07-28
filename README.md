@@ -1,5 +1,4 @@
-Clafer Wiki
-===========
+# Clafer Wiki
 
 v0.4.0
 
@@ -15,15 +14,13 @@ Also, ClaferWiki acts as a collaborative, lightweight, web-based integrated deve
 
 If the demo is down or you encounter a bug, please email [Michal Antkiewicz](mailto:mantkiew@gsd.uwaterloo.ca).
 
-Contributors
-------------
+## Contributors
 
 * [Michał Antkiewicz](http://gsd.uwaterloo.ca/mantkiew), Main developer. Requirements, development, architecture, testing, technology transfer.
 * Chris Walker, co-op student May-Aug, 2012. Developer of Clafer Wiki, HTML and GraphViz generators.
 * [Jimmy Liang](http://gsd.uwaterloo.ca/jliang), Clafer compiler support, including multi-fragment compilation, source/AST/IR traceability, parsing and compilation error reporting.
 
-Getting the Clafer Wiki
------------------------
+## Getting the Clafer Wiki
 
 Clafer can be installed either from Hackage or from the source code.
 
@@ -31,11 +28,11 @@ Clafer can be installed either from Hackage or from the source code.
 
 Regardless of the installation method, the following are required:
 
-* [Clafer compiler](https://github.com/gsdlab/clafer/) v0.4.0.
-* [The Haskell Platform](http://hackage.haskell.org/platform) v2014.2.0.0.
+* [Clafer compiler](https://github.com/gsdlab/clafer/) v0.4.0
+* [GHC](https://www.haskell.org/downloads) v7.10.*
 * [Git](http://git-scm.com)
-* [Gitit wiki](http://gitit.net) v0.11.1.
-* GraphViz.
+* [Gitit wiki](http://gitit.net) v0.11.1
+* GraphViz
 
 ### Installation from Hackage
 
@@ -66,8 +63,8 @@ When building the tools, the branches should match.
 Releases from branches 'master` are guaranteed to work well together.
 Development versions from branches `develop` should work well together but this might not always be the case.
 
-Usage
-=====
+# Usage
+
 
 * in the `<target directory>` execute `claferwiki.sh` to start the wiki server
 
@@ -78,15 +75,13 @@ The script can either use gitit and clafer installed in the user package space (
 
 Wiki can be configured by editing the `gitit.cnf` file. See [Configuring and customizing gitit](http://gitit.net/README#configuring-and-customizing-gitit).
 
-Update
-------
+## Update
 
 * in the `<source directory>` execute `git pull`
 * execute `make update to=<target directory>`
   * this will keep the directory structure and your existing git repository with the wiki contents
 
-Features
---------
+## Features
 
 <a href="https://raw.github.com/gsdlab/claferwiki/master/spec/telematics-screenshot-1.png">
 <img src="https://raw.github.com/gsdlab/claferwiki/master/spec/telematics-screenshot-1.png" width="30%" alt="Telematics Example, Module Overview">
@@ -103,8 +98,7 @@ Features
 * overview with graph rendering, statistics, and download links for the entire model source and self-contained HTML rendering
 * integration with ClaferMooVisualizer
 
-Using Clafer Wiki
------------------
+## Using Clafer Wiki
 
 For general usage information for the GitIt wiki see the [README](http://gitit.net/README).
 
@@ -127,8 +121,7 @@ The model overview, including the graph, stats, and download links, can be added
 
 To have the code blocks correctly processed, make sure to add an empty line before and after the code block, even if the code block is the last element on the page.
 
-How it works
-------------
+## How it works
 
 * Clafer Wiki is a set of plugins for the GitIt wiki which processes clafer code blocks and invokes the Clafer compiler.
 * All code blocks on a single page are interpreted as a single module.
@@ -138,7 +131,7 @@ How it works
   * links to the types of references
   * compiler error highlights
 
-Need help?
-==========
+# Need help?
+
 * Visit [language's website](http://clafer.org).
 * Report issues to [issue tracker](https://github.com/gsdlab/claferwiki/issues)
