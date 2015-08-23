@@ -289,7 +289,7 @@ renderAnalyzeWithClaferMooViz :: String -> String -> String -> Block
 renderAnalyzeWithClaferMooViz fileName serverURL serverPort =
     RawBlock "html" (unlines [
       "<div>" ++
-      "<a href=\"http://" ++ serverURL ++ ":8092/?claferFileURL=http://" ++ serverURL ++ ":" ++ serverPort ++ "/clafer/" ++
+      "<a href=\"http://" ++ serverURL ++ ":8192/?claferFileURL=http://" ++ serverURL ++ ":" ++ serverPort ++ "/clafer/" ++
       fileName ++
       ".cfr\" target=\"_blank\" " ++
       "style=\"background-color: #ccc;color: white;text-decoration: none;padding: 1px 5px 1px 5px;\" >" ++
@@ -301,7 +301,7 @@ renderConfigureWithClaferConfigurator :: String -> String -> String -> Block
 renderConfigureWithClaferConfigurator fileName serverURL serverPort =
     RawBlock "html" (unlines [
       "<div>" ++
-      "<a href=\"http://" ++ serverURL ++ ":8093/?claferFileURL=http://" ++ serverURL ++ ":" ++ serverPort ++ "/clafer/" ++
+      "<a href=\"http://" ++ serverURL ++ ":8193/?claferFileURL=http://" ++ serverURL ++ ":" ++ serverPort ++ "/clafer/" ++
       fileName ++
       ".cfr\" target=\"_blank\" " ++
       "style=\"background-color: #ccc;color: white;text-decoration: none;padding: 1px 5px 1px 5px;\" >" ++
@@ -313,7 +313,7 @@ renderAddOpenInIDE :: String -> String -> String -> Block
 renderAddOpenInIDE fileName serverURL serverPort =
     RawBlock "html" (unlines [
       "<div>" ++
-      "<a href=\"http://" ++ serverURL ++ ":8094/?claferFileURL=http://" ++ serverURL ++ ":" ++ serverPort ++ "/clafer/" ++
+      "<a href=\"http://" ++ serverURL ++ ":8194/?claferFileURL=http://" ++ serverURL ++ ":" ++ serverPort ++ "/clafer/" ++
       fileName ++
       ".cfr\" target=\"_blank\" " ++
       "style=\"background-color: #ccc;color: white;text-decoration: none;padding: 1px 5px 1px 5px;\" >" ++
