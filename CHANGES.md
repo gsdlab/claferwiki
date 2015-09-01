@@ -1,4 +1,4 @@
-# claferwiki Version 0.4.0 released on Aug 24, 2015
+# claferwiki Version 0.4.1 released on Sep 1, 2015
 
 [Release](https://github.com/gsdlab/claferwiki/pull/12)
 
