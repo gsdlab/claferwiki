@@ -4,6 +4,7 @@
 
 .cabal-sandbox
 cabal.sandbox.config
+dist/
 
 #################
 ## Clafer Wiki
@@ -18,16 +19,17 @@ static/clafer/*.html
 ## Haskell
 #################
 
+.stack-work
+tags
 *.hi
 *.o
-dist/
 
 ############
 ## Windows
 ############
 
 # Windows image file caches
-Thumbs.db 
+Thumbs.db
 
 # Folder config file
 Desktop.ini

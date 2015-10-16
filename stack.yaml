@@ -1,0 +1,22 @@
+# for GHC-7.10.2
+extra-deps:
+  [ data-stringmap-1.0.1.1
+  , gitit-0.12.0.1
+  , filestore-0.6.1
+  , recaptcha-0.1.0.3
+  , uri-0.1.6.3
+  , sendfile-0.7.9
+  ]
+
+resolver: lts-3.9
+
+flags:
+  sendfile:
+    portable: true
+  gitit:
+    plugins: true
+    network-uri: true
+
+packages:
+- '../clafer'
+- '.'

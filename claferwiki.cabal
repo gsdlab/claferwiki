@@ -1,5 +1,5 @@
 Name:                   claferwiki
-version:                0.4.1
+version:                0.4.2
 stability:              experimental
 author:                 Michał Antkiewicz, Chris Walker, Luke Michael Brown
 maintainer:             Michał Antkiewicz <mantkiew@gsd.uwaterloo.ca>
@@ -24,7 +24,7 @@ data-files:             claferwiki.sh
                       , static/img/logo.png
                       , static/css/clafer.css
                       , static/css/custom.css
-
+                      , stack.yaml
 source-repository head
     type:               git
     location:           git://github.com/gsdlab/claferwiki.git
@@ -46,10 +46,10 @@ library
                       , network-uri >= 2.6.0.3
                       , SHA >= 1.6.4.2
                       , utf8-string >= 0.3.8
-                      , gitit >= 0.10.6.3
+                      , gitit >= 0.12.0.1
                       , transformers-compat >= 0.3 && < 0.5
 
-                      , clafer == 0.4.1
+                      , clafer == 0.4.2
   hs-source-dirs:       src
   ghc-options:          -Wall -fno-warn-orphans
   exposed-modules:      Network.Gitit.Plugin.ClaferWiki
