@@ -1,17 +1,13 @@
 all:
-	cabal build
-
-init:
-	cabal sandbox init --sandbox=../.clafertools-cabal-sandbox
-	cabal install gitit -fhighlighting -fhttps -fplugins -fnetwork-uri
-	cabal install --only-dependencies
+	stack build
 
 install:
-	cabal install
+	stack install
 	@if test ! -d ".git"; then \
 		cp -f  -r .git $(to); \
 	fi
 	mkdir -p $(to)
+	cp -f stack.yaml $(to)
 	cp -f  gitit.cnf $(to)
 	cp -f  claferwiki.sh $(to)
 	chmod +x $(to)/claferwiki.sh
@@ -30,4 +26,4 @@ update:
 	cp -f  static/css/clafer.css $(to)/static/css/clafer.css
 
 clean:
-	cabal clean
+	stack clean

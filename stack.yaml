@@ -8,7 +8,7 @@ extra-deps:
   , sendfile-0.7.9
   ]
 
-resolver: lts-3.9
+resolver: lts-3.10
 
 flags:
   sendfile:
@@ -16,6 +16,8 @@ flags:
   gitit:
     plugins: true
     network-uri: true
+    https: true
+    highlighting: true
 
 packages:
 - '../clafer'
