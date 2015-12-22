@@ -3,6 +3,7 @@ all:
 
 install:
 	stack install
+	stack install gitit
 	@if test ! -d ".git"; then \
 		cp -f  -r .git $(to); \
 	fi

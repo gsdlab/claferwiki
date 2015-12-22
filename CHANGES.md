@@ -1,3 +1,7 @@
+* claferwiki Version 0.4.3 released on Dec 22, 2015
+
+[Release](https://github.com/gsdlab/claferwiki/pull/14)
+
 * claferwiki Version 0.4.2.1 released on Oct 20, 2015
 
 Updated to clafer 0.4.2.1, added stack instructions to README.
