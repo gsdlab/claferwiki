@@ -1,6 +1,6 @@
 # Claferwiki
 
-##### v0.4.3
+##### v0.4.4
 
 **Claferwiki** is a wiki system integrated with [Clafer compiler](https://github.com/gsdlab/clafer). [Clafer](http://clafer.org) is a lightweight yet powerful structural modeling language. Claferwiki allows for embedding Clafer model fragments in wiki pages and provides model authoring support including code highlighting, parse and semantic error reporting, hyperlinking from identifier use to its definition, and graphical view rendering.
 
@@ -35,15 +35,15 @@ Clafer can be installed either from Hackage or from the source code.
 
 Regardless of the installation method, the following are required:
 
-* [Clafer compiler](https://github.com/gsdlab/clafer/) v0.4.3
-* [GHC](https://www.haskell.org/downloads) v7.10.*
+* [Clafer compiler](https://github.com/gsdlab/clafer/) v0.4.4
+* [GHC](https://www.haskell.org/downloads) >= v7.10.*
 * [Git](http://git-scm.com)
-* [Gitit wiki](http://gitit.net) v0.12.0.1
+* [Gitit wiki](http://gitit.net) v0.12.1.1
 * GraphViz
 
 ### Installation from Hackage
 
-Claferwiki is now available on [Hackage](http://hackage.haskell.org/package/claferwiki-0.4.3/) and it can be installed using either [`stack`](https://github.com/commercialhaskell/stack) or [`cabal-install`](https://hackage.haskell.org/package/cabal-install).
+Claferwiki is now available on [Hackage](http://hackage.haskell.org/package/claferwiki-0.4.4/) and it can be installed using either [`stack`](https://github.com/commercialhaskell/stack) or [`cabal-install`](https://hackage.haskell.org/package/cabal-install).
 
 #### Installation using `stack`
 
@@ -55,8 +55,8 @@ Stack is the only requirement: no other Haskell tooling needs to be installed be
 #### Installation using `cabal-install`
 
 1. `cabal update`
-2. `cabal install claferwiki-0.4.3 -fhighlighting -fhttps -fplugins -fnetwork-uri`
-3. `cd <cabal's lib or share folder>`  (`C:\Users\<user>\AppData\Roaming\cabal\i386-windows-ghc-7.10.2\claferwiki-0.4.3` on Windows or `.cabal/share/x86_64-linux-ghc-7.10.2/claferwiki-0.4.3/` on Linux)
+2. `cabal install claferwiki-0.4.4 -fhighlighting -fhttps -fplugins -fnetwork-uri`
+3. `cd <cabal's lib or share folder>`  (`C:\Users\<user>\AppData\Roaming\cabal\i386-windows-ghc-8.0.1\claferwiki-0.4.4` on Windows or `.cabal/share/x86_64-linux-ghc-8.0.1/claferwiki-0.4.4/` on Linux)
   * execute `make install to=<target directory>`
   * this will copy the wiki files
 
