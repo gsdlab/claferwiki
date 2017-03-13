@@ -1,13 +1,14 @@
 # For GHC-8.0.2
 extra-deps:
   - data-stringmap-1.0.1.1
-  - json-builder-0.3
   - gitit-0.12.2.1
   - sendfile-0.7.9
   - filestore-0.6.3.1
   - json-0.9.1
+  - json-builder-0.3
   - recaptcha-0.1.0.3
   - uri-0.1.6.4
+  - tagsoup-0.14.1
 resolver: lts-8.5
 
 flags:
