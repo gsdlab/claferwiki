@@ -1,5 +1,5 @@
 Name:                   claferwiki
-version:                0.4.4
+version:                0.4.5
 stability:              experimental
 author:                 Michał Antkiewicz, Chris Walker, Luke Michael Brown
 maintainer:             Michał Antkiewicz <mantkiew@gsd.uwaterloo.ca>
@@ -13,6 +13,7 @@ license:                MIT
 license-file:           LICENSE
 Tested-with:            GHC == 7.10.3
                       , GHC == 8.0.1
+                      , GHC == 8.0.2
 Cabal-version:          >= 1.22
 data-files:             claferwiki.sh
                       , gitit.cnf
@@ -48,7 +49,7 @@ library
                       , gitit >= 0.12.0.1
                       , transformers-compat >= 0.3
 
-                      , clafer == 0.4.4
+                      , clafer == 0.4.5
   hs-source-dirs:       src
   ghc-options:          -Wall -fno-warn-orphans
   exposed-modules:      Network.Gitit.Plugin.ClaferWiki
