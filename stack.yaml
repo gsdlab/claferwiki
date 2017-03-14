@@ -9,6 +9,7 @@ extra-deps:
   - recaptcha-0.1.0.3
   - uri-0.1.6.4
   - tagsoup-0.14.1
+  - cond-0.4.1.1
 resolver: lts-8.5
 
 flags:
