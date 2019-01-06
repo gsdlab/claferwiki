@@ -1,6 +1,6 @@
-* claferwiki Version 0.5.0 released on ??? ??, 2017
+* claferwiki Version 0.5.1 released on Jan 07, 2019
 
-[Release](https://github.com/gsdlab/claferwiki/pull/??)
+[Release](https://github.com/gsdlab/claferwiki/pull/19)
 
 * claferwiki Version 0.4.5 released on Mar 13, 2017
 
