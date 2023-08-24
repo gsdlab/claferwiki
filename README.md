@@ -19,7 +19,7 @@ Claferwiki is also integrated with other Clafer Web Tools, allowing to open the 
 
 [Try me!](http://t3-necsis.cs.uwaterloo.ca:8091/)
 
-If the demo is down or you encounter a bug, please email [Michal Antkiewicz](mailto:mantkiew@gsd.uwaterloo.ca).
+If the demo is down or you encounter a bug, please email [Michal Antkiewicz](mailto:michal.antkiewicz@uwaterloo.ca).
 
 ## Contributors
 

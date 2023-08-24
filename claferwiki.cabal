@@ -2,7 +2,7 @@ cabal-version:          3.8
 name:                   claferwiki
 version:                0.5.1
 author:                 Michał Antkiewicz, Chris Walker, Luke Michael Brown
-maintainer:             Michał Antkiewicz <mantkiew@gsd.uwaterloo.ca>
+maintainer:             Michał Antkiewicz <michal.antkiewicz@uwaterloo.ca>
 synopsis:               A wiki-based IDE for literate modeling with Clafer
 description:            A wiki-based IDE for literate modeling with Clafer. A Plugin for the Gitit wiki which collects code blocks written in Clafer (.clafer), compiles them, renders into HTML and Dot, and replaces the code blocks with the results.
 homepage:               http://github.com/gsdlab/claferwiki
