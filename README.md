@@ -36,9 +36,9 @@ Clafer can be installed either from Hackage or from the source code.
 Regardless of the installation method, the following are required:
 
 * [Clafer compiler](https://github.com/gsdlab/clafer/) v0.5.1
-* [GHC](https://www.haskell.org/downloads) >= v8.4.4
+* [GHC](https://www.haskell.org/downloads) >= v9.4.6
 * [Git](http://git-scm.com)
-* [Gitit wiki](http://hackage.haskell.org/package/gitit) v0.12.3.2
+* [Gitit wiki](http://hackage.haskell.org/package/gitit) v0.15.1.1
 * GraphViz
 
 ### Installation from Hackage
@@ -55,8 +55,8 @@ Stack is the only requirement: no other Haskell tooling needs to be installed be
 #### Installation using `cabal-install`
 
 1. `cabal update`
-2. `cabal install claferwiki-0.5.1 -fhighlighting -fhttps -fplugins -fnetwork-uri`
-3. `cd <cabal's lib or share folder>`  (`C:\Users\<user>\AppData\Roaming\cabal\i386-windows-ghc-8.4.4\claferwiki-0.5.1` on Windows or `.cabal/share/x86_64-linux-ghc-8.4.4/claferwiki-0.5.1/` on Linux)
+2. `cabal install claferwiki-0.5.1 -fplugins`
+3. `cd <cabal's lib or share folder>`  (`C:\Users\<user>\AppData\Roaming\cabal\i386-windows-ghc-9.4.6\claferwiki-0.5.1` on Windows or `.cabal/share/x86_64-linux-ghc-9.4.6/claferwiki-0.5.1/` on Linux)
   * execute `make install to=<target directory>`
   * this will copy the wiki files
 

@@ -1,4 +1,4 @@
-* claferwiki Version 0.5.1 released on Jan 07, 2019
+* claferwiki Version 0.5.1 released on Aug 24, 2023
 
 [Release](https://github.com/gsdlab/claferwiki/pull/19)
 
