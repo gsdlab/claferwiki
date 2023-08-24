@@ -1,26 +1,21 @@
-# For GHC-8.4.4
+# For GHC-9.4.6
 extra-deps:
-  - data-stringmap-1.0.1.1
-  - gitit-0.12.3.2
-  - ConfigFile-1.1.4@sha256:ca56261e1deae6ef958a337b03812987bfd94ab37b047e27f262bc3137813165
-  - hoauth2-1.8.3@sha256:32e1a6fcdc999d3eef522ee31c165805626e5c154aa828d603402767d02f2bc6
-  - url-2.1.3@sha256:f22aeac9b607527bd5d070f2191cd2f0336f04ed7982cbe4dc4c6bdb5911ac13
-  - uri-bytestring-aeson-0.1.0.7@sha256:33d83caa4704f07112564b98cb4b2e7b87f3f185e2e520c8d3444b95967d11f3
-  - filestore-0.6.3.4
+  - gitit-0.15.1.1
+  - url-2.1.3
+  - filestore-0.6.5
   - recaptcha-0.1.0.4
   - github: nikomi/json-builder
     commit: fef4700b53da502f8d70d2106c9f4b65e1a69b3f
+  - github: gsdlab/StringMap
+    commit: 0fe1e8e3919de3077b40a61f54cb681c3548307e
 
-resolver: lts-12.26
+resolver: lts-21.8
 
 flags:
   sendfile:
     portable: true
   gitit:
     plugins: true
-    network-uri: true
-    https: true
-    highlighting: true
 
 packages:
 - '../clafer'
