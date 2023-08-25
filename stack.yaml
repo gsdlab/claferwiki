@@ -1,7 +1,6 @@
 # For GHC-9.4.6
 extra-deps:
   - gitit-0.15.1.1
-  - url-2.1.3
   - filestore-0.6.5
   - recaptcha-0.1.0.4
   - github: nikomi/json-builder
@@ -9,7 +8,7 @@ extra-deps:
   - github: gsdlab/StringMap
     commit: 2ce0adb947adaa5581d347ce8555ec76db44d815
 
-resolver: lts-21.8
+resolver: lts-21.9
 
 flags:
   sendfile:
