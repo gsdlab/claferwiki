@@ -109,7 +109,7 @@ claferWiki pandoc = do
     where
         -- collect clafer model fragments
         fragments :: [String]
-        fragments = queryWith addFragment pandoc
+        fragments = queryWith extractFragment pandoc
 
         -- collects compiler modes depending on the kinds of blocks on the page
         claferModes :: [ ClaferMode ]
@@ -121,9 +121,9 @@ claferWiki pandoc = do
         completeModel :: String
         completeModel = intercalate "\n" fragments
 
-        addFragment :: Block -> [String]
-        addFragment (CodeBlock (_, [ "clafer" ], _) code) = [ T.unpack code ++ "\n" ]
-        addFragment _                                     = []
+        extractFragment :: Block -> [String]
+        extractFragment (CodeBlock (_, [ "clafer" ], _) code) = [ T.unpack code ++ "\n" ]
+        extractFragment _                                     = []
 
         addMode :: Block -> [ClaferMode]
         addMode (CodeBlock (_, [ "clafer" ], _) _)              = [Html]
@@ -171,22 +171,25 @@ data WikiEnv = WikiEnv {
                }
 
 
+mkHtmlBlock :: Builder -> Block
+mkHtmlBlock = RawBlock "html" . toStrict . toLazyText
+
 replaceClaferWikiBlocks :: Block -> State WikiEnv Block
 replaceClaferWikiBlocks (CodeBlock (_, [ "clafer" ], _) _) = do
     wikiEnv <- get
     case we_htmlCodeFragments wikiEnv of
         (fragment:fragments) -> do
             put $ wikiEnv { we_htmlCodeFragments = fragments }
-            return $ RawBlock "html" $ toStrict . toLazyText $ "<div class=\"code\">" <> fromString fragment <> "</div>"
+            return $ mkHtmlBlock $ "<div class=\"code\">" <> fromString fragment <> "</div>"
         []                   -> return $ Plain []
 
 replaceClaferWikiBlocks (CodeBlock (_, [ "clafer", "links" ], _) _) = do
     fileName <- gets we_fileName
-    return $ RawBlock "html" $ toStrict . toLazyText $ renderLinks fileName
+    return $ mkHtmlBlock $ renderLinks fileName
 
 replaceClaferWikiBlocks (CodeBlock (_, [ "clafer", "stats" ], _) _) = do
     stats <- gets we_stats
-    return $ RawBlock "html" $ toStrict . toLazyText $ renderStats stats
+    return $ mkHtmlBlock $ renderStats stats
 
 replaceClaferWikiBlocks (CodeBlock (_, [ "clafer", "graph" ], _) _) = do
     wikiEnv <- get
@@ -194,15 +197,15 @@ replaceClaferWikiBlocks (CodeBlock (_, [ "clafer", "graph" ], _) _) = do
     svgGraphWithRefs <- gets we_svgGraphWithRefs
     svgGraphWithoutRefs <- gets we_svgGraphWithoutRefs
     put $ wikiEnv { we_graphNo = graphNo + 1 }
-    return $ RawBlock "html" $ toStrict . toLazyText $ renderGraphWithToggle svgGraphWithoutRefs svgGraphWithRefs graphNo
+    return $ mkHtmlBlock $ renderGraphWithToggle svgGraphWithoutRefs svgGraphWithRefs graphNo
 
 replaceClaferWikiBlocks (CodeBlock (_, [ "clafer", "cvlGraph" ], _) _) =  do
     svgCVLGraph <- gets we_svgCVLGraph
-    return $ RawBlock "html" $ toStrict . toLazyText $ renderGraph svgCVLGraph
+    return $ mkHtmlBlock $ renderGraph svgCVLGraph
 
 replaceClaferWikiBlocks (CodeBlock (_, [ "clafer", "cvlgraph" ], _) _) =  do
     svgCVLGraph <- gets we_svgCVLGraph
-    return $ RawBlock "html" $ toStrict . toLazyText $ renderGraph svgCVLGraph
+    return $ mkHtmlBlock $ renderGraph svgCVLGraph
 
 replaceClaferWikiBlocks (CodeBlock (_, [ "clafer", "summary" ], _) _) =  do
     wikiEnv <- get
@@ -212,7 +215,7 @@ replaceClaferWikiBlocks (CodeBlock (_, [ "clafer", "summary" ], _) _) =  do
     svgGraphWithRefs <- gets we_svgGraphWithRefs
     svgGraphWithoutRefs <- gets we_svgGraphWithoutRefs
     put $ wikiEnv { we_graphNo = graphNo + 1 }
-    return $ RawBlock "html" $ toStrict . toLazyText $ renderSummary fileName stats svgGraphWithoutRefs svgGraphWithRefs graphNo
+    return $ mkHtmlBlock $ renderSummary fileName stats svgGraphWithoutRefs svgGraphWithRefs graphNo
 
 replaceClaferWikiBlocks (CodeBlock (_, [ "clafer", "mooviz" ], _) _) =  do
     wikiEnv <- get
@@ -231,6 +234,9 @@ replaceClaferWikiBlocks block = return block
 -- new line builder
 nl :: Builder
 nl = singleton '\n'
+
+colon :: Builder
+colon = singleton ':'
 
 renderLinks :: String -> Builder
 renderLinks fileName =
@@ -294,12 +300,11 @@ compileFragments    fragments   claferModes   =
             compile iModule
             generate
 
-
 renderAnalyzeWithClaferMooViz :: String -> String -> String -> Block
 renderAnalyzeWithClaferMooViz fileName serverURL serverPort =
-    RawBlock "html" $ toStrict . toLazyText $
+    mkHtmlBlock 
       ("<div>" <> nl <>
-      "<a href=\"http://" <> fromString serverURL <> ":8092/?claferFileURL=http://" <> fromString serverURL <> singleton ':' <> fromString serverPort <> "/clafer/" <> nl <>
+      "<a href=\"http://" <> fromString serverURL <> ":8092/?claferFileURL=http://" <> fromString serverURL <> colon <> fromString serverPort <> "/clafer/" <> nl <>
       fromString fileName <> nl <>
       ".cfr\" target=\"_blank\" " <> nl <>
       "style=\"background-color: #ccc;color: white;text-decoration: none;padding: 1px 5px 1px 5px;\" >" <> nl <>
@@ -308,9 +313,9 @@ renderAnalyzeWithClaferMooViz fileName serverURL serverPort =
 
 renderConfigureWithClaferConfigurator :: String -> String -> String -> Block
 renderConfigureWithClaferConfigurator fileName serverURL serverPort =
-    RawBlock "html" $ toStrict . toLazyText $
+    mkHtmlBlock 
       ("<div>" <> nl <>
-      "<a href=\"http://" <> fromString serverURL <> ":8093/?claferFileURL=http://" <> fromString serverURL <> singleton ':' <> fromString serverPort <> "/clafer/" <> nl <>
+      "<a href=\"http://" <> fromString serverURL <> ":8093/?claferFileURL=http://" <> fromString serverURL <> colon <> fromString serverPort <> "/clafer/" <> nl <>
       fromString fileName <> nl <>
       ".cfr\" target=\"_blank\" " <> nl <>
       "style=\"background-color: #ccc;color: white;text-decoration: none;padding: 1px 5px 1px 5px;\" >" <> nl <>
@@ -319,9 +324,9 @@ renderConfigureWithClaferConfigurator fileName serverURL serverPort =
 
 renderAddOpenInIDE :: String -> String -> String -> Block
 renderAddOpenInIDE    fileName  serverURL serverPort =
-    RawBlock "html" $ toStrict . toLazyText $
+    mkHtmlBlock 
       ("<div>" <> nl <>
-      "<a href=\"http://" <> fromString serverURL <> ":8094/?claferFileURL=http://" <> fromString serverURL <> singleton ':' <> fromString serverPort <> "/clafer/" <> nl <>
+      "<a href=\"http://" <> fromString serverURL <> ":8094/?claferFileURL=http://" <> fromString serverURL <> colon <> fromString serverPort <> "/clafer/" <> nl <>
       fromString fileName <> nl <>
       ".cfr\" target=\"_blank\" " <> nl <>
       "style=\"background-color: #ccc;color: white;text-decoration: none;padding: 1px 5px 1px 5px;\" >" <> nl <>
