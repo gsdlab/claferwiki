@@ -22,8 +22,6 @@ install:
 	cp -f  templates/footer.st $(to)/templates/footer.st
 	cp -rf .stack-work/ $(to)
 
-
-
 update:
 	cp -f  claferwiki.sh $(to)
 	cp -f  README.md $(to)
