@@ -18,6 +18,9 @@ install:
 	mkdir -p $(to)/static/css
 	cp -f  static/css/custom.css $(to)/static/css/custom.css
 	cp -f  static/css/clafer.css $(to)/static/css/clafer.css
+	mkdir -p $(to)/templates
+	cp -f  templates/footer.st $(to)/templates/footer.st
+	cp -rf .stack-work/ $(to)
 
 update:
 	cp -f  claferwiki.sh $(to)

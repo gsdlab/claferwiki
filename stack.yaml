@@ -1,24 +1,20 @@
-# For GHC-8.0.2
+# For GHC-9.4.6
 extra-deps:
-  - data-stringmap-1.0.1.1
-  - gitit-0.12.2.1
-  - sendfile-0.7.9
-  - filestore-0.6.3.1
-  - json-0.9.1
-  - json-builder-0.3
-  - recaptcha-0.1.0.3
-  - uri-0.1.6.4
-  - tagsoup-0.14.1
-resolver: lts-8.5
+  - gitit-0.15.1.1
+  - filestore-0.6.5
+  - recaptcha-0.1.0.4
+  - github: nikomi/json-builder
+    commit: fef4700b53da502f8d70d2106c9f4b65e1a69b3f
+  - github: gsdlab/StringMap
+    commit: 2ce0adb947adaa5581d347ce8555ec76db44d815
+
+resolver: lts-21.11
 
 flags:
   sendfile:
     portable: true
   gitit:
     plugins: true
-    network-uri: true
-    https: true
-    highlighting: true
 
 packages:
 - '../clafer'

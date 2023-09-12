@@ -20,6 +20,7 @@ static/clafer/*.html
 #################
 
 .stack-work
+stack.yaml.lock
 tags
 *.hi
 *.o
