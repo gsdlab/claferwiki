@@ -8,11 +8,13 @@ install:
 		cp -f  -r .git $(to); \
 	fi
 	mkdir -p $(to)
-	cp -f stack.yaml $(to)
+	cp -f  stack.yaml $(to)
+	cp -f  claferwiki.cabal $(to)
 	cp -f  gitit.cnf $(to)
 	cp -f  claferwiki.sh $(to)
 	chmod +x $(to)/claferwiki.sh
-	cp -f  README.md $(to)
+	cp -f  README.md $(to)/claferwiki-README.md
+	cp -f  CHANGES.md $(to)/claferwiki-CHANGES.md
 	mkdir -p $(to)/static/img
 	cp -f  static/img/logo.png $(to)/static/img
 	mkdir -p $(to)/static/css
@@ -23,11 +25,16 @@ install:
 	cp -rf .stack-work/ $(to)
 
 update:
+	cp -f  stack.yaml $(to)
+	cp -f  claferwiki.cabal $(to)
 	cp -f  claferwiki.sh $(to)
-	cp -f  README.md $(to)
+	cp -f  README.md $(to)/claferwiki-README.md
+	cp -f  CHANGES.md $(to)/claferwiki-CHANGES.md
 	cp -f  static/img/logo.png $(to)/static/img
 	cp -f  static/css/custom.css $(to)/static/css/custom.css
 	cp -f  static/css/clafer.css $(to)/static/css/clafer.css
+	cp -f  templates/footer.st $(to)/templates/footer.st
+	cp -rf .stack-work/ $(to)
 
 clean:
 	stack clean
