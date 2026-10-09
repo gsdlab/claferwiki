@@ -1,6 +1,6 @@
 cabal-version:          3.8
 name:                   claferwiki
-version:                0.5.1
+version:                0.5.2
 author:                 Michał Antkiewicz, Chris Walker, Luke Michael Brown
 maintainer:             Michał Antkiewicz <michal.antkiewicz@uwaterloo.ca>
 synopsis:               A wiki-based IDE for literate modeling with Clafer
@@ -12,11 +12,9 @@ build-type:             Simple
 copyright:              Michal Antkiewicz, Chris Walker, Luke Michael Brown
 license:                MIT
 license-file:           LICENSE
-Tested-with:            GHC == 9.2.8
-                      , GHC == 9.4.8
+Tested-with:            GHC == 9.6.7
 data-files:             claferwiki.sh
                       , gitit.cnf
-                      , Makefile
                       , README.md
                       , CHANGES.md
                       , static/img/logo.png
@@ -30,12 +28,12 @@ source-repository head
 
 library
   default-language:     Haskell2010
-  build-depends:        base >= 4.16 && < 5
+  build-depends:        base >= 4.18.3.0 && < 5
                       , containers >= 0.5.7.1
                       , directory >= 1.2.1.0
                       , process >= 1.2.0.0
                       , time >= 1.4.2
-                      , transformers >= 0.3.0.0
+                      , transformers >= 0.6
 
                       , mtl >= 2.2.1
                       , network >= 2.6.3.2
@@ -50,7 +48,7 @@ library
                       , gitit >= 0.15.1.1
                       , transformers-compat >= 0.5.1.4
 
-                      , clafer == 0.5.1
+                      , clafer == 0.5.2
   hs-source-dirs:       src
   ghc-options:          -Wall -fno-warn-orphans
   exposed-modules:      Network.Gitit.Plugin.ClaferWiki

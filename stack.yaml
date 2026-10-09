@@ -1,10 +1,11 @@
-# for GHC-9.4.8
-resolver: lts-21.25
+# for GHC-9.6.7
+resolver: lts-22.44
 
 extra-deps:
-  - gitit-0.16
+  - gitit-0.16.0.2
   - filestore-0.6.5.1
   - recaptcha-0.1.0.4
+  - feed-1.3.2.1
   - github: nikomi/json-builder
     commit: fef4700b53da502f8d70d2106c9f4b65e1a69b3f
   - github: gsdlab/StringMap
@@ -15,6 +16,11 @@ flags:
     portable: true
   gitit:
     plugins: true
+  # Link zlib via the zlib package instead of pkg-config. On Arch-based
+  # distributions zlib.pc adds -L/usr/lib, which makes the linker pick up the
+  # system's identically named libHS*.so files instead of Stack's own.
+  digest:
+    pkg-config: false
 
 packages:
 - '../clafer'

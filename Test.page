@@ -3,4 +3,10 @@
 
 ```clafer
 test
+   optionA ?
+   optionB ?
+      [ optionA ]
+```
+
+``` {.clafer .summary}
 ```
