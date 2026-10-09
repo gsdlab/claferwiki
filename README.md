@@ -1,6 +1,6 @@
 # Claferwiki
 
-##### v0.5.1
+##### v0.5.2
 
 **Claferwiki** is a wiki system integrated with [Clafer compiler](https://github.com/gsdlab/clafer). [Clafer](http://clafer.org) is a lightweight yet powerful structural modeling language. Claferwiki allows for embedding Clafer model fragments in wiki pages and provides model authoring support including code highlighting, parse and semantic error reporting, hyperlinking from identifier use to its definition, and graphical view rendering.
 
@@ -23,42 +23,25 @@ If the demo is down or you encounter a bug, please email [Michal Antkiewicz](mai
 
 ## Contributors
 
-* [Michał Antkiewicz](http://gsd.uwaterloo.ca/mantkiew), Main developer. Requirements, development, architecture, testing, technology transfer.
+* [Michał Antkiewicz](https://uwaterloo.ca/wise-lab/profiles/michal-antkiewicz), Main developer. Requirements, development, architecture, testing, technology transfer.
 * Chris Walker, co-op student May-Aug, 2012. Developer of Clafer Wiki, HTML and GraphViz generators.
 * [Jimmy Liang](http://gsd.uwaterloo.ca/jliang), Clafer compiler support, including multi-fragment compilation, source/AST/IR traceability, parsing and compilation error reporting.
 
 ## Getting the Clafer Wiki
 
-Clafer can be installed either from Hackage or from the source code.
+ClaferWiki is a [gitit](https://github.com/jgm/gitit) plugin: gitit loads it when it starts,
+compiling it with GHC, so GHC and the claferwiki package must be available where gitit runs.
 
-### Dependencies for running
+### Dependencies
 
-Regardless of the installation method, the following are required:
-
-* [Clafer compiler](https://github.com/gsdlab/clafer/) v0.5.1
-* [GHC](https://www.haskell.org/downloads) >= v9.4.6
+* [Clafer compiler](https://github.com/gsdlab/clafer/) v0.5.2
+* [GHC](https://www.haskell.org/downloads) >= v9.6.7
+* [cabal-install](https://hackage.haskell.org/package/cabal-install) >= v3.10.3 (when building with `cabal`)
 * [Git](http://git-scm.com)
-* [Gitit wiki](http://hackage.haskell.org/package/gitit) v0.15.1.1
+* [Gitit wiki](http://hackage.haskell.org/package/gitit) v0.16.0.2 with plugin support (the `plugins` flag).
+  A dynamically linked gitit (for example, from a Linux distribution) can only load plugins with
+  [jgm/gitit#714](https://github.com/jgm/gitit/pull/714).
 * GraphViz
-
-### Installation from Hackage
-
-Claferwiki is now available on [Hackage](http://hackage.haskell.org/package/claferwiki-0.5.1/) and it can be installed using either [`stack`](https://haskellstack.org) or [`cabal-install`](https://hackage.haskell.org/package/cabal-install).
-
-#### Installation using `stack`
-
-Stack is the only requirement: no other Haskell tooling needs to be installed because stack will automatically install everything that's needed.
-
-1. `stack update`
-2. `stack install claferwiki`
-
-#### Installation using `cabal-install`
-
-1. `cabal update`
-2. `cabal install claferwiki-0.5.1 -fplugins`
-3. `cd <cabal's lib or share folder>`  (`C:\Users\<user>\AppData\Roaming\cabal\i386-windows-ghc-9.4.6\claferwiki-0.5.1` on Windows or `.cabal/share/x86_64-linux-ghc-9.4.6/claferwiki-0.5.1/` on Linux)
-  * execute `make install to=<target directory>`
-  * this will copy the wiki files
 
 ### Important: branches must correspond
 
@@ -68,42 +51,22 @@ When building the tools, the branches should match.
 Releases from branches 'master` are guaranteed to work well together.
 Development versions from branches `develop` should work well together but this might not always be the case.
 
-### Installation from source code
+### Installation
 
-1. In some `<source directory>` where you want to have the wiki source code
-   * execute `git clone git://github.com/gsdlab/claferwiki.git`
-2. execute `stack update`
-3. execute `make init`
-4. [install clafer from source code](https://github.com/gsdlab/clafer#installation-from-the-source-code)
-4. execute `make`
-5. execute `make install to=<target directory>`
-  * this will copy the wiki files
-6. in `<target directory>`, execute `git init` to create a git repository for the wiki data
-  * NOTE: see `repository-path:` option in `gitit.cnf`
+The plugin library is available on [Hackage](http://hackage.haskell.org/package/claferwiki-0.5.2/)
+and can be built with either `stack` or `cabal-install`:
 
+* `stack build` in a clone of this repository builds claferwiki and gitit;
+  start the wiki with `stack exec gitit -- -f gitit.cnf` (or `./claferwiki.sh`), so that gitit finds the packages.
+* `cabal install --lib claferwiki` installs the library into the default GHC package environment,
+  where gitit finds it; start the wiki with `gitit -f gitit.cnf`.
+
+The wiki needs `gitit.cnf`, `static/` and `templates/` from this repository in the directory where gitit runs.
 
 # Usage
 
 Wiki can be configured by editing the `gitit.cnf` file. See [Configuring and customizing gitit](http://gitit.net/README#configuring-and-customizing-gitit).
-
-#### Installation using `stack`
-
-* in the `<target directory>` execute `stack exec gitit -- -f gitit.cnf` to start the wiki server.
-
-#### Using `cabal-install`
-
-* in the `<target directory>` execute `claferwiki.sh` to start the wiki server.
-
-The script can either use gitit and clafer installed in the user package space (default) or in the sandbox. The sandbox location can be provided using the parameter `--sandbox` as follows:
-
-* `./claferwiki.sh --sandbox <relative or absolute path to the sandbox>`, or
-* `./claferwiki.sh --sandbox` which will use the default sandbox location `../.clafertools-cabal-sandbox`
-
-## Update
-
-* in the `<source directory>` execute `git pull`
-* execute `make update to=<target directory>`
-  * this will keep the directory structure and your existing git repository with the wiki contents
+The wiki data is a git repository; see the `repository-path:` option in `gitit.cnf`.
 
 ## Features
 

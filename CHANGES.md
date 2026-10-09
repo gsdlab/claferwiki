@@ -1,3 +1,7 @@
+* claferwiki Version 0.5.2 released on Oct 9, 2026
+
+Minor release, Haskell compatibility (GHC 9.6.7 and lts-22.44).
+
 * claferwiki Version 0.5.1 released on Aug 24, 2023
 
 [Release](https://github.com/gsdlab/claferwiki/pull/19)

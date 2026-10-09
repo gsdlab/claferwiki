@@ -14,6 +14,7 @@ gitit.log
 *.cfr
 static/clafer/output.txt
 static/clafer/*.html
+wikidata/
 
 #################
 ## Haskell
