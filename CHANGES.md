@@ -1,3 +1,9 @@
+* claferwiki Version 0.5.3, unreleased
+
+Minor release with Clafer 0.5.3.
+
+[Release](https://github.com/gsdlab/claferwiki/pull/21)
+
 * claferwiki Version 0.5.2 released on Oct 9, 2026
 
 [Release](https://github.com/gsdlab/claferwiki/pull/20)
