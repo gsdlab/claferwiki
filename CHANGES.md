@@ -2,6 +2,8 @@
 
 Minor release with Clafer 0.5.3.
 
+* The buttons for ClaferIDE, ClaferConfigurator, and ClaferMooVisualizer link to the host and port that the browser used to reach the wiki (the `Host` or `X-Forwarded-Host` header), instead of the short host name of the machine, which made the links unreachable (e.g., `http://t3-necsis:8094/` instead of `http://t3-necsis.cs.uwaterloo.ca:8094/`).
+
 [Release](https://github.com/gsdlab/claferwiki/pull/21)
 
 * claferwiki Version 0.5.2 released on Oct 9, 2026

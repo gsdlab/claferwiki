@@ -29,8 +29,11 @@ module Network.Gitit.Plugin.ClaferWiki (plugin) where
 
 import Network.Gitit.Interface
 
+import Control.Applicative ((<|>))
 import Control.Monad (unless)
 import Control.Monad.Trans.State (evalState, get, gets, put, State)
+import Data.ByteString.UTF8 (toString)
+import Data.Char (isDigit)
 import Data.List (intercalate, nub)
 import Data.List.Split (splitOn)
 import qualified Data.Map as Map
@@ -38,6 +41,7 @@ import Data.String.Utils (replace)
 import qualified Data.Text as T
 import Data.Text.Lazy (toStrict)
 import Data.Text.Lazy.Builder (Builder,  fromString, toLazyText, singleton)
+import Happstack.Server (Request, getHeader)
 import Network.BSD (getHostName)
 import System.Directory (createDirectoryIfMissing, doesFileExist)
 import System.Process (readProcessWithExitCode)
@@ -60,12 +64,13 @@ claferWiki pandoc = do
         cssExist <- doesFileExist "static/css/clafer.css"
         unless cssExist $ writeFile "static/css/clafer.css" css
 
-    serverURL <- liftIO getHostName
+    hostName <- liftIO getHostName
+    request <- askRequest
     pageName <- getPageName
     config <- askConfig
 
     let
-        serverPort = show $ portNumber config
+        (serverURL, serverPort) = serverAddress hostName (show $ portNumber config) request
         -- produce the required outputs in a single compilation
         allCompilationResults = compileFragments fragments claferModes
 
@@ -332,6 +337,22 @@ renderAddOpenInIDE    fileName  serverURL serverPort =
       "style=\"background-color: #ccc;color: white;text-decoration: none;padding: 1px 5px 1px 5px;\" >" <> nl <>
       "Open in ClaferIDE" <> nl <>
       "</a></div><br>\n" :: Builder)
+
+-- | The host and the port of the wiki as the browser addressed it: the X-Forwarded-Host header
+--   (behind a proxy) or the Host header of the request, so that the links to the web tools and to
+--   the model work from the client. Without either, the name of the machine and the configured
+--   port; getHostName gives only the short name of the machine (or of its container), e.g.,
+--   t3-necsis instead of t3-necsis.cs.uwaterloo.ca.
+serverAddress :: String -> String -> Request -> (String, String)
+serverAddress hostName port request =
+    case takeWhile (/= ',') . toString <$> (getHeader "x-forwarded-host" request <|> getHeader "host" request) of
+        Just host | not (null host) -> splitPort host
+        _                           -> (hostName, port)
+  where
+    -- "host:port", "host", "[::1]:port", or "[::1]"
+    splitPort host = case break (== ':') (reverse host) of
+        (revPort@(_:_), ':' : revHost) | all isDigit revPort -> (reverse revHost, reverse revPort)
+        _                                                    -> (host, "80")
 
 getPageName:: PluginM String
 getPageName = replace " " "_" . replace "/" "_" . pgPageName . ctxLayout <$> getContext

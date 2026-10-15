@@ -46,6 +46,7 @@ library
                       , SHA >= 1.6.4.2
                       , utf8-string >= 0.3.8
                       , gitit >= 0.15.1.1
+                      , happstack-server >= 7.0
                       , transformers-compat >= 0.5.1.4
 
                       , clafer == 0.5.3
