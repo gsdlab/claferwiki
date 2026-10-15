@@ -16,12 +16,12 @@ Tested-with:            GHC == 9.6.7
 data-files:             claferwiki.sh
                       , gitit.cnf
                       , README.md
-                      , CHANGES.md
                       , static/img/logo.png
                       , static/css/clafer.css
                       , static/css/custom.css
                       , templates/footer.st
                       , stack.yaml
+extra-doc-files:        CHANGES.md
 source-repository head
     type:               git
     location:           git://github.com/gsdlab/claferwiki.git
