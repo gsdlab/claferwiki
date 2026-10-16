@@ -17,7 +17,7 @@ Claferwiki is also integrated with other Clafer Web Tools, allowing to open the 
 
 ### Live demo
 
-[Try me!](http://t3-necsis.cs.uwaterloo.ca:8091/)
+[Try me!](https://wiselab.uwaterloo.ca/modelwiki/) Also the [Railway Wiki](https://wiselab.uwaterloo.ca/railwaywiki/) and the [Traffic Lights Wiki](https://wiselab.uwaterloo.ca/trafficlightswiki/).
 
 If the demo is down or you encounter a bug, please email [Michal Antkiewicz](mailto:michal.antkiewicz@uwaterloo.ca).
 
