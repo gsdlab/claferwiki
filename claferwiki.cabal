@@ -1,6 +1,6 @@
 cabal-version:          3.8
 name:                   claferwiki
-version:                0.5.3
+version:                0.5.4
 author:                 Michał Antkiewicz, Chris Walker, Luke Michael Brown
 maintainer:             Michał Antkiewicz <michal.antkiewicz@uwaterloo.ca>
 synopsis:               A wiki-based IDE for literate modeling with Clafer

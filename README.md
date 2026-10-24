@@ -1,6 +1,6 @@
 # Claferwiki
 
-##### v0.5.3
+##### v0.5.4
 
 **Claferwiki** is a wiki system integrated with [Clafer compiler](https://github.com/gsdlab/clafer). [Clafer](http://clafer.org) is a lightweight yet powerful structural modeling language. Claferwiki allows for embedding Clafer model fragments in wiki pages and provides model authoring support including code highlighting, parse and semantic error reporting, hyperlinking from identifier use to its definition, and graphical view rendering.
 
@@ -53,7 +53,7 @@ Development versions from branches `develop` should work well together but this 
 
 ### Installation
 
-The plugin library is available on [Hackage](http://hackage.haskell.org/package/claferwiki-0.5.3/)
+The plugin library is available on [Hackage](http://hackage.haskell.org/package/claferwiki-0.5.4/)
 and can be built with either `stack` or `cabal-install`:
 
 * `stack build` in a clone of this repository builds claferwiki and gitit;
