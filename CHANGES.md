@@ -1,10 +1,12 @@
-* claferwiki Version 0.5.4, unreleased
+* claferwiki Version 0.5.4, Oct 25, 2026
 
 Minor release with Clafer 0.5.4.
 
 * The model graphs contain only the `svg` element of Graphviz's output, without its XML declaration, DOCTYPE and comments, which do not belong in an HTML page. HTML rewriting proxies, such as Apache's `mod_proxy_html`, mangled them and showed the graphs' double-click handler as text in the model summary.
 * `custom.css` imports gitit's `highlighting.css` instead of `hk-pyg.css`, which gitit no longer provides: every page requested a missing stylesheet, and code blocks had no syntax highlighting.
 * The live demo is at https://wiselab.uwaterloo.ca/modelwiki/.
+
+[Release](https://github.com/gsdlab/claferwiki/pull/22)
 
 * claferwiki Version 0.5.3, Oct 15, 2026
 
