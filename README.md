@@ -34,7 +34,7 @@ compiling it with GHC, so GHC and the claferwiki package must be available where
 
 ### Dependencies
 
-* [Clafer compiler](https://github.com/gsdlab/clafer/) v0.5.3
+* [Clafer compiler](https://github.com/gsdlab/clafer/) v0.5.4
 * [GHC](https://www.haskell.org/downloads) >= v9.6.7
 * [cabal-install](https://hackage.haskell.org/package/cabal-install) >= v3.10.3 (when building with `cabal`)
 * [Git](http://git-scm.com)

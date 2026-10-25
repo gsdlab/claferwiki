@@ -49,7 +49,7 @@ library
                       , happstack-server >= 7.0
                       , transformers-compat >= 0.5.1.4
 
-                      , clafer == 0.5.3
+                      , clafer == 0.5.4
   hs-source-dirs:       src
   ghc-options:          -Wall -fno-warn-orphans
   exposed-modules:      Network.Gitit.Plugin.ClaferWiki
