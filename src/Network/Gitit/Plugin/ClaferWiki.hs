@@ -34,7 +34,7 @@ import Control.Monad (unless)
 import Control.Monad.Trans.State (evalState, get, gets, put, State)
 import Data.ByteString.UTF8 (toString)
 import Data.Char (isDigit)
-import Data.List (intercalate, nub)
+import Data.List (intercalate, isPrefixOf, nub, tails)
 import Data.List.Split (splitOn)
 import qualified Data.Map as Map
 import Data.String.Utils (replace)
@@ -99,9 +99,9 @@ claferWiki pandoc = do
                             we_htmlCodeFragments = htmlCodeFragments,
                             we_stats = stats,
                             we_graphNo = 0,     -- needed to construct unique IDs of <div> for graphs
-                            we_svgGraphWithRefs = svgGraphWithRefs,
-                            we_svgGraphWithoutRefs = svgGraphWithoutRefs,
-                            we_svgCVLGraph = svgCVLGraph
+                            we_svgGraphWithRefs = inlineSvg svgGraphWithRefs,
+                            we_svgGraphWithoutRefs = inlineSvg svgGraphWithoutRefs,
+                            we_svgCVLGraph = inlineSvg svgCVLGraph
                          }
         newPandoc = evalState (bottomUpM replaceClaferWikiBlocks pandoc) initialWikiEnv
 
@@ -356,6 +356,14 @@ serverAddress hostName port request =
 
 getPageName:: PluginM String
 getPageName = replace " " "_" . replace "/" "_" . pgPageName . ctxLayout <$> getContext
+
+-- | dot's SVG output starts with an XML declaration, a DOCTYPE and comments, which
+-- do not belong inside an HTML page (and HTML rewriting proxies mangle them);
+-- keep only the svg element.
+inlineSvg :: String -> String
+inlineSvg svg = case filter ("<svg" `isPrefixOf`) (tails svg) of
+    svgElement : _ -> svgElement
+    []             -> svg
 
 changeTransparentToLightGray :: String -> String
 changeTransparentToLightGray = replace "color=transparent" "color=lightgray"

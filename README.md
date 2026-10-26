@@ -1,6 +1,6 @@
 # Claferwiki
 
-##### v0.5.3
+##### v0.5.4
 
 **Claferwiki** is a wiki system integrated with [Clafer compiler](https://github.com/gsdlab/clafer). [Clafer](http://clafer.org) is a lightweight yet powerful structural modeling language. Claferwiki allows for embedding Clafer model fragments in wiki pages and provides model authoring support including code highlighting, parse and semantic error reporting, hyperlinking from identifier use to its definition, and graphical view rendering.
 
@@ -17,7 +17,7 @@ Claferwiki is also integrated with other Clafer Web Tools, allowing to open the 
 
 ### Live demo
 
-[Try me!](http://t3-necsis.cs.uwaterloo.ca:8091/)
+[Try me!](https://wiselab.uwaterloo.ca/modelwiki/) Also the [Railway Wiki](https://wiselab.uwaterloo.ca/railwaywiki/) and the [Traffic Lights Wiki](https://wiselab.uwaterloo.ca/trafficlightswiki/).
 
 If the demo is down or you encounter a bug, please email [Michal Antkiewicz](mailto:michal.antkiewicz@uwaterloo.ca).
 
@@ -34,7 +34,7 @@ compiling it with GHC, so GHC and the claferwiki package must be available where
 
 ### Dependencies
 
-* [Clafer compiler](https://github.com/gsdlab/clafer/) v0.5.3
+* [Clafer compiler](https://github.com/gsdlab/clafer/) v0.5.4
 * [GHC](https://www.haskell.org/downloads) >= v9.6.7
 * [cabal-install](https://hackage.haskell.org/package/cabal-install) >= v3.10.3 (when building with `cabal`)
 * [Git](http://git-scm.com)
@@ -53,7 +53,7 @@ Development versions from branches `develop` should work well together but this 
 
 ### Installation
 
-The plugin library is available on [Hackage](http://hackage.haskell.org/package/claferwiki-0.5.3/)
+The plugin library is available on [Hackage](http://hackage.haskell.org/package/claferwiki-0.5.4/)
 and can be built with either `stack` or `cabal-install`:
 
 * `stack build` in a clone of this repository builds claferwiki and gitit;
