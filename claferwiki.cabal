@@ -1,6 +1,6 @@
 cabal-version:          3.8
 name:                   claferwiki
-version:                0.5.4
+version:                0.5.5
 author:                 Michał Antkiewicz, Chris Walker, Luke Michael Brown
 maintainer:             Michał Antkiewicz <michal.antkiewicz@uwaterloo.ca>
 synopsis:               A wiki-based IDE for literate modeling with Clafer
@@ -49,7 +49,7 @@ library
                       , happstack-server >= 7.0
                       , transformers-compat >= 0.5.1.4
 
-                      , clafer == 0.5.4
+                      , clafer == 0.5.5
   hs-source-dirs:       src
   ghc-options:          -Wall -fno-warn-orphans
   exposed-modules:      Network.Gitit.Plugin.ClaferWiki
