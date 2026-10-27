@@ -1,4 +1,4 @@
-* claferwiki Version 0.5.5, unreleased
+* claferwiki Version 0.5.5, Oct 27, 2026
 
 Minor release with Clafer 0.5.5.
 
