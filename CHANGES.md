@@ -1,3 +1,9 @@
+* claferwiki Version 0.5.5, unreleased
+
+Minor release with Clafer 0.5.5.
+
+* Models can use decimals, a new primitive type `decimal` with a fixed number of fractional digits, e.g., `cost -> decimal = 19.99`.
+
 * claferwiki Version 0.5.4, Oct 25, 2026
 
 Minor release with Clafer 0.5.4.
