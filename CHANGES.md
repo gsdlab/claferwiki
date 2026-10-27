@@ -3,6 +3,7 @@
 Minor release with Clafer 0.5.5.
 
 * Models can use decimals, a new primitive type `decimal` with a fixed number of fractional digits, e.g., `cost -> decimal = 19.99`.
+* The buttons for ClaferIDE, ClaferConfigurator, and ClaferMooVisualizer can link to the tools under paths, e.g., `https://wiselab.uwaterloo.ca/claferide/`: the environment variables `CLAFERIDE_URL`, `CLAFERCONFIGURATOR_URL`, and `CLAFERMOOVISUALIZER_URL` give the tools' URLs (by default, still the ports 8094, 8093, and 8092). Behind a reverse proxy, the model's URL in the links follows the headers `X-Forwarded-Proto` and `X-Forwarded-Prefix`, e.g., `https://wiselab.uwaterloo.ca/modelwiki/clafer/<page>.cfr`, so the proxy no longer needs to rewrite the links. The links no longer contain the port 80 when the wiki is reached without a port.
 
 * claferwiki Version 0.5.4, Oct 25, 2026
 

@@ -108,6 +108,20 @@ The model overview, including the graph, stats, and download links, can be added
 
 To have the code blocks correctly processed, make sure to add an empty line before and after the code block, even if the code block is the last element on the page.
 
+The blocks `{.clafer .ide}`, `{.clafer .config}`, and `{.clafer .mooviz}` become buttons that open the page's model in ClaferIDE, ClaferConfigurator, and ClaferMooVisualizer.
+By default, the buttons link to the tools' ports 8094, 8093, and 8092 on the host that the browser used to reach the wiki.
+The environment variables `CLAFERIDE_URL`, `CLAFERCONFIGURATOR_URL`, and `CLAFERMOOVISUALIZER_URL` give the tools' URLs instead, either full URLs or paths on the wiki's host, e.g., `CLAFERIDE_URL=/claferide/`.
+
+Behind a reverse proxy, the wiki takes its own URL, which the tools load the model from, from the headers `X-Forwarded-Host`, `X-Forwarded-Proto`, and `X-Forwarded-Prefix`, e.g., with Apache:
+
+```
+ProxyPass /modelwiki/ http://127.0.0.1:8091/
+<Location /modelwiki/>
+    RequestHeader set X-Forwarded-Proto "https"
+    RequestHeader set X-Forwarded-Prefix "/modelwiki"
+</Location>
+```
+
 ## How it works
 
 * Clafer Wiki is a set of plugins for the GitIt wiki which processes clafer code blocks and invokes the Clafer compiler.
