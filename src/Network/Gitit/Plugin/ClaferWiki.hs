@@ -33,10 +33,11 @@ import Control.Applicative ((<|>))
 import Control.Monad (unless)
 import Control.Monad.Trans.State (evalState, get, gets, put, State)
 import Data.ByteString.UTF8 (toString)
-import Data.Char (isDigit)
-import Data.List (intercalate, isPrefixOf, nub, tails)
+import Data.Char (isDigit, isSpace)
+import Data.List (dropWhileEnd, intercalate, isPrefixOf, isSuffixOf, nub, tails)
 import Data.List.Split (splitOn)
 import qualified Data.Map as Map
+import Data.Maybe (fromMaybe)
 import Data.String.Utils (replace)
 import qualified Data.Text as T
 import Data.Text.Lazy (toStrict)
@@ -44,6 +45,7 @@ import Data.Text.Lazy.Builder (Builder,  fromString, toLazyText, singleton)
 import Happstack.Server (Request, getHeader)
 import Network.BSD (getHostName)
 import System.Directory (createDirectoryIfMissing, doesFileExist)
+import System.Environment (lookupEnv)
 import System.Process (readProcessWithExitCode)
 
 import Language.Clafer
@@ -68,9 +70,11 @@ claferWiki pandoc = do
     request <- askRequest
     pageName <- getPageName
     config <- askConfig
+    [mooVizSetting, configuratorSetting, ideSetting] <-
+        liftIO $ mapM lookupEnv ["CLAFERMOOVISUALIZER_URL", "CLAFERCONFIGURATOR_URL", "CLAFERIDE_URL"]
 
     let
-        (serverURL, serverPort) = serverAddress hostName (show $ portNumber config) request
+        address = wikiAddress hostName (show $ portNumber config) request
         -- produce the required outputs in a single compilation
         allCompilationResults = compileFragments fragments claferModes
 
@@ -94,8 +98,10 @@ claferWiki pandoc = do
     let
         initialWikiEnv = WikiEnv {
                             we_fileName = pageName,
-                            we_serverURL = serverURL,
-                            we_serverPort = serverPort,
+                            we_wikiURL = wa_wikiURL address,
+                            we_mooVizURL = toolURL address "8092" mooVizSetting,
+                            we_configuratorURL = toolURL address "8093" configuratorSetting,
+                            we_ideURL = toolURL address "8094" ideSetting,
                             we_htmlCodeFragments = htmlCodeFragments,
                             we_stats = stats,
                             we_graphNo = 0,     -- needed to construct unique IDs of <div> for graphs
@@ -164,8 +170,12 @@ claferWiki pandoc = do
 -- | Environment (state) for rewriting the page
 data WikiEnv = WikiEnv {
                     we_fileName :: String,
-                    we_serverURL :: String,
-                    we_serverPort :: String,
+                    -- | the wiki's URL as the browser addressed it, ending with /
+                    we_wikiURL :: String,
+                    -- | the web tools' URLs, ending with /
+                    we_mooVizURL :: String,
+                    we_configuratorURL :: String,
+                    we_ideURL :: String,
                     -- | code fragments are consumed
                     we_htmlCodeFragments :: [ String ],
                     we_stats :: String,
@@ -224,24 +234,21 @@ replaceClaferWikiBlocks (CodeBlock (_, [ "clafer", "summary" ], _) _) =  do
 
 replaceClaferWikiBlocks (CodeBlock (_, [ "clafer", "mooviz" ], _) _) =  do
     wikiEnv <- get
-    return $ renderAnalyzeWithClaferMooViz (we_fileName wikiEnv) (we_serverURL wikiEnv) (we_serverPort wikiEnv)
+    return $ renderAnalyzeWithClaferMooViz (we_fileName wikiEnv) (we_mooVizURL wikiEnv) (we_wikiURL wikiEnv)
 
 replaceClaferWikiBlocks (CodeBlock (_, [ "clafer", "config" ], _) _) =  do
     wikiEnv <- get
-    return $ renderConfigureWithClaferConfigurator (we_fileName wikiEnv) (we_serverURL wikiEnv) (we_serverPort wikiEnv)
+    return $ renderConfigureWithClaferConfigurator (we_fileName wikiEnv) (we_configuratorURL wikiEnv) (we_wikiURL wikiEnv)
 
 replaceClaferWikiBlocks (CodeBlock (_, [ "clafer", "ide" ], _) _) =  do
     wikiEnv <- get
-    return $ renderAddOpenInIDE (we_fileName wikiEnv) (we_serverURL wikiEnv) (we_serverPort wikiEnv)
+    return $ renderAddOpenInIDE (we_fileName wikiEnv) (we_ideURL wikiEnv) (we_wikiURL wikiEnv)
 
 replaceClaferWikiBlocks block = return block
 
 -- new line builder
 nl :: Builder
 nl = singleton '\n'
-
-colon :: Builder
-colon = singleton ':'
 
 renderLinks :: String -> Builder
 renderLinks fileName =
@@ -306,10 +313,10 @@ compileFragments    fragments   claferModes   =
             generate
 
 renderAnalyzeWithClaferMooViz :: String -> String -> String -> Block
-renderAnalyzeWithClaferMooViz fileName serverURL serverPort =
+renderAnalyzeWithClaferMooViz fileName toolURL' wikiURL =
     mkHtmlBlock 
       ("<div>" <> nl <>
-      "<a href=\"http://" <> fromString serverURL <> ":8092/?claferFileURL=http://" <> fromString serverURL <> colon <> fromString serverPort <> "/clafer/" <> nl <>
+      "<a href=\"" <> fromString (escapeAttribute toolURL') <> "?claferFileURL=" <> fromString (escapeAttribute wikiURL) <> "clafer/" <> nl <>
       fromString fileName <> nl <>
       ".cfr\" target=\"_blank\" " <> nl <>
       "style=\"background-color: #ccc;color: white;text-decoration: none;padding: 1px 5px 1px 5px;\" >" <> nl <>
@@ -317,10 +324,10 @@ renderAnalyzeWithClaferMooViz fileName serverURL serverPort =
       "</a></div><br>" <> nl :: Builder)
 
 renderConfigureWithClaferConfigurator :: String -> String -> String -> Block
-renderConfigureWithClaferConfigurator fileName serverURL serverPort =
+renderConfigureWithClaferConfigurator fileName toolURL' wikiURL =
     mkHtmlBlock 
       ("<div>" <> nl <>
-      "<a href=\"http://" <> fromString serverURL <> ":8093/?claferFileURL=http://" <> fromString serverURL <> colon <> fromString serverPort <> "/clafer/" <> nl <>
+      "<a href=\"" <> fromString (escapeAttribute toolURL') <> "?claferFileURL=" <> fromString (escapeAttribute wikiURL) <> "clafer/" <> nl <>
       fromString fileName <> nl <>
       ".cfr\" target=\"_blank\" " <> nl <>
       "style=\"background-color: #ccc;color: white;text-decoration: none;padding: 1px 5px 1px 5px;\" >" <> nl <>
@@ -328,31 +335,74 @@ renderConfigureWithClaferConfigurator fileName serverURL serverPort =
       "</a></div><br>\n" :: Builder)
 
 renderAddOpenInIDE :: String -> String -> String -> Block
-renderAddOpenInIDE    fileName  serverURL serverPort =
+renderAddOpenInIDE    fileName  toolURL' wikiURL =
     mkHtmlBlock 
       ("<div>" <> nl <>
-      "<a href=\"http://" <> fromString serverURL <> ":8094/?claferFileURL=http://" <> fromString serverURL <> colon <> fromString serverPort <> "/clafer/" <> nl <>
+      "<a href=\"" <> fromString (escapeAttribute toolURL') <> "?claferFileURL=" <> fromString (escapeAttribute wikiURL) <> "clafer/" <> nl <>
       fromString fileName <> nl <>
       ".cfr\" target=\"_blank\" " <> nl <>
       "style=\"background-color: #ccc;color: white;text-decoration: none;padding: 1px 5px 1px 5px;\" >" <> nl <>
       "Open in ClaferIDE" <> nl <>
       "</a></div><br>\n" :: Builder)
 
--- | The host and the port of the wiki as the browser addressed it: the X-Forwarded-Host header
---   (behind a proxy) or the Host header of the request, so that the links to the web tools and to
---   the model work from the client. Without either, the name of the machine and the configured
---   port; getHostName gives only the short name of the machine (or of its container), e.g.,
---   t3-necsis instead of t3-necsis.cs.uwaterloo.ca.
-serverAddress :: String -> String -> Request -> (String, String)
-serverAddress hostName port request =
-    case takeWhile (/= ',') . toString <$> (getHeader "x-forwarded-host" request <|> getHeader "host" request) of
-        Just host | not (null host) -> splitPort host
-        _                           -> (hostName, port)
+-- | The wiki as the browser addressed it, so that the links to the web tools and to the model
+--   work from the client.
+data WikiAddress = WikiAddress {
+                    wa_scheme :: String,
+                    -- | the host and the port, e.g., wiselab.uwaterloo.ca or localhost:8091
+                    wa_authority :: String,
+                    -- | the host without the port
+                    wa_host :: String,
+                    -- | e.g., https://wiselab.uwaterloo.ca/modelwiki/ or http://localhost:8091/
+                    wa_wikiURL :: String
+               }
+
+-- | The host and the port from the X-Forwarded-Host header (behind a proxy) or the Host header
+--   of the request; without either, the name of the machine and the configured port
+--   (getHostName gives only the short name of the machine or of its container, e.g., t3-necsis
+--   instead of t3-necsis.cs.uwaterloo.ca). Behind a reverse proxy, X-Forwarded-Proto gives the
+--   scheme (e.g., https) and X-Forwarded-Prefix the path of the wiki (e.g., /modelwiki).
+wikiAddress :: String -> String -> Request -> WikiAddress
+wikiAddress hostName port request =
+    WikiAddress scheme authority (hostOf authority) (scheme ++ "://" ++ authority ++ prefix ++ "/")
   where
+    firstValue name = case trim . takeWhile (/= ',') . toString <$> getHeader name request of
+        Just value | not (null value) -> Just value
+        _                             -> Nothing
+    authority = fromMaybe (hostName ++ ":" ++ port) (firstValue "x-forwarded-host" <|> firstValue "host")
+    scheme = case firstValue "x-forwarded-proto" of
+        Just "https" -> "https"
+        _            -> "http"
+    prefix = case dropWhileEnd (== '/') <$> firstValue "x-forwarded-prefix" of
+        Just path@('/':_) -> path
+        Just path         -> '/' : path
+        Nothing           -> ""
     -- "host:port", "host", "[::1]:port", or "[::1]"
-    splitPort host = case break (== ':') (reverse host) of
-        (revPort@(_:_), ':' : revHost) | all isDigit revPort -> (reverse revHost, reverse revPort)
-        _                                                    -> (host, "80")
+    hostOf host = case break (== ':') (reverse host) of
+        (revPort@(_:_), ':' : revHost) | all isDigit revPort -> reverse revHost
+        _                                                    -> host
+    trim = dropWhileEnd isSpace . dropWhile isSpace
+
+-- | The URL of a web tool, ending with /: from its environment variable, a URL or a path on the
+--   wiki's host (e.g., /claferide/ behind a reverse proxy); by default, the tool's port on the
+--   wiki's host.
+toolURL :: WikiAddress -> String -> Maybe String -> String
+toolURL address defaultPort setting = withSlash $ case setting of
+    Just path@('/':_)              -> wa_scheme address ++ "://" ++ wa_authority address ++ path
+    Just url | not (null url)      -> url
+    _                              -> wa_scheme address ++ "://" ++ wa_host address ++ ":" ++ defaultPort ++ "/"
+  where
+    withSlash url = if "/" `isSuffixOf` url then url else url ++ "/"
+
+-- | The headers come from the client, so they must not end an attribute.
+escapeAttribute :: String -> String
+escapeAttribute = concatMap escape
+  where
+    escape '"' = "&quot;"
+    escape '&' = "&amp;"
+    escape '<' = "&lt;"
+    escape '>' = "&gt;"
+    escape c   = [c]
 
 getPageName:: PluginM String
 getPageName = replace " " "_" . replace "/" "_" . pgPageName . ctxLayout <$> getContext
