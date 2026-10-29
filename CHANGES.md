@@ -1,3 +1,9 @@
+* claferwiki Version 0.5.6, Oct 28, 2026
+
+Minor release with Clafer 0.5.6.
+
+* The models and their graphs show expressions with the parentheses that the grammar requires, e.g., `[ (1 + 2) * 3 = 9 ]`, which was shown as `[ 1 + 2 * 3 = 9 ]`.
+
 * claferwiki Version 0.5.5, Oct 27, 2026
 
 Minor release with Clafer 0.5.5.
