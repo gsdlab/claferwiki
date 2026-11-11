@@ -1,3 +1,9 @@
+* claferwiki Version 0.5.8, unreleased
+
+Minor release with Clafer 0.5.8.
+
+* Builds with GHC 9.12.4 (Stackage nightly-2026-11-11) and still with GHC 9.6.7. The stack build uses gitit 0.16.1 of the snapshot, which can also load plugins when it is linked dynamically ([jgm/gitit#714](https://github.com/jgm/gitit/pull/714)).
+
 * claferwiki Version 0.5.7, Nov 8, 2026
 
 Minor release with Clafer 0.5.7.

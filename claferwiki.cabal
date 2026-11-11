@@ -12,7 +12,7 @@ build-type:             Simple
 copyright:              Michal Antkiewicz, Chris Walker, Luke Michael Brown
 license:                MIT
 license-file:           LICENSE
-Tested-with:            GHC == 9.6.7
+Tested-with:            GHC == 9.6.7 || == 9.12.4
 data-files:             claferwiki.sh
                       , gitit.cnf
                       , README.md
