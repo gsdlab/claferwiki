@@ -3,6 +3,7 @@
 Minor release with Clafer 0.5.8.
 
 * Builds with GHC 9.12.4 (Stackage nightly-2026-11-11) and still with GHC 9.6.7. The stack build uses gitit 0.16.1 of the snapshot, which can also load plugins when it is linked dynamically ([jgm/gitit#714](https://github.com/jgm/gitit/pull/714)).
+* No longer depends on `MissingH`, `network-bsd`, `network`, `network-uri`, `SHA`, `time`, `mtl` and `transformers-compat`. Without a `Host` header in the request (HTTP/1.0), the links to the wiki use `localhost` and the configured port instead of the name of the machine.
 
 * claferwiki Version 0.5.7, Nov 8, 2026
 

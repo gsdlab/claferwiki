@@ -38,12 +38,10 @@ import Data.List (dropWhileEnd, intercalate, isPrefixOf, isSuffixOf, nub, tails)
 import Data.List.Split (splitOn)
 import qualified Data.Map as Map
 import Data.Maybe (fromMaybe)
-import Data.String.Utils (replace)
 import qualified Data.Text as T
 import Data.Text.Lazy (toStrict)
 import Data.Text.Lazy.Builder (Builder,  fromString, toLazyText, singleton)
 import Happstack.Server (Request, getHeader)
-import Network.BSD (getHostName)
 import System.Directory (createDirectoryIfMissing, doesFileExist)
 import System.Environment (lookupEnv)
 import System.Process (readProcessWithExitCode)
@@ -66,7 +64,6 @@ claferWiki pandoc = do
         cssExist <- doesFileExist "static/css/clafer.css"
         unless cssExist $ writeFile "static/css/clafer.css" css
 
-    hostName <- liftIO getHostName
     request <- askRequest
     pageName <- getPageName
     config <- askConfig
@@ -74,7 +71,7 @@ claferWiki pandoc = do
         liftIO $ mapM lookupEnv ["CLAFERMOOVISUALIZER_URL", "CLAFERCONFIGURATOR_URL", "CLAFERIDE_URL"]
 
     let
-        address = wikiAddress hostName (show $ portNumber config) request
+        address = wikiAddress (show $ portNumber config) request
         -- produce the required outputs in a single compilation
         allCompilationResults = compileFragments fragments claferModes
 
@@ -358,18 +355,17 @@ data WikiAddress = WikiAddress {
                }
 
 -- | The host and the port from the X-Forwarded-Host header (behind a proxy) or the Host header
---   of the request; without either, the name of the machine and the configured port
---   (getHostName gives only the short name of the machine or of its container, e.g., t3-necsis
---   instead of t3-necsis.cs.uwaterloo.ca). Behind a reverse proxy, X-Forwarded-Proto gives the
+--   of the request; without either (only HTTP/1.0 clients omit Host), localhost and the
+--   configured port. Behind a reverse proxy, X-Forwarded-Proto gives the
 --   scheme (e.g., https) and X-Forwarded-Prefix the path of the wiki (e.g., /modelwiki).
-wikiAddress :: String -> String -> Request -> WikiAddress
-wikiAddress hostName port request =
+wikiAddress :: String -> Request -> WikiAddress
+wikiAddress port request =
     WikiAddress scheme authority (hostOf authority) (scheme ++ "://" ++ authority ++ prefix ++ "/")
   where
     firstValue name = case trim . takeWhile (/= ',') . toString <$> getHeader name request of
         Just value | not (null value) -> Just value
         _                             -> Nothing
-    authority = fromMaybe (hostName ++ ":" ++ port) (firstValue "x-forwarded-host" <|> firstValue "host")
+    authority = fromMaybe ("localhost:" ++ port) (firstValue "x-forwarded-host" <|> firstValue "host")
     scheme = case firstValue "x-forwarded-proto" of
         Just "https" -> "https"
         _            -> "http"
@@ -417,3 +413,7 @@ inlineSvg svg = case filter ("<svg" `isPrefixOf`) (tails svg) of
 
 changeTransparentToLightGray :: String -> String
 changeTransparentToLightGray = replace "color=transparent" "color=lightgray"
+
+-- | Replaces every occurrence of the first string with the second.
+replace :: String -> String -> String -> String
+replace old new = intercalate new . splitOn old
