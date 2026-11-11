@@ -1,6 +1,6 @@
 # Claferwiki
 
-##### v0.5.7
+##### v0.5.8
 
 **Claferwiki** is a wiki system integrated with [Clafer compiler](https://github.com/gsdlab/clafer). [Clafer](http://clafer.org) is a lightweight yet powerful structural modeling language. Claferwiki allows for embedding Clafer model fragments in wiki pages and provides model authoring support including code highlighting, parse and semantic error reporting, hyperlinking from identifier use to its definition, and graphical view rendering.
 
@@ -34,13 +34,13 @@ compiling it with GHC, so GHC and the claferwiki package must be available where
 
 ### Dependencies
 
-* [Clafer compiler](https://github.com/gsdlab/clafer/) v0.5.7
-* [GHC](https://www.haskell.org/downloads) >= v9.6.7
+* [Clafer compiler](https://github.com/gsdlab/clafer/) v0.5.8
+* [GHC](https://www.haskell.org/downloads) v9.6.7 or v9.12.4
 * [cabal-install](https://hackage.haskell.org/package/cabal-install) >= v3.10.3 (when building with `cabal`)
 * [Git](http://git-scm.com)
-* [Gitit wiki](http://hackage.haskell.org/package/gitit) v0.16.0.2 with plugin support (the `plugins` flag).
-  A dynamically linked gitit (for example, from a Linux distribution) can only load plugins with
-  [jgm/gitit#714](https://github.com/jgm/gitit/pull/714).
+* [Gitit wiki](http://hackage.haskell.org/package/gitit) v0.16.1 with plugin support (the `plugins` flag).
+  A dynamically linked gitit (for example, from a Linux distribution) can only load plugins since v0.16.1
+  ([jgm/gitit#714](https://github.com/jgm/gitit/pull/714)).
 * GraphViz
 
 ### Important: branches must correspond
