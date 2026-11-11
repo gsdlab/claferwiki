@@ -22,9 +22,9 @@
 -}
 {-# LANGUAGE NamedFieldPuns, OverloadedStrings #-}
 -- | A plugin for Gitit which integrates the Clafer compiler and links to other
--- Clafer web tools: <http://https://github.com/gsdlab/ClaferIDE ClaferIDE>,
--- <http://https://github.com/gsdlab/ClaferConfigurator ClaferConfigurator>, and
--- <http://https://github.com/gsdlab/ClaferMooVisualizer ClaferMooVisualizer>
+-- Clafer web tools: <https://github.com/gsdlab/ClaferIDE ClaferIDE>,
+-- <https://github.com/gsdlab/ClaferConfigurator ClaferConfigurator>, and
+-- <https://github.com/gsdlab/ClaferMooVisualizer ClaferMooVisualizer>
 module Network.Gitit.Plugin.ClaferWiki (plugin) where
 
 import Network.Gitit.Interface

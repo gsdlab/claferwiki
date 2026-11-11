@@ -24,7 +24,7 @@ data-files:             claferwiki.sh
 extra-doc-files:        CHANGES.md
 source-repository head
     type:               git
-    location:           git://github.com/gsdlab/claferwiki.git
+    location:           https://github.com/gsdlab/claferwiki.git
 
 library
   default-language:     Haskell2010
