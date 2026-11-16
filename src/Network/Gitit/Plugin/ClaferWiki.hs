@@ -41,7 +41,7 @@ import Data.Maybe (fromMaybe)
 import qualified Data.Text as T
 import Data.Text.Lazy (toStrict)
 import Data.Text.Lazy.Builder (Builder,  fromString, toLazyText, singleton)
-import Happstack.Server (Request, getHeader)
+import Happstack.Server (getHeader)
 import System.Directory (createDirectoryIfMissing, doesFileExist)
 import System.Environment (lookupEnv)
 import System.Process (readProcessWithExitCode)
@@ -142,13 +142,13 @@ claferWiki pandoc = do
         addMode _                                               = []
 
         extractCompilerResult :: Either [ClaferErr] (Map.Map ClaferMode CompilerResult) -> ClaferMode -> Maybe CompilerResult
-        extractCompilerResult result claferMode = either (const Nothing) (Map.lookup claferMode) result
+        extractCompilerResult result mode' = either (const Nothing) (Map.lookup mode') result
 
         extractOutput :: Either [ClaferErr] (Map.Map ClaferMode CompilerResult) -> ClaferMode -> String
-        extractOutput (Right compilerResultMap) claferMode =
-            case Map.lookup claferMode compilerResultMap of
+        extractOutput (Right compilerResultMap) mode' =
+            case Map.lookup mode' compilerResultMap of
                 Just CompilerResult{ outputCode } -> outputCode
-                Just NoCompilerResult{ reason } -> "Error: No " ++ show claferMode ++ " output. Reason:" ++ reason
+                Just NoCompilerResult{ reason } -> "Error: No " ++ show mode' ++ " output. Reason:" ++ reason
                 Nothing -> "Error: No " ++ show claferMode ++ " output."
         extractOutput (Left err) _ = highlightErrors fragmentedModel err
 
