@@ -1,3 +1,9 @@
+* claferwiki Version 0.6.0, Nov 29, 2026
+
+Minor release with Clafer 0.6.0.
+
+* Builds with GHC 9.12.4 (Stackage nightly-2026-11-15) and still with GHC 9.6.7.
+
 * claferwiki Version 0.5.8, Nov 15, 2026
 
 Minor release with Clafer 0.5.8.

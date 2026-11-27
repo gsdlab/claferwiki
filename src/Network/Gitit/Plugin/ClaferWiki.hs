@@ -1,6 +1,6 @@
 {-
  Copyright 2012-2019 Generative Software Development Lab <http://gsd.uwaterloo.ca>
- Copyright 2019-2023 Intelligent Systems Development Lab <https://uwaterloo.ca/wise-lab/>
+ Copyright 2019-2026 Waterloo Intelligent Systems Engineering Lab, University of Waterloo <https://uwaterloo.ca/wise-lab/>
 
  Permission is hereby granted, free of charge, to any person obtaining a copy of
  this software and associated documentation files (the "Software"), to deal in
@@ -41,7 +41,7 @@ import Data.Maybe (fromMaybe)
 import qualified Data.Text as T
 import Data.Text.Lazy (toStrict)
 import Data.Text.Lazy.Builder (Builder,  fromString, toLazyText, singleton)
-import Happstack.Server (Request, getHeader)
+import Happstack.Server (getHeader)
 import System.Directory (createDirectoryIfMissing, doesFileExist)
 import System.Environment (lookupEnv)
 import System.Process (readProcessWithExitCode)
@@ -142,13 +142,13 @@ claferWiki pandoc = do
         addMode _                                               = []
 
         extractCompilerResult :: Either [ClaferErr] (Map.Map ClaferMode CompilerResult) -> ClaferMode -> Maybe CompilerResult
-        extractCompilerResult result claferMode = either (const Nothing) (Map.lookup claferMode) result
+        extractCompilerResult result mode' = either (const Nothing) (Map.lookup mode') result
 
         extractOutput :: Either [ClaferErr] (Map.Map ClaferMode CompilerResult) -> ClaferMode -> String
-        extractOutput (Right compilerResultMap) claferMode =
-            case Map.lookup claferMode compilerResultMap of
+        extractOutput (Right compilerResultMap) mode' =
+            case Map.lookup mode' compilerResultMap of
                 Just CompilerResult{ outputCode } -> outputCode
-                Just NoCompilerResult{ reason } -> "Error: No " ++ show claferMode ++ " output. Reason:" ++ reason
+                Just NoCompilerResult{ reason } -> "Error: No " ++ show mode' ++ " output. Reason:" ++ reason
                 Nothing -> "Error: No " ++ show claferMode ++ " output."
         extractOutput (Left err) _ = highlightErrors fragmentedModel err
 
@@ -271,7 +271,7 @@ renderGraphWithToggle    svgGraphWithoutRefs svgGraphWithRefs graphNo   =
     "</div>" <> nl
 
 renderGraph :: String  -> Builder
-renderGraph    svgGraph = 
+renderGraph    svgGraph =
     "<div style=\"display:block;width:100%;border:solid lightgray 1px;overflow-x:auto;\">" <> nl <>
     fromString svgGraph <> nl <>
     "</div>" <> nl
@@ -311,7 +311,7 @@ compileFragments    fragments   claferModes   =
 
 renderAnalyzeWithClaferMooViz :: String -> String -> String -> Block
 renderAnalyzeWithClaferMooViz fileName toolURL' wikiURL =
-    mkHtmlBlock 
+    mkHtmlBlock
       ("<div>" <> nl <>
       "<a href=\"" <> fromString (escapeAttribute toolURL') <> "?claferFileURL=" <> fromString (escapeAttribute wikiURL) <> "clafer/" <> nl <>
       fromString fileName <> nl <>
@@ -322,7 +322,7 @@ renderAnalyzeWithClaferMooViz fileName toolURL' wikiURL =
 
 renderConfigureWithClaferConfigurator :: String -> String -> String -> Block
 renderConfigureWithClaferConfigurator fileName toolURL' wikiURL =
-    mkHtmlBlock 
+    mkHtmlBlock
       ("<div>" <> nl <>
       "<a href=\"" <> fromString (escapeAttribute toolURL') <> "?claferFileURL=" <> fromString (escapeAttribute wikiURL) <> "clafer/" <> nl <>
       fromString fileName <> nl <>
@@ -333,7 +333,7 @@ renderConfigureWithClaferConfigurator fileName toolURL' wikiURL =
 
 renderAddOpenInIDE :: String -> String -> String -> Block
 renderAddOpenInIDE    fileName  toolURL' wikiURL =
-    mkHtmlBlock 
+    mkHtmlBlock
       ("<div>" <> nl <>
       "<a href=\"" <> fromString (escapeAttribute toolURL') <> "?claferFileURL=" <> fromString (escapeAttribute wikiURL) <> "clafer/" <> nl <>
       fromString fileName <> nl <>
